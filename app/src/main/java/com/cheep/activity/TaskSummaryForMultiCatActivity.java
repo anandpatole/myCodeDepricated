@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubCatSummaryAdapter;
+import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
 import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
@@ -149,7 +150,9 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 //        mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(getList()));
         if (mTaskDetailModel == null) {
+            showProgressDialog();
             callTaskDetailWS(getIntent().getExtras().getString(Utility.Extra.TASK_ID));
+
         } else {
             setUpUI();
         }
@@ -189,11 +192,11 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.textCategoryName.setText(mTaskDetailModel.categoryModel.catName != null ? mTaskDetailModel.categoryModel.catName : Utility.EMPTY_STRING);
 
         // Show/Hide Subscribed Image
-        if(mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
-            mBinding.imgSubscribed.setVisibility(View.VISIBLE);
-        } else {
-            mBinding.imgSubscribed.setVisibility(View.GONE);
-        }
+//        if(mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
+//            mBinding.imgSubscribed.setVisibility(View.VISIBLE);
+//        } else {
+//            mBinding.imgSubscribed.setVisibility(View.GONE);
+//        }
 
         // Set up image
         GlideUtility.loadImageView(mContext, mBinding.imgService, mTaskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
@@ -315,7 +318,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 mBinding.lnProviderProfileSection.setVisibility(View.GONE);
                 mBinding.rlUnknownPro.setVisibility(View.GONE);
                 // Update Task Status
-                mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
+               // mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
                 updateSPImageStacks(mTaskDetailModel.profile_img_arr);
             } else {
                 mBinding.lnResponseReceived.setVisibility(View.GONE);
@@ -362,7 +365,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         // Set Second Section
 //        mBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
-        mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(mTaskDetailModel.subCatList));
+        mBinding.textCategory.setText(mTaskDetailModel.categoryModel.catName);
+        if(mTaskDetailModel.subCatList!=null) {
+            mBinding.recyclerViewSubCategory.setLayoutManager(new LinearLayoutManager(this));
+            mBinding.recyclerViewSubCategory.setAdapter(new SelectedSubServiceAdapter(mTaskDetailModel.subCatList));
+        }
+       // mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(mTaskDetailModel.subCatList));
         mBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
 
         // By Default makethe task completion dialog as gone
@@ -409,14 +417,18 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
         // Set Category/Nickname
         if(mTaskDetailModel.taskAddress.nickname != null && !TextUtils.isEmpty(mTaskDetailModel.taskAddress.nickname)) {
-            mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.nickname);
+            //mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.nickname);
+            mBinding.textTaskWhere1.setText(Utility.getAddressCategoryString(mTaskDetailModel.taskAddress.category));
+            mBinding.textTaskWhere1.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(mTaskDetailModel.taskAddress.category), 0, 0, 0);
         } else {
             mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.category.substring(0,1).toUpperCase() + mTaskDetailModel.taskAddress.category.substring(1));
+            mBinding.textTaskWhere1.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(mTaskDetailModel.taskAddress.category), 0, 0, 0);
         }
 
         //Set Subscribed yes/no
         if(!mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
             mBinding.textTaskWhere2.setVisibility(View.VISIBLE);
+            mBinding.textTaskWhere2.setText(mTaskDetailModel.taskAddress.is_subscribe);
         } else {
             mBinding.textTaskWhere2.setVisibility(View.GONE);
         }
@@ -514,13 +526,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
+            mBinding.textTaskStatusTop.setText(getString(R.string.service_confirmed));
             mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
             mBinding.textPaid.setVisibility(View.VISIBLE);
             hideRateAndReviewView();
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
-            mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
+            mBinding.textTaskStatusTop.setText(getString(R.string.service_status_processing));
             mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
             mBinding.textPaid.setVisibility(View.VISIBLE);
             hideRateAndReviewView();
@@ -981,7 +993,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         if (list == null || list.isEmpty()) {
             mBinding.textTaskResponseStatus.setText(getResources().getString(R.string.label_pros_around_you_reviewing_desc));
             mBinding.textBottomAction.setVisibility(View.GONE);
-            mBinding.textTaskStatusTop.setVisibility(View.GONE);
+            mBinding.textTaskStatusTop.setVisibility(View.VISIBLE);
             mBinding.img1.setVisibility(View.GONE);
             mBinding.img2.setVisibility(View.GONE);
             mBinding.img3.setVisibility(View.GONE);
@@ -1075,7 +1087,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             return;
         }
 
-        showProgressBar(true);
+        //showProgressBar(true);
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -1101,6 +1113,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         public void onResponse(Object response) {
 
             String strResponse = (String) response;
+            hideProgressDialog();
             try {
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
@@ -1133,7 +1146,9 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         finish();
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
                 mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
@@ -1147,8 +1162,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
-            showProgressBar(false);
-
+            //showProgressBar(false);
+hideProgressDialog();
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }

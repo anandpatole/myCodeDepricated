@@ -69,14 +69,15 @@
                             android:textSize="@dimen/toolbar_title_text_size" />
                     </android.support.v7.widget.Toolbar>
 
-                    <ImageView
-                        android:id="@+id/img_subscribed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="50dp"
-                        android:layout_marginStart="50dp"
-                        android:src="@drawable/ic_subscribed_text" />
+                        <ImageView
+                            android:id="@+id/img_subscribed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="50dp"
+                            android:layout_marginStart="50dp"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_subscribed_text" />
                     </FrameLayout>
 
                     <com.cheep.custom_view.CFTextViewSemiBold
@@ -90,7 +91,7 @@
                         android:lines="1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/toolbar_title_text_size"
-                        tools:text="Plumber" />
+                        tools:text="" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_task_status_top"
@@ -105,7 +106,7 @@
                         android:paddingLeft="@dimen/scale_8dp"
                         android:paddingRight="@dimen/scale_8dp"
                         android:paddingTop="@dimen/scale_3dp"
-                        android:text="@string/label_service_summary"
+                        android:text=""
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_14sp" />
                 </LinearLayout>
@@ -508,6 +509,7 @@
                     <!--Second Section(Task Description)-->
                     <RelativeLayout
                         android:layout_width="match_parent"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <!--<LinearLayout
                             android:layout_width="wrap_content"
@@ -688,6 +690,41 @@
                         </FrameLayout>
                     </RelativeLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/scale_16dp"
+                    android:paddingRight="@dimen/scale_16dp"
+                    android:paddingTop="@dimen/scale_16dp">
+
+                    <ImageView
+                        android:id="@+id/icon_task_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_tick"
+                        tools:ignore="ContentDescription" />
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/text_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/scale_15dp"
+                        android:text=""
+                        android:textColor="@color/splash_gradient_end"
+                        android:textSize="@dimen/text_size_18sp" />
+                </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_sub_category"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/scale_5dp"
+                        android:paddingLeft="@dimen/scale_44dp"
+                        android:paddingRight="@dimen/scale_44dp"
+                        android:layout_height="wrap_content">
+
+                    </android.support.v7.widget.RecyclerView>
                     <!--Divider(2)-->
                     <View
                         android:layout_width="match_parent"
@@ -733,14 +770,14 @@
                         android:background="@color/transparent"
                         android:gravity="start"
                         android:paddingBottom="@dimen/scale_24dp"
-                        android:paddingLeft="@dimen/scale_16dp"
+                        android:paddingLeft="@dimen/scale_40dp"
                         android:paddingRight="@dimen/scale_16dp"
                         android:paddingTop="@dimen/scale_8dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey_dark_color_2"
                         android:textSize="@dimen/text_size_12sp"
                         android:visibility="visible"
-                        tools:text="25 Apr between 1600 hrs - 1800 hrs" />
+                        tools:text="" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tv_confirm_availability"
@@ -860,8 +897,10 @@
                             android:layout_height="wrap_content"
                             android:background="@color/transparent"
                             android:gravity="start"
-                            android:paddingLeft="@dimen/scale_16dp"
+                            android:drawableLeft="@drawable/home_icon"
+                            android:paddingLeft="@dimen/scale_40dp"
                             android:paddingRight="@dimen/scale_4dp"
+                            android:drawablePadding="@dimen/scale_8dp"
                             android:textColor="@color/splash_gradient_end"
                             android:textColorHint="@color/grey_dark_color_2"
                             android:textSize="@dimen/text_size_12sp"
@@ -877,25 +916,25 @@
                             android:textColor="@color/grey_varient_23"
                             android:textColorHint="@color/grey_dark_color_2"
                             android:textSize="@dimen/text_size_12sp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:text="@string/label_subscribed_under_cheep_care" />
 
                     </LinearLayout>
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_task_where_address"
-                        android:layout_width="@dimen/scale_268dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:gravity="start"
-                        android:paddingLeft="@dimen/scale_16dp"
+                        android:paddingLeft="@dimen/scale_55dp"
                         android:paddingRight="@dimen/scale_16dp"
                         android:paddingTop="@dimen/scale_2dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey_dark_color_2"
                         android:textSize="@dimen/text_size_12sp"
-                        android:visibility="gone"
-                        tools:text="1202/1204 UniWorls Towers, Next to Palladium Mall, Mahatma Gandhi Phule Road, Elphinstone Road (West) Bombay" />
+                        android:visibility="visible"
+                        tools:text="" />
 
                     <!--Divider(4)-->
                     <View
