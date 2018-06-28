@@ -44,6 +44,7 @@ public class NetworkUtility {
         public static final String ALL_BANNER = BASE_URL + "customers/category/all_banner";
         public static final String GET_CATEGORY_ID_BASED_ON_SLUG = BASE_URL + "customers/category/getCategoryIdBasedOnSlug";
         public static final String FAVOURITE_CATEGORY = BASE_URL + "customers/category/category_favourite";
+        public static final String MANAGE_SUBSCRIPTION = BASE_URL + "customers/care/getUserSubscribedCarePackage";
 
         public static final String UPDATE_LOCATION = BASE_URL + "customers/profile/update_location";
         public static final String CREATE_TASK = BASE_URL + "customers/tasks/create";
@@ -529,6 +530,7 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
         String PACKAGE_DATA = "packageData";
+        String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
         String CAT_PRICE= "cat_price";
 
         interface VERSION_CHANGE_TYPE {

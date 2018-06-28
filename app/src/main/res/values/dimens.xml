@@ -105,6 +105,7 @@
     <dimen name="scale_256dp">256dp</dimen>
     <dimen name="scale_260dp">260dp</dimen>
     <dimen name="scale_268dp">268dp</dimen>
+    <dimen name="scale_300dp">300dp</dimen>
 
     <!--TextSize-->
     <!--<dimen name="text_size_6sp">6sp</dimen>-->

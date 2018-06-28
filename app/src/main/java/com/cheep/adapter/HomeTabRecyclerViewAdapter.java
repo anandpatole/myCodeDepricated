@@ -175,9 +175,12 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             holder.mRowTabHomeBinding.ivLiveAnimated.setVisibility(View.GONE);
             holder.mRowTabHomeBinding.tvLiveFeed.setVisibility(View.GONE);
         }
+        holder.mRowTabHomeBinding.tvOldPrice.setText(model.catOldPrice);
+        holder.mRowTabHomeBinding.tvNewPrice.setText(model.catPrice+" "+Utility.ONLY);
 
         // LIVE Pro stacks
         updateLIVEProStackImages(holder.mRowTabHomeBinding, (ArrayList<String>) model.proImagesPerCategory);
+
     }
 
     private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {

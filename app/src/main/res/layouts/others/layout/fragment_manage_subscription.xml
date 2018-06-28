@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,12 +74,12 @@
                     <android.support.v4.widget.NestedScrollView
                         android:id="@+id/scrollView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
                             android:orientation="vertical">
 
                             <com.cheep.custom_view.CFTextViewRegular
@@ -102,47 +102,128 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/scale_13dp"
-                                android:layout_marginRight="@dimen/scale_13dp"
-                                android:layout_marginTop="@dimen/scale_10dp"
-                                android:background="@drawable/rounded_rect_white"
-                                android:elevation="@dimen/scale_4dp"
-                                android:orientation="horizontal">
+                                android:layout_height="wrap_content">
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/subscription_recycler_view"
+                                <RelativeLayout
+                                    android:id="@+id/all_address_layout"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/scale_13dp"
+                                    android:layout_marginRight="@dimen/scale_13dp"
+                                    android:layout_marginTop="@dimen/scale_10dp"
+                                    android:layout_marginBottom="@dimen/scale_10dp"
+                                    android:background="@drawable/rounded_rect_white"
+                                    android:elevation="@dimen/scale_4dp"
+                                    android:orientation="horizontal"
+                                    android:visibility="visible">
 
-                                </android.support.v7.widget.RecyclerView>
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/subscription_recycler_view"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                                <ImageView
-                                    android:id="@+id/address_drop_downs"
-                                    android:layout_width="@dimen/scale_30dp"
-                                    android:layout_height="@dimen/scale_30dp"
-                                    android:scaleType="centerInside"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_marginEnd="@dimen/scale_12dp"
-                                    android:layout_marginTop="@dimen/scale_12dp"
-                                    android:src="@drawable/ic_drop_down_arrow"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_marginRight="12dp" />
-                                <ImageView
-                                    android:id="@+id/address_drop_up"
-                                    android:layout_width="@dimen/scale_30dp"
-                                    android:layout_height="@dimen/scale_30dp"
-                                    android:scaleType="centerInside"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_marginEnd="@dimen/scale_12dp"
-                                    android:layout_marginTop="@dimen/scale_12dp"
-                                    android:src="@drawable/ic_up_arrow_blue"
-                                    android:visibility="gone"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_marginRight="12dp" />
+                                    </android.support.v7.widget.RecyclerView>
+
+                                    <ImageView
+                                        android:id="@+id/address_drop_downs"
+                                        android:layout_width="@dimen/scale_30dp"
+                                        android:layout_height="@dimen/scale_30dp"
+                                        android:scaleType="centerInside"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_marginEnd="@dimen/scale_12dp"
+                                        android:layout_marginTop="@dimen/scale_12dp"
+                                        android:src="@drawable/ic_drop_down_arrow"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginRight="12dp" />
+                                    <ImageView
+                                        android:id="@+id/address_drop_up"
+                                        android:layout_width="@dimen/scale_30dp"
+                                        android:layout_height="@dimen/scale_30dp"
+                                        android:scaleType="centerInside"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_marginEnd="@dimen/scale_12dp"
+                                        android:layout_marginTop="@dimen/scale_12dp"
+                                        android:src="@drawable/ic_up_arrow_blue"
+                                        android:visibility="gone"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginRight="12dp" />
+                                </RelativeLayout>
+
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/only_one_address_layout"
+                                    android:layout_gravity="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    card_view:cardCornerRadius="4dp"
+                                    app:cardElevation="@dimen/scale_4dp"
+                                    app:cardBackgroundColor="@color/white"
+                                    app:cardUseCompatPadding="true"
+                                    app:cardCornerRadius="@dimen/scale_4dp"
+                                    android:layout_marginLeft="@dimen/scale_6dp"
+                                    android:layout_marginStart="@dimen/scale_6dp"
+                                    android:layout_marginRight="@dimen/scale_6dp"
+                                    android:layout_marginEnd="@dimen/scale_6dp"
+                                    android:visibility="visible">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="1"
+                                        android:padding="@dimen/scale_4dp"
+                                        android:orientation="horizontal">
+
+                                        <com.cheep.custom_view.CFTextViewSemiBold
+                                            android:id="@+id/text_address_category"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:drawableLeft="@drawable/icon_home_address"
+                                            android:drawableStart="@drawable/icon_home_address"
+                                            android:drawablePadding="@dimen/scale_5dp"
+                                            android:gravity="center"
+                                            android:layout_centerVertical="true"
+                                            android:paddingLeft="@dimen/scale_8dp"
+                                            android:paddingStart="@dimen/scale_8dp"
+                                            android:text="My sweet home"
+                                            android:textColor="@color/splash_gradient_end"
+                                            android:textSize="@dimen/text_size_11sp" />
+
+                                        <com.cheep.custom_view.CFTextViewRegular
+                                            android:id="@+id/text_full_address"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerVertical="true"
+                                            android:layout_marginTop="@dimen/scale_3dp"
+                                            android:layout_toEndOf="@+id/text_address_category"
+                                            android:layout_toLeftOf="@+id/address_drop_downs_single"
+                                            android:layout_toRightOf="@+id/text_address_category"
+                                            android:layout_toStartOf="@+id/address_drop_downs_single"
+                                            android:ellipsize="end"
+                                            android:maxLines="@integer/freshchat_channel_desc_max_lines"
+                                            android:paddingEnd="@dimen/scale_4dp"
+                                            android:paddingLeft="@dimen/scale_4dp"
+                                            android:paddingRight="@dimen/scale_4dp"
+                                            android:paddingStart="@dimen/scale_4dp"
+                                            android:text="@string/hint_address_initials"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/text_size_13sp" />
+
+                                        <ImageView
+                                            android:id="@+id/address_drop_downs_single"
+                                            android:layout_width="@dimen/scale_30dp"
+                                            android:layout_height="@dimen/scale_30dp"
+                                            android:layout_alignParentRight="true"
+                                            android:layout_marginEnd="@dimen/scale_12dp"
+                                            android:layout_marginRight="12dp"
+                                            android:scaleType="centerInside"
+                                            android:src="@drawable/ic_drop_down_arrow" />
+                                    </RelativeLayout>
+                                </android.support.v7.widget.CardView>
                             </RelativeLayout>
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:orientation="vertical"
@@ -237,7 +318,6 @@
                                     android:orientation="horizontal">
 
                                     <com.cheep.custom_view.CFTextViewRegular
-
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/scale_13dp"
@@ -266,7 +346,6 @@
                                     android:orientation="horizontal">
 
                                     <com.cheep.custom_view.CFTextViewRegular
-
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/scale_13dp"
@@ -289,7 +368,7 @@
                                         android:textSize="@dimen/text_size_13sp" />
                                 </RelativeLayout>
                                 <RelativeLayout
-
+                                    android:id="@+id/relative_auto_renewal"
                                     android:visibility="visible"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
@@ -374,7 +453,8 @@
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textColor="@color/white"
                                             android:layout_weight="1"
-                                            android:background="@drawable/rounded_rect_blue"/>
+                                            android:background="@drawable/rounded_rect_blue"
+                                            android:visibility="gone"/>
                                     </LinearLayout>
                                     <com.cheep.custom_view.CFTextViewRegular
                                         android:layout_width="match_parent"
@@ -392,12 +472,15 @@
                         </LinearLayout>
                     </android.support.v4.widget.NestedScrollView>
                 </LinearLayout>
+
+
                 <FrameLayout
                     android:id="@+id/bottom_frame"
                     android:layout_width="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="@dimen/scale_10dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/upgrade_subscription_btn"
