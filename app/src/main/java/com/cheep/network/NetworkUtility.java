@@ -529,6 +529,7 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
         String PACKAGE_DATA = "packageData";
+        String CAT_PRICE= "cat_price";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

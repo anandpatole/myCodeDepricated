@@ -1364,97 +1364,19 @@ public class HomeActivity extends BaseAppCompatActivity
      * Call Delete(Cancel)task webservice
      */
     private void callRescheduleTaskWS(String taskId, String startDateTimeTimeStamp) {
-
-        //Validation
         if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
-
-        //Show Progress
         showProgressDialog();
+        WebCallClass.rescheduleTask(mContext, taskId, startDateTimeTimeStamp, new WebCallClass.RescheduleTaskListener() {
+            @Override
+            public void onSuccessOfReschedule() {
 
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(TASK_ID, taskId);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, startDateTimeTimeStamp);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.RESCHEDULE_TASK
-                , mCallRescheduleTaskWSErrorListener
-                , mCallRescheduleTaskWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest);
-
+            }
+        }, mCommonResponseListener);
     }
 
-    Response.Listener mCallRescheduleTaskWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
-                        String pro_username = jData.optString(NetworkUtility.TAGS.SP_USER_NAME);
-                        Log.i(TAG, "onResponse: Pro name" + pro_username);
-                        Utility.showToast(mContext, getString(R.string.task_reschedule_task_success, pro_username));
-                        MessageEvent messageEvent = new MessageEvent();
-                        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_RESCHEDULED;
-                        messageEvent.id = jData.getString(NetworkUtility.TAGS.TASK_ID);
-
-                        messageEvent.taskStartdate = jData.getString(NetworkUtility.TAGS.RESCHEDULE_DATETIME);
-                        EventBus.getDefault().post(messageEvent);
-
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallRescheduleTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-            hideProgressDialog();
-        }
-    };
-
-    Response.ErrorListener mCallRescheduleTaskWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////Reschedule Related Feature[End]///////////////////////////////
@@ -1861,18 +1783,21 @@ public class HomeActivity extends BaseAppCompatActivity
             new WebCallClass.CommonResponseListener() {
                 @Override
                 public void volleyError(VolleyError error) {
+                    hideProgressDialog();
                     Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
                     Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                 }
 
                 @Override
                 public void showSpecificMessage(String message) {
+                    hideProgressDialog();
                     Utility.showSnackBar(message, mBinding.getRoot());
                 }
 
                 @Override
                 public void forceLogout() {
                     //Logout and finish the current activity
+                    hideProgressDialog();
                     finish();
                 }
             };

@@ -36,7 +36,6 @@ import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MediaModel;
-import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
@@ -55,7 +54,6 @@ import com.mixpanel.android.java_websocket.util.Base64;
 import org.cryptonode.jncryptor.AES256JNCryptor;
 import org.cryptonode.jncryptor.CryptorException;
 import org.cryptonode.jncryptor.JNCryptor;
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -631,8 +629,8 @@ public class Utility {
         String DATA = "DATA";
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
-        String DATA_3 = "DATA_3";
         String DATA_4 = "DATA_4";
+        String DATA_3 = "DATA_3";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
@@ -810,6 +808,7 @@ public class Utility {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
         String PROCESSING = "processing";//not using it
         String COMPLETED = "completed";
+        String PENDING= "pending";
         String FAILED = "failed";
     }
 
@@ -1158,7 +1157,7 @@ public class Utility {
         });
     }
 
-    public static void onSuccessfulInstaBookingTaskCompletion(final Context context, JSONObject jsonObject) {
+    public static void onSuccessfulInstaBookingTaskCompletion(final Context context, JSONObject jsonObject,TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener listener) {
 //        Utility.showToast(context, context.getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         String dateTime = "";
@@ -1170,21 +1169,7 @@ public class Utility {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(new TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener() {
-            @Override
-            public void onAcknowledgementAccepted() {
-                MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
-                EventBus.getDefault().post(messageEvent);
-
-                ((Activity) context).finish();
-            }
-
-            @Override
-            public void rescheduleTask() {
-
-            }
-        }, true, dateTime);
+        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime,taskDetailModel.taskId);
         taskConfirmedCCInstaBookDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
         // TODO : commented code for nor this chat module will be added when pro will accepts from market place
         //-- by gieeka
@@ -1252,4 +1237,5 @@ public class Utility {
 
         return spannableString;
     }
+
 }

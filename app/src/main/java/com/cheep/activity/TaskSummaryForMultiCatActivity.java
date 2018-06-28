@@ -294,11 +294,12 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //                    }
 //                    LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
-                    if (mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
-                    } else {
-                        PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel);
-                    }
+//                    if (mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+//                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+//                    } else {
+                        PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel,false);
+
+//                    }
                 }
             });
             showChatCallButton(true);
@@ -862,8 +863,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                     LogUtils.LOGE(TAG, "showTaskCompletionDialog: pendingAmount :: " + pendingAmount);
 
                     if (pendingAmount > 0) {
-//                        PaymentChoiceActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+//                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
+                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel,false);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);

@@ -157,6 +157,8 @@ public class SuperCalendar {
     }
 
     public boolean isWorkingHour(String startTime, String endTime) {
+        startTime = "10:00:00";
+        endTime = "19:00:00";
         SuperCalendar startDate = SuperCalendar.getInstance();
         startDate.setTime(CalendarUtility.getDate(startTime, Utility.DATE_FORMAT_HH_MM_SS));
         startDate.mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DATE));
