@@ -33,12 +33,13 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
     private TaskConfirmActionListener mListener;
     private boolean isInstaBookingTask;
     private String dateTime;
+    private String taskId;
 
     public interface TaskConfirmActionListener {
 
         void onAcknowledgementAccepted();
 
-        void rescheduleTask();
+        void rescheduleTask(String taskId);
     }
 
     /*
@@ -48,12 +49,13 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
 
     }
 
-    public static TaskConfirmedCCInstaBookDialog newInstance(TaskConfirmActionListener listener, boolean isInstaBookingTask, String dateTime) {
+    public static TaskConfirmedCCInstaBookDialog newInstance(TaskConfirmActionListener listener, boolean isInstaBookingTask, String dateTime,String taskId) {
         TaskConfirmedCCInstaBookDialog f = new TaskConfirmedCCInstaBookDialog();
         f.setListener(listener);
         Bundle args = new Bundle();
         args.putBoolean(Utility.Extra.IS_INSTA_BOOKING_TASK, isInstaBookingTask);
         args.putString(Utility.Extra.DATA, dateTime);
+        args.putString(Utility.Extra.DATA_2, taskId);
         f.setArguments(args);
         return f;
     }
@@ -72,6 +74,7 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         isInstaBookingTask = getArguments().getBoolean(Utility.Extra.IS_INSTA_BOOKING_TASK, true);
         dateTime = getArguments().getString(Utility.Extra.DATA);
+        taskId = getArguments().getString(Utility.Extra.DATA_2);
 
     }
 
@@ -93,7 +96,7 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
         String text2 = getString(R.string.msg_task_confirmed_instabook_2, dateTime) + Utility.ONE_CHARACTER_SPACE + Utility.ONE_CHARACTER_SPACE;
         SpannableStringBuilder spanDesc1 = new SpannableStringBuilder(text2);
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.emoji_folded_hands);
-        drawable.setBounds(0,0,30,30);
+        drawable.setBounds(0, 0, 30, 30);
         ImageSpan span1 = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
 //            spanDesc1.setSpan(span1, text1.length() - 1
 //                    , text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -129,10 +132,10 @@ public class TaskConfirmedCCInstaBookDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //Callback to activity
-                mListener.rescheduleTask();
+                mListener.rescheduleTask(taskId);
 
                 // Dissmiss the dialog.
-                dismiss();
+//                dismiss();
             }
         });
         return mBinding.getRoot();

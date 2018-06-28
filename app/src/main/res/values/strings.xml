@@ -258,14 +258,16 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="choose_image">Choose image</string>
     <string name="msg_thanks_for_rating">Thanks for providing reviews.</string>
     <string name="msg_task_cancelled">Task Cancelled.</string>
-    <string name="msg_task_cancelled_title">Task Cancelled</string>
+    <string name="msg_task_cancelled_title">Service Cancelled</string>
     <string name="label_lapsed">Lapsed</string>
     <string name="msg_payment_failed">Unfortunately the payment has failed, please try again or get in touch with us on 18002660777</string>
     <string name="msg_thanks_for_confirmation">Thanks for confirmation of task completion</string>
     <string name="label_x_job">%1$s Job</string>
     <string name="task_status_pending">Task is yet to be reviewed by selected Provider</string>
-    <string name="task_confirmed">Task Confirmed</string>
-    <string name="task_status_processing">Task in Progress</string>
+    <string name="service_confirmed">Service Confirmed</string>
+    <string name="task_confirmed">Service Confirmed</string>
+    <string name="service_status_processing">Service in Progress</string>
+    <string name="task_status_processing">Service in Progress</string>
     <string name="task_status_paid">Task Confirmed</string>
     <string name="task_completion_confirm">Task was successfully completed</string>
     <string name="label_completed">Completed</string>
@@ -330,7 +332,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_awaiting_response">Awaiting\nResponse</string>
     <string name="label_awaiting_response_single_line">Awaiting Response</string>
     <string name="label_view_quotes">View Quotes</string>
-    <string name="label_view_task">View Task</string>
+    <string name="label_view_task">View Service</string>
     <string name="desc_shortly_receive_callback">You will shortly receive a call back</string>
     <string name="label_address_hint">Click on the map to enter your address.</string>
     <string name="label_quote_received">Quote Received</string>
@@ -402,7 +404,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="label_formatted_quote_amount">₹ %1$s</string>
     <string name="label_pros_around_you_reviewing_desc">PROs around you are viewing your task currently and shall respond shortly</string>
-    <string name="label_task_complete">Task Complete</string>
+    <string name="label_task_complete">Service Complete</string>
     <string name="label_connect_using_social_accounts">Connect using social accounts</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
@@ -799,7 +801,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="msg_someone_will_attend">Please tell us the name of the person who will be attending the PRO in your absence. </string>
     <string name="label_title_perfect">Perfect!</string>
     <string name="msg_user_confirm_availablity">Thank you for confirming your availability. Your Pro will be arriving shortly.</string>
-    <string name="label_rebook_task">Rebook Task</string>
+    <string name="label_rebook_task">Rebook Service</string>
     <string name="validate_person_name">Please enter the name of the person who will coordinate with the PRO</string>
     <string name="msg_task_confirmed_cheep_care">Our Cheep PRO will be arriving at your location on %1s. Heads up! We will also ask you to confirm your availability %2s prior to the task, please confirm for a smooth experience on Cheep.</string>
     <string name="msg_task_confirmed_instabook_1">Your task has been confirmed</string>
@@ -813,6 +815,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_all">All</string>
     <string name="label_your_tasks">Your Tasks</string>
     <string name="label_chat_now">Chat Now</string>
+    <string name="plumber">Plumber</string>
     <!--https:\/\/s3.ap-south-1.amazonaws.com\/cheepapp\/advertise\/banner_image\/thumb\/vlcc_banner_image.jpg-->
     <string name="validation_message_same_address_for_same_group_of_care">You can\'t purchase care package home, biz and soci for same address</string>
     <string name="msg_task_confirmed_cheep_care_no_time_specified">As per our guarantee, our PRO will be at your home

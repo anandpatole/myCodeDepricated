@@ -531,6 +531,7 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String PRICE_LIST = "price_list";
         String PACKAGE_DATA = "packageData";
         String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
+        String CAT_PRICE= "cat_price";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

@@ -23,6 +23,9 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
     @SerializedName("sub_cat_name")
     public String name;
 
+    @SerializedName("sub_cat_price")
+    public String subCatPrice;
+
 
     public boolean isSelected = false;
     @SerializedName("all_sub_sub_cats")
