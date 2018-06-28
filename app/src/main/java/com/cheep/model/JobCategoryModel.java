@@ -30,8 +30,9 @@ public class JobCategoryModel implements Serializable {
 
     @SerializedName("cat_new_price")
     public String catPrice;
-//    @SerializedName("cat_image")
-//    public String catImage;
+
+   @SerializedName("cat_old_price")
+    public String catOldPrice;
 
     @SerializedName("cat_jobs")
     public String catJobs;

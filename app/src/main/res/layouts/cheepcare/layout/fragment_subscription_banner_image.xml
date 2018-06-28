@@ -45,30 +45,38 @@
                 android:layout_marginEnd="@dimen/scale_15dp"
                 android:src="@drawable/gif_cheep_care_unit"/>
 
-            <com.cheep.custom_view.CFTextViewBold
-                android:id="@+id/img_cheep_care_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_below="@id/img_cheep_care_gif"
                 android:layout_centerHorizontal="true"
-                android:text="@string/cheep_care_value"
-                android:textSize="@dimen/text_size_18sp"/>
-
-            <com.cheep.custom_view.CFTextViewSemiBold
-                android:id="@+id/tv_subscribe"
-                android:layout_width="@dimen/home_screen_book_button_width"
-                android:layout_height="@dimen/home_screen_book_button_height"
-                android:background="@drawable/rounded_rect_blue"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:padding="@dimen/scale_6dp"
-                android:layout_marginRight="@dimen/scale_15dp"
-                android:layout_marginEnd="@dimen/scale_15dp"
-                android:gravity="center"
-                android:text="@string/label_subscribe"
-                android:layout_marginBottom="@dimen/scale_6dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_10sp"/>
+                android:gravity="bottom"
+                android:layout_marginRight="@dimen/scale_8dp"
+                android:layout_marginEnd="@dimen/scale_8dp">
+                <com.cheep.custom_view.CFTextViewBold
+                    android:id="@+id/img_cheep_care_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cheep_care_value"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:padding="@dimen/scale_4dp"/>
+
+                <com.cheep.custom_view.CFTextViewSemiBold
+                    android:id="@+id/tv_subscribe"
+                    android:layout_width="@dimen/home_screen_book_button_width"
+                    android:layout_height="@dimen/home_screen_book_button_height"
+                    android:background="@drawable/rounded_rect_blue"
+                    android:padding="@dimen/scale_6dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="@string/label_subscribe"
+                    android:layout_marginBottom="@dimen/scale_6dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_10sp"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -86,6 +94,7 @@
             tools:text="Discover a new level of carefree!"/>
 
         <RelativeLayout
+            android:id="@+id/relativeSubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/rl_right"
@@ -102,6 +111,31 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_11sp"
                 tools:text="ddfsg gdf gd fgdfgdfgoodrstep services "/>
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tv_sub_title_remaining"
+                android:layout_below="@+id/tv_sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="@string/thanks"
+                android:visibility="gone"/>
+
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/tv_old_price"
+                android:layout_below="@+id/tv_sub_title"
+                android:layout_toRightOf="@+id/tv_sub_title_remaining"
+                android:layout_toEndOf="@+id/tv_sub_title_remaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="@drawable/strike"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_11sp"
+                tools:text="@string/thanks"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <com.cheep.custom_view.CFTextViewRegular

@@ -40,6 +40,7 @@ import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class SubscriptionBannerFragment extends BaseFragment {
 
@@ -48,6 +49,8 @@ public class SubscriptionBannerFragment extends BaseFragment {
     private FragmentSubscriptionBannerImageBinding binding;
     SpannableString oldPrice = null, newPrice = null;
     boolean isPriceIsZero;
+    private String firstVariable,secondVariable;
+    private int stringWordCountAfterDivision;
 
 
     public ArrayList<CareCityDetail> cheepCareBannerModels;
@@ -97,7 +100,6 @@ public class SubscriptionBannerFragment extends BaseFragment {
     }
 
     private void init() {
-
         if (bannerImageModel != null) {
             Glide.with(mContext)
                     .load(R.drawable.gif_cheep_care_unit)
@@ -123,6 +125,11 @@ public class SubscriptionBannerFragment extends BaseFragment {
             //binding.tvSubTitle.setText(subtitle);
             binding.tvCityName.setText(bannerImageModel.cityName);
             // set banner image
+
+
+            int wordCount = getStringWordCount(bannerImageModel.subtitle);
+            getStringForTwoPart(wordCount,bannerImageModel.subtitle);
+
 
             int resId = R.drawable.banner_mumbai;
             switch (bannerImageModel.citySlug) {
@@ -222,5 +229,34 @@ public class SubscriptionBannerFragment extends BaseFragment {
     public void onDetach() {
 //        Log.d(TAG, "onDetach() called");
         super.onDetach();
+    }
+
+    private int getStringWordCount(String data){
+        int count = 1;
+
+        for (int i = 0; i < data.length() - 1; i++)
+        {
+            if ((data.charAt(i) == ' ') && (data.charAt(i + 1) != ' '))
+            {
+                count++;
+
+            }
+        }
+        return  count;
+    }
+
+    private void getStringForTwoPart(int totalStringWordCount,String data){
+
+        stringWordCountAfterDivision = totalStringWordCount/3;
+
+        LogUtils.LOGE(TAG, "FINAL STRING WORD COUNT: " + stringWordCountAfterDivision);
+
+        Scanner scanner = new Scanner(data);
+        String sentence = scanner.nextLine();
+        String[] words = sentence.split(" ");
+        for (String word : words) {
+            LogUtils.LOGE(TAG, "SUBTITLE: " + word);
+        }
+        scanner.close();
     }
 }

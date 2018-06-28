@@ -47,4 +47,11 @@
         <attr name="civ_shadow_color" format="color"/>
         <attr name="civ_shadow_radius" format="float"/>
     </declare-styleable>
+
+    <attr name="tagViewStyle" format="reference" />
+    <declare-styleable name="TagView">
+        <attr name="tagCornerRadius" format="dimension" />
+        <attr name="tagPadding" format="dimension" />
+        <attr name="tagUppercase" format="boolean" />
+    </declare-styleable>
 </resources>

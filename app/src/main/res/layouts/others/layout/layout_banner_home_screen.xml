@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        >
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/root_banner_view"
@@ -50,7 +49,10 @@
             android:layout_height="@dimen/height_cheep_care_banner"
             android:focusableInTouchMode="true"
             android:orientation="horizontal"
-            >
+            android:layout_marginStart="@dimen/scale_10dp"
+            android:layout_marginLeft="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginEnd="@dimen/scale_10dp">
 
             <com.cheep.cheepcare.customview.VerticalViewPager
                 android:id="@+id/view_pager_subscription_banner_images"
