@@ -50,12 +50,10 @@ public class ManageSubscriptionFragment extends BaseFragment implements
     private ManageSubscriptionAddressAdapter adapter;
     private FragmentManageSubscriptionBinding mBinding;
     private LinearLayoutManager linearLayoutManager;
-    int listPosition = 0;
     int dateDifference = 0;
 
     public static ManageSubscriptionFragment newInstance(ArrayList<AddressModel> list) {
         Bundle args = new Bundle();
-        args.putSerializable("list", list);
         ManageSubscriptionFragment fragment = new ManageSubscriptionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -94,8 +92,8 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.notification.setOnClickListener(this);
         mBinding.addressDropDowns.setOnClickListener(this);
         mBinding.addressDropUp.setOnClickListener(this);
-        //mBinding.upgradeSubscriptionBtn.setOnClickListener(this);
-       // mBinding.autoRenewalToggle.setOnClickListener(this);
+        mBinding.upgradeSubscriptionBtn.setOnClickListener(this);
+        mBinding.autoRenewalToggle.setOnClickListener(this);
         mBinding.addressDropDownsSingle.setOnClickListener(this);
         mBinding.addressDropDowns.setOnClickListener(this);
 
@@ -117,63 +115,45 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.subscriptionRecyclerView.setLayoutManager(linearLayoutManager);
         mBinding.subscriptionRecyclerView.setHasFixedSize(false);
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
-        adapter = new ManageSubscriptionAddressAdapter(addressList, 0, ManageSubscriptionFragment.this);
+        adapter = new ManageSubscriptionAddressAdapter(addressList, ManageSubscriptionFragment.this);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
     }
 
-    private void setOnlyOneAddressOnView() {
+    private void setOnlyOneAddressOnView(ManageSubscriptionModel  model) {
         mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
         mBinding.allAddressLayout.setVisibility(View.GONE);
-        int count = 0;
-        for (int i = 0; i < addressList.size(); i++) {
-            if (listPosition == count) {
-                mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(addressList.get(i).category));
-                mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(addressList.get(i).category), 0, 0, 0);
-            }
-            count++;
+        mBinding.textFullAddress.setText(model.address);
+        mBinding.textSubscriptionDuration.setText(model.packageDuration);
+        mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
+        mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
+        mBinding.textAmountPaid.setText(model.paidAmount);
+        mBinding.textPaymentMethod.setText(model.paymentType);
+        mBinding.textSubscribedOn.setText(model.startDate);
+        mBinding.textSubscriptionEndDate.setText(model.endDate);
+        if (model.isRenew.equalsIgnoreCase(Utility.YES)) {
+            mBinding.relativeAutoRenewal.setVisibility(View.VISIBLE);
+            mBinding.renewLl.setVisibility(View.GONE);
+        }else {
+            mBinding.relativeAutoRenewal.setVisibility(View.GONE);
+            mBinding.renewLl.setVisibility(View.VISIBLE);
         }
-        setAllField();
-    }
-
-    private void setAllField() {
-        int count = 0;
-        for (int i = 0; i < addressList.size(); i++) {
-            if (listPosition == count) {
-               /* mBinding.textSubscriptionDuration.setText(addressList.get(i).packageDuration);
-                mBinding.textAmountPaid.setText(addressList.get(i).paidAmount);
-                mBinding.textPaymentMethod.setText(addressList.get(i).paymentType);
-                mBinding.textSubscribedOn.setText(addressList.get(i).startDate);
-                mBinding.textSubscriptionEndDate.setText(addressList.get(i).endDate);
-
-                if (addressList.get(i).isRenew.equalsIgnoreCase(Utility.YES)) {
-                    mBinding.relativeAutoRenewal.setVisibility(View.VISIBLE);
-                    mBinding.renewLl.setVisibility(View.GONE);
-                }else {
-                    mBinding.relativeAutoRenewal.setVisibility(View.GONE);
-                    mBinding.renewLl.setVisibility(View.VISIBLE);
-                }
-                dateDifference = Utility.getDifferenceBetweenTwoDate(addressList.get(i).startDate,addressList.get(i).endDate);
-                if( dateDifference >= Utility.TEN){
-                    mBinding.renewBtn.setTextColor(getResources().getColor(R.color.dark_blue));
-                }else {
-                    mBinding.renewBtn.setTextColor(getResources().getColor(R.color.black_translucent_1));
-                }*/
-
-            }
-            count++;
+        // calculate how many date to left to from end date
+        /* if day is more than 10 then RENEW BUTTON is clickable and color will be blue
+        * other wise color will be gray and not clickable*/
+        dateDifference = Utility.getDifferenceBetweenTwoDate(model.startDate,model.endDate);
+        if( dateDifference >= Utility.TEN){
+            mBinding.renewBtn.setTextColor(getResources().getColor(R.color.dark_blue));
+        }else {
+            mBinding.renewBtn.setTextColor(getResources().getColor(R.color.black_translucent_1));
         }
-
     }
 
     // ManageSubscriptionAddressAdapter.AddressItemClickListener
     @Override
-    public void onClickItem(ArrayList<ManageSubscriptionModel> mList, int position)
+    public void onClickItem(ManageSubscriptionModel  model)
 
     {
-        this.addressList = mList;
-        listPosition = position;
-        setOnlyOneAddressOnView();
-
+        setOnlyOneAddressOnView(model);
 
     }
 
@@ -237,7 +217,7 @@ public class ManageSubscriptionFragment extends BaseFragment implements
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
                         addressList = GsonUtility.getObjectListFromJsonString(jsonData.optString(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_PACKAGE), ManageSubscriptionModel[].class);
-                        setOnlyOneAddressOnView();
+                        setOnlyOneAddressOnView(addressList.get(0));
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
