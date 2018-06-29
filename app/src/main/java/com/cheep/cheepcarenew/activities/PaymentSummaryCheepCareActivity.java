@@ -120,7 +120,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         }
 
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
-            // packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
             addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
             Log.e(TAG, "initiateUI: -------------" + addressModel.address);
 
@@ -398,19 +398,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.addressId = addressModel.address_id;
         paymentDataModel.addressAssetTypeId = addressModel.addressSizeModel.id;
 
-    }
-
-    private void checkValidation() {
-        String errorMessage = "";
-        Boolean isErrorOccurred = false;
-
-        if (cheepCode.trim().isEmpty()) {
-            errorMessage = "";
-            isErrorOccurred = true;
-        } else if (cheepMateCode.trim().isEmpty()) {
-            errorMessage = "";
-            isErrorOccurred = true;
-        }
     }
 
     private void calculateDiscountPrice() {

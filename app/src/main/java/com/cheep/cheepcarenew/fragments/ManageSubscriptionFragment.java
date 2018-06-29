@@ -30,6 +30,7 @@ import com.cheep.utils.Utility;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,13 +82,7 @@ public class ManageSubscriptionFragment extends BaseFragment implements
 
     @Override
     public void initiateUI() {
-        java.util.Date now = new Date();
-        Calendar myCal = Calendar.getInstance();
-        myCal.setTime(now);
-        myCal.add(Calendar.MONTH, +1);
-        now = myCal.getTime();
 
-        Log.i(TAG, "FUTUER DATE: "+now);
     }
 
     @Override

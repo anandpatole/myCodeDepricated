@@ -147,22 +147,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
             // get next year date
             SuperCalendar superCalendar = SuperCalendar.getInstance();
-            superCalendar.getCalendar().add(Calendar.DAY_OF_YEAR, 365);
-            String day = CalendarUtility.getDateStringWithSuffic(superCalendar.getCalendar().get(Calendar.DATE));
-            String month = superCalendar.getCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+            superCalendar.getCalendar().add(Calendar.MONTH, + Integer.parseInt(paymentDataModel.packageDuration));
+            String day = String.valueOf(superCalendar.getCalendar().get(Calendar.DATE));
+            String month = String.valueOf(superCalendar.getCalendar().get(Calendar.MONTH));
             String year = String.valueOf(superCalendar.getCalendar().get(Calendar.YEAR));
-            String date = day + " " + month + " " + year;
-
-            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, date));
-        } /*else {
-            subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
-            payableAmount = subscribedTaskDetailModel.total;
-<<<<<<< HEAD
+            String date = day + "-" + month + "-" + year;
+            String oneDayMinusFromDate = CalendarUtility.getOneDayMinusDateFromPassingDate(date);
+            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, oneDayMinusFromDate));
         }
-        mBinding.paytmAutoRenewSwitch.setSelected(true);
-        mBinding.cartAutoRenewSwitch.setSelected(true);
-=======
-        }*/
         setupActionbar();
     }
 
