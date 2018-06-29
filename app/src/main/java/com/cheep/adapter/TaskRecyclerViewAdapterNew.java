@@ -97,24 +97,24 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 
     @Override
     public int getActualItemViewType(int position) {
-        if (whichFrag == TaskFragment.TAB_PAST_TASK) {
-            if (mList.get(position).taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                return VIEW_TYPE_INDIVIDUAL;
-            } else
-                {
-                if (mList.get(position).selectedProvider != null && !TextUtils.isEmpty(mList.get(position).selectedProvider.providerId)) {
-                    return VIEW_TYPE_INDIVIDUAL;
-                } else {
-                    if (mList.get(position).taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
-                        return VIEW_TYPE_INDIVIDUAL;
-                    }
-                    return VIEW_TYPE_GROUP;
-                }
-            }
-        } else
-            {
+//        TaskDetailModel taskDetailModel = mList.get(position);
+//        if (whichFrag == TaskFragment.TAB_PAST_TASK) {
+//            if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC) && taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
+//                return VIEW_TYPE_INDIVIDUAL;
+//            } else {
+//                if (taskDetailModel.selectedProvider != null && !TextUtils.isEmpty(taskDetailModel.selectedProvider.providerId)) {
+//                    return VIEW_TYPE_INDIVIDUAL;
+//                } else {
+//                    return VIEW_TYPE_GROUP;
+//                }
+//            }
+//        } else {
+//            return VIEW_TYPE_UPCOMING;
+//        }
+        if (whichFrag == TaskFragment.TAB_PAST_TASK)
+            return VIEW_TYPE_INDIVIDUAL;
+        else
             return VIEW_TYPE_UPCOMING;
-        }
     }
 
 
@@ -346,7 +346,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.VISIBLE);
                         holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
 
-                    } else if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)) {
+                    } else if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)
+                             || model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
                         holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.VISIBLE);
@@ -398,10 +399,10 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         int pR = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingRight();
                         int pB = holder.mUpcomingTaskBinding.tvViewQuotes.getPaddingBottom();
 //                        if (model.providerCount.equals(Utility.ZERO_STRING)) {
-                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
-                            holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getString(R.string.label_awaiting_response));
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.img_grey_rounded));
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setEnabled(false);
+                        holder.mUpcomingTaskBinding.tvViewQuotes.setPadding(pL, pT, pR, pB);
 //                        } else {
 //                            int providerCount = Integer.parseInt(model.providerCount);
 //                            holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(holder.mView.getContext().getResources().getQuantityText(R.plurals.getResponseReceivedString, providerCount));

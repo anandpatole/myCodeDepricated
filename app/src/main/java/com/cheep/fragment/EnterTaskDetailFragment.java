@@ -238,7 +238,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                 updateFinalVerificationFlag();
                 Log.i("myLog", "" + isTotalVerified);
-                if (!mTaskCreationActivity.isValidationCompleted()) {
+                if (mTaskCreationActivity.isValidationCompleted()) {
                     return;
                 }
                 // additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
@@ -796,7 +796,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public void onUrgentPayNow() {
         updateFinalVerificationFlag();
         Log.i("myLog", "" + isTotalVerified);
-        if (!mTaskCreationActivity.isValidationCompleted()) {
+        if (mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
         additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
@@ -815,7 +815,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public void onOutofOfficePayNow() {
         updateFinalVerificationFlag();
         Log.i("myLog", "" + isTotalVerified);
-        if (!mTaskCreationActivity.isValidationCompleted()) {
+        if (mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
         additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;

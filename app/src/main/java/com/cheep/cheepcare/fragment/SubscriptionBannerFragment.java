@@ -34,9 +34,8 @@ public class SubscriptionBannerFragment extends BaseFragment {
     private static final String TAG = "SubscriptionBannerFragm";
     private CareCityDetail bannerImageModel;
     private FragmentSubscriptionBannerImageBinding binding;
-    SpannableString oldPrice = null, newPrice = null;
-    boolean isPriceIsZero;
-    private String firstVariable,secondVariable;
+    private SpannableString oldPrice = null, newPrice = null;
+    private StringBuilder firstVariable,secondVariable;
     private int stringWordCountAfterDivision;
 
 
@@ -99,21 +98,28 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
             /*LogUtils.LOGE(TAG, "init: " + bannerImageModel.cityName);*/
             binding.tvTitle.setText(bannerImageModel.title);
-            String subtitle = addingSubtitleWithOldAndNewPrice(bannerImageModel.subtitle);
-            if(isPriceIsZero){
-                SpannableStringBuilder ss= drawLineOnText(subtitle);
-                binding.tvSubTitle.setText(ss);
-            }else {
-                binding.tvSubTitle.setText(subtitle);
-            }
-
-            //binding.tvSubTitle.setText(subtitle);
-            binding.tvCityName.setText(bannerImageModel.cityName);
-            // set banner image
-
 
             int wordCount = getStringWordCount(bannerImageModel.subtitle);
             getStringForTwoPart(wordCount,bannerImageModel.subtitle);
+
+            binding.tvSubTitle.setText(firstVariable);
+            binding.tvSubTitleRemaining.setText(secondVariable);
+
+            if (!bannerImageModel.oldPrice.equals(Utility.ZERO_VALUE.THREE_ZERO)) {
+                oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                        , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
+                binding.tvOldPrice.setText(oldPrice);
+                binding.tvOldPrice.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvOldPrice.setVisibility(View.GONE);
+            }
+
+            newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                    , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
+            binding.tvNewPrice.setText(newPrice);
+
+            binding.tvCityName.setText(bannerImageModel.cityName);
+            // set banner image
 
 
             int resId = R.drawable.banner_mumbai;
@@ -172,31 +178,6 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
     }
 
-
-    private String addingSubtitleWithOldAndNewPrice(String subTitle) {
-        if (!bannerImageModel.oldPrice.equals(Utility.ZERO_VALUE.THREE_ZERO)) {
-            isPriceIsZero = true;
-            oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                    , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
-        } else {
-            isPriceIsZero = false;
-            oldPrice = SpannableString.valueOf("");
-        }
-        newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
-
-        return subTitle + " " + oldPrice + " " + newPrice;
-
-    }
-
-    private SpannableStringBuilder drawLineOnText(String subTitle) {
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(subTitle);
-        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-        spannableStringBuilder.setSpan(strikethroughSpan,49,57, Paint.STRIKE_THRU_TEXT_FLAG);
-        return spannableStringBuilder;
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -228,19 +209,24 @@ public class SubscriptionBannerFragment extends BaseFragment {
         }
         return  count;
     }
-
     private void getStringForTwoPart(int totalStringWordCount,String data){
 
-        stringWordCountAfterDivision = totalStringWordCount/3;
+        stringWordCountAfterDivision = totalStringWordCount * 70/100;
 
-        LogUtils.LOGE(TAG, "FINAL STRING WORD COUNT: " + stringWordCountAfterDivision);
-
-        Scanner scanner = new Scanner(data);
-        String sentence = scanner.nextLine();
-        String[] words = sentence.split(" ");
-        for (String word : words) {
-            LogUtils.LOGE(TAG, "SUBTITLE: " + word);
+        firstVariable = new StringBuilder();
+        secondVariable = new StringBuilder();
+        String[] words = data.split(" ");
+        int count=0;
+        for(int i=0; i < words.length; i++){
+            if(stringWordCountAfterDivision+1 > count){
+                firstVariable.append(words[i] +" ");
+                LogUtils.LOGE(TAG, "FIRST: " + firstVariable);
+            }else {
+                secondVariable.append(words[i] + ", ");
+                LogUtils.LOGE(TAG, "SECOND: " + secondVariable);
+            }
+            count++;
         }
-        scanner.close();
+
     }
 }
