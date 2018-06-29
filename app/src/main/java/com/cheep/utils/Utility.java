@@ -242,6 +242,9 @@ public class Utility {
     public static final int Y_RATIO = 9;
     public static final String DEBUG = "debug";
     public static final String ONLY = "only";
+    public static final String CHEEP_CARE_PACKAGE = "Cheep Care Package";
+    public static final String CHEEP_CARE_PREMIUM_PACKAGE = "Cheep Care Premium Package";
+    public static final String MONTH = "months";
 
     /*
     Home Screen Category Image Ratio

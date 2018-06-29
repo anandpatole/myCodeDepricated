@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 public class ManageSubscriptionFragment extends BaseFragment implements
         ManageSubscriptionAddressAdapter.AddressItemClickListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     public static final String TAG = "ManageSubscriptionFragment";
     private ArrayList<ManageSubscriptionModel> addressList;
@@ -82,7 +83,7 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.notification.setOnClickListener(this);
         mBinding.addressDropDowns.setOnClickListener(this);
         mBinding.addressDropUp.setOnClickListener(this);
-        mBinding.upgradeSubscriptionBtn.setOnClickListener(this);
+        //mBinding.upgradeSubscriptionBtn.setOnClickListener(this);
         mBinding.autoRenewalToggle.setOnClickListener(this);
         mBinding.addressDropDownsSingle.setOnClickListener(this);
         mBinding.addressDropDowns.setOnClickListener(this);
@@ -96,51 +97,61 @@ public class ManageSubscriptionFragment extends BaseFragment implements
 
         super.onDetach();
     }
-    private void setAllAddressOnView(){
+
+    private void setAllAddressOnView() {
         mBinding.onlyOneAddressLayout.setVisibility(View.INVISIBLE);
         mBinding.allAddressLayout.setVisibility(View.VISIBLE);
         mBinding.addressDropDowns.setVisibility(View.VISIBLE);
         mBinding.addressDropUp.setVisibility(View.GONE);
+
         linearLayoutManager = new LinearLayoutManager(mContext);
         mBinding.subscriptionRecyclerView.setLayoutManager(linearLayoutManager);
-        mBinding.subscriptionRecyclerView.setHasFixedSize(false);
+        mBinding.subscriptionRecyclerView.setHasFixedSize(true);
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
         adapter = new ManageSubscriptionAddressAdapter(addressList, ManageSubscriptionFragment.this);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
+
     }
 
-    private void setOnlyOneAddressOnView(ManageSubscriptionModel  model) {
+    private void setOnlyOneAddressOnView(ManageSubscriptionModel model) {
         mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
         mBinding.allAddressLayout.setVisibility(View.GONE);
         mBinding.textFullAddress.setText(model.address);
-        mBinding.textSubscriptionDuration.setText(model.packageDuration);
+        if(model.packageType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)){
+              mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PREMIUM_PACKAGE);
+        }else {
+             mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PACKAGE);
+        }
+        mBinding.textSubscriptionDuration.setText(model.packageDuration+" "+Utility.MONTH);
         mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
-        mBinding.textAmountPaid.setText(model.paidAmount);
-        mBinding.textPaymentMethod.setText(model.paymentType);
+
+          mBinding.textPaymentMethod.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.textPaymentMethod.getContext()
+                               , R.string.rupee_symbol_x, model.paymentType)); mBinding.textAmountPaid.setText(model.paidAmount);
+
         mBinding.textSubscribedOn.setText(model.startDate);
         mBinding.textSubscriptionEndDate.setText(model.endDate);
         if (model.isRenew.equalsIgnoreCase(Utility.YES)) {
             mBinding.relativeAutoRenewal.setVisibility(View.VISIBLE);
             mBinding.renewLl.setVisibility(View.GONE);
-        }else {
+        } else {
             mBinding.relativeAutoRenewal.setVisibility(View.GONE);
             mBinding.renewLl.setVisibility(View.VISIBLE);
         }
         // calculate how many date to left to from end date
         /* if day is more than 10 then RENEW BUTTON is clickable and color will be blue
         * other wise color will be gray and not clickable*/
-        dateDifference = Utility.getDifferenceBetweenTwoDate(model.startDate,model.endDate);
-        if( dateDifference >= Utility.TEN){
+        dateDifference = Utility.getDifferenceBetweenTwoDate(model.startDate, model.endDate);
+        if (dateDifference >= Utility.TEN) {
             mBinding.renewBtn.setTextColor(getResources().getColor(R.color.dark_blue));
-        }else {
+        } else {
             mBinding.renewBtn.setTextColor(getResources().getColor(R.color.black_translucent_1));
         }
     }
 
     // ManageSubscriptionAddressAdapter.AddressItemClickListener
     @Override
-    public void onClickItem(ManageSubscriptionModel  model)
+    public void onClickItem(ManageSubscriptionModel model)
 
     {
         setOnlyOneAddressOnView(model);
@@ -150,15 +161,15 @@ public class ManageSubscriptionFragment extends BaseFragment implements
     //View.OnClickListener
     @Override
     public void onClick(View view) {
-         switch (view.getId()){
-             case R.id.address_drop_downs_single:
-                 setAllAddressOnView();
-                 break;
-             case R.id.address_drop_downs:
-                 mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
-                 mBinding.allAddressLayout.setVisibility(View.GONE);
-                 break;
-         }
+        switch (view.getId()) {
+            case R.id.address_drop_downs_single:
+                setAllAddressOnView();
+                break;
+            case R.id.address_drop_downs:
+                mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
+                mBinding.allAddressLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
