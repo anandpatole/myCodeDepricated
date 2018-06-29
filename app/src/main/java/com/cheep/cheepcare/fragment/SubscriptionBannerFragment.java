@@ -23,6 +23,7 @@ import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
