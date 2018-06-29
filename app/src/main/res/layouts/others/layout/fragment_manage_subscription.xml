@@ -101,7 +101,7 @@
                             android:background="@drawable/rounded_rect_white"
                             android:elevation="@dimen/scale_4dp"
                             android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/subscription_recycler_view"
