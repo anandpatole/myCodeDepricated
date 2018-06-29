@@ -134,22 +134,24 @@
                         android:layout_height="match_parent"
                        >
 
-                        <com.cheep.custom_view.GridImageView
+                        <ImageView
                             android:id="@+id/gridImageView"
                             android:layout_width="@dimen/chat_width"
                             android:layout_height="@dimen/chat_width"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:layout_gravity="center"
+                          android:src="@drawable/ic_cheep_circular_icon"
                             android:layout_alignParentLeft="true" />
+
 
                         <ImageView
 
                             android:layout_width="@dimen/scale_14dp"
                             android:layout_height="@dimen/scale_14dp"
-                            android:layout_marginRight="@dimen/scale_5dp"
+                            android:layout_marginRight="@dimen/scale_9dp"
                             android:layout_alignBottom="@+id/gridImageView"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/icon_favourite_selected"
                             android:layout_alignParentRight="true" />

@@ -3,13 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
+
+
         <com.cheep.custom_view.CFTextViewRegular
             android:id="@+id/tv_sub_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/scale_5dp"
+            android:layout_marginEnd="@dimen/scale_15dp"
             android:layout_marginRight="@dimen/scale_15dp"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/scale_5dp"
+            android:paddingStart="@dimen/scale_5dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_13sp"
-            tools:text="asdasdasdasdasdasdasdasdasdasdasdasd" />
+            android:textSize="@dimen/text_size_12sp"
+            tools:text="@string/test" />
 
 </layout>
