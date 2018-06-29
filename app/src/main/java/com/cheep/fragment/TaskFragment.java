@@ -173,7 +173,8 @@ public class TaskFragment extends BaseFragment {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
         switch (event.BROADCAST_ACTION) {
             case Utility.BROADCAST_TYPE.UPDATE_FAVOURITE:
-                if (!TextUtils.isEmpty(event.isFav)) {
+                if (!TextUtils.isEmpty(event.isFav))
+                {
                     if (taskRecyclerViewAdapter != null)
                         taskRecyclerViewAdapter.updateFavStatus(event.id, event.isFav);
                 }

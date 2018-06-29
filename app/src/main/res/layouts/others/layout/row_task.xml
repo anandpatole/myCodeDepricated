@@ -93,7 +93,7 @@
                     android:isIndicator="true"
                     android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
                     android:rating="4"
-                    android:stepSize="1"/>
+                    android:stepSize="1" />
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/tvExperience"
@@ -173,7 +173,7 @@
                 android:layout_marginBottom="@dimen/scale_8dp"
                 android:layout_marginLeft="@dimen/scale_16dp"
                 android:layout_marginStart="@dimen/scale_16dp"
-                android:layout_marginTop="@dimen/scale_5dp"
+                android:layout_marginTop="@dimen/scale_15dp"
                 android:layout_toEndOf="@+id/layout_participant_counter"
                 android:layout_toRightOf="@+id/layout_participant_counter"
                 android:baselineAligned="false"
@@ -194,6 +194,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:lines="2"
+                        android:visibility="visible"
                         android:text="@string/dummy_chat"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_11sp"/>
@@ -205,7 +206,7 @@
                         android:layout_alignParentBottom="true"
 
                         android:layout_alignParentLeft="true"
-                        android:layout_marginBottom="@dimen/scale_3dp"
+                        android:layout_marginBottom="@dimen/scale_1dp"
                         android:background="@drawable/ic_subscribed_text"
                         android:paddingEnd="@dimen/scale_16dp"
                         android:paddingLeft="@dimen/scale_4dp"
@@ -258,6 +259,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/scale_5dp"
                             android:textAllCaps="false"
+                            android:layout_marginTop="@dimen/scale_8dp"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_size_14sp"
                             tools:text="123"/>
@@ -285,12 +287,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/scale_8dp"
+                            android:layout_marginTop="@dimen/scale_15dp"
                             android:background="@drawable/img_blue_rounded"
                             android:gravity="center"
                             android:paddingBottom="@dimen/scale_5dp"
                             android:paddingEnd="@dimen/scale_5dp"
                             android:paddingLeft="@dimen/scale_4dp"
+
                             android:paddingRight="@dimen/scale_5dp"
                             android:paddingStart="@dimen/scale_4dp"
                             android:paddingTop="@dimen/scale_5dp"

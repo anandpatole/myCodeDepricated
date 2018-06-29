@@ -234,7 +234,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     });
 
                     GlideUtility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
-
+//anand
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
 
                         SpannableString sName = new SpannableString(Utility.checkNonNullAndSet(model.categoryModel.catName));
@@ -367,8 +367,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 
                         holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
-                        holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
-                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(model.paymentMethod);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(context.getString(R.string.rupee_symbol_x,model.taskPaidAmount));
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
                         //discount
                         try {
