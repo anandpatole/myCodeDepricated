@@ -94,9 +94,9 @@ public class AddressCategorySelectionFragment extends BaseFragment {
                 arrayList.addAll(guestUserDetails.addressList);
             }
         }
+        addressModelArrayList = new ArrayList<>();
 
         if (!arrayList.isEmpty()) {
-            addressModelArrayList = new ArrayList<>();
             for (AddressModel addressModel : arrayList) {
                 if (addressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
                     addressModelArrayList.add(addressModel);

@@ -19,7 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -50,6 +49,7 @@ import com.cheep.databinding.FragmentTabHomeBinding;
 import com.cheep.databinding.LayoutFilterHomePopupBinding;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.interfaces.NotificationClickInteractionListener;
+import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.JobCategoryModel;
@@ -72,6 +72,7 @@ import com.cheep.utils.WebCallClass;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -332,6 +333,13 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         WebCallClass.getAdminSettings(mContext, mCommonResponseListenerAdminSetting);
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
+            WebCallClass.getProfileDetail(mContext, mCommonResponseListenerAdminSetting, new WebCallClass.GetProfileDetailResponseListener() {
+                @Override
+                public void getUserDetails(UserDetails userDetails, JSONArray jsonEmergencyContacts, ArrayList<AddressModel> addressList) {
+
+                }
+            });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

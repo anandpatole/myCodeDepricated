@@ -178,7 +178,8 @@
                                 android:id="@+id/iv_home"
                                 android:layout_width="@dimen/scale_14dp"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                                android:layout_gravity="top"
+                                android:layout_marginTop="@dimen/scale_2dp"
                                 android:src="@drawable/icon_address_home_active"/>
 
                             <com.cheep.custom_view.CFTextViewSemiBold
@@ -187,26 +188,22 @@
                                 android:layout_height="wrap_content"
                                 android:includeFontPadding="false"
                                 android:paddingLeft="@dimen/scale_7dp"
-                                android:text="@string/label_home"
+                                tools:text="@string/label_home"
                                 android:textColor="@color/splash_gradient_end"
-                                app:layout_constraintBottom_toBottomOf="@+id/view_dot"
-                                app:layout_constraintStart_toEndOf="@id/iv_home"
-                                app:layout_constraintTop_toTopOf="@+id/view_dot"/>
-
+                                android:textSize="@dimen/text_size_13sp"/>
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/tv_label_address_subscribed"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/scale_4dp"
+                                android:layout_gravity="top|start"
                                 android:layout_weight="1"
                                 android:includeFontPadding="false"
-                                android:paddingRight="@dimen/scale_12dp"
+                                android:paddingLeft="@dimen/scale_5dp"
                                 android:textColor="@color/grey_varient_17"
-                                android:textSize="@dimen/text_size_11sp"
-                                android:visibility="invisible"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/tv_address_nickname"/>
+                                android:textSize="@dimen/text_size_13sp"
+                                tools:text="zdfsdfsfsfsdf sdf sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsf"/>
+
 
                             <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/tv_change"
@@ -326,8 +323,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_15dp"
                     android:layout_marginBottom="@dimen/scale_15dp"
+                    android:layout_marginTop="@dimen/scale_15dp"
                     android:paddingLeft="@dimen/scale_10dp">
 
                     <ImageView

@@ -220,10 +220,10 @@ public class SubscriptionBannerFragment extends BaseFragment {
         for(int i=0; i < words.length; i++){
             if(stringWordCountAfterDivision+1 > count){
                 firstVariable.append(words[i] +" ");
-                LogUtils.LOGE(TAG, "FIRST: " + firstVariable);
+//                LogUtils.LOGE(TAG, "FIRST: " + firstVariable);
             }else {
                 secondVariable.append(words[i] + ", ");
-                LogUtils.LOGE(TAG, "SECOND: " + secondVariable);
+//                LogUtils.LOGE(TAG, "SECOND: " + secondVariable);
             }
             count++;
         }

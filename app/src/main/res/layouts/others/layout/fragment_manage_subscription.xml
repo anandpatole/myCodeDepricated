@@ -41,464 +41,439 @@
 
             <ImageView
                 android:id="@+id/notification"
-                android:layout_gravity="right"
                 android:layout_width="@dimen/scale_16dp"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
+                android:layout_gravity="right"
                 android:layout_marginRight="@dimen/scale_14dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/notification_icon" />
 
         </android.support.v7.widget.Toolbar>
 
-        <FrameLayout
-            android:id="@+id/fl_details_container"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white_variant_3">
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_above="@+id/bottom_frame"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="@dimen/scale_13dp"
-                    android:layout_marginRight="@dimen/scale_13dp"
-                    android:layout_marginTop="@dimen/scale_16dp"
-                    android:layout_marginBottom="@dimen/scale_5dp"
-                    android:background="@drawable/rounded_rect_white"
-                    android:elevation="@dimen/scale_2dp"
-                    android:layout_height="wrap_content">
-                    <android.support.v4.widget.NestedScrollView
-                        android:id="@+id/scrollView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none">
+                    android:layout_height="wrap_content"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical">
 
-                        <LinearLayout
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_13dp"
+                        android:layout_marginTop="@dimen/scale_17dp"
+                        android:text="Your Current Subscription"
+                        android:textColor="@color/black_variant"
+                        android:textSize="@dimen/text_size_15sp" />
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tv_cheep_care_package"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_13dp"
+                        android:layout_marginTop="@dimen/scale_25dp"
+                        android:text="Cheep Care Package"
+                        android:textColor="@color/blue_variant_4"
+                        android:textSize="@dimen/text_size_14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:id="@+id/all_address_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_marginBottom="@dimen/scale_10dp"
+                            android:layout_marginLeft="@dimen/scale_13dp"
+                            android:layout_marginRight="@dimen/scale_13dp"
+                            android:layout_marginTop="@dimen/scale_10dp"
+                            android:background="@drawable/rounded_rect_white"
+                            android:elevation="@dimen/scale_4dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/subscription_recycler_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/scale_300dp"
+                                android:nestedScrollingEnabled="false"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                            </android.support.v7.widget.RecyclerView>
+
+                            <ImageView
+                                android:id="@+id/address_drop_downs"
+                                android:layout_width="@dimen/scale_30dp"
+                                android:layout_height="@dimen/scale_30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginEnd="@dimen/scale_12dp"
+                                android:layout_marginRight="12dp"
+                                android:layout_marginTop="@dimen/scale_12dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_drop_down_arrow" />
+
+                            <ImageView
+                                android:id="@+id/address_drop_up"
+                                android:layout_width="@dimen/scale_30dp"
+                                android:layout_height="@dimen/scale_30dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginEnd="@dimen/scale_12dp"
+                                android:layout_marginRight="12dp"
+                                android:layout_marginTop="@dimen/scale_12dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_up_arrow_blue"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/only_one_address_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/scale_6dp"
+                            android:layout_marginLeft="@dimen/scale_6dp"
+                            android:layout_marginRight="@dimen/scale_6dp"
+                            android:layout_marginStart="@dimen/scale_6dp"
+                            android:visibility="visible"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="@dimen/scale_4dp"
+                            app:cardElevation="@dimen/scale_4dp"
+                            app:cardUseCompatPadding="true"
+                            card_view:cardCornerRadius="4dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/scale_4dp">
+
+                                <com.cheep.custom_view.CFTextViewSemiBold
+                                    android:id="@+id/text_address_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:drawableLeft="@drawable/icon_home_address"
+                                    android:drawablePadding="@dimen/scale_5dp"
+                                    android:drawableStart="@drawable/icon_home_address"
+                                    android:gravity="center"
+                                    android:paddingLeft="@dimen/scale_8dp"
+                                    android:paddingStart="@dimen/scale_8dp"
+                                    android:text="My sweet home"
+                                    android:textColor="@color/splash_gradient_end"
+                                    android:textSize="@dimen/text_size_11sp" />
+
+                                <com.cheep.custom_view.CFTextViewRegular
+                                    android:id="@+id/text_full_address"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginTop="@dimen/scale_3dp"
+                                    android:layout_toEndOf="@+id/text_address_category"
+                                    android:layout_toLeftOf="@+id/address_drop_downs_single"
+                                    android:layout_toRightOf="@+id/text_address_category"
+                                    android:layout_toStartOf="@+id/address_drop_downs_single"
+                                    android:ellipsize="end"
+                                    android:maxLines="@integer/freshchat_channel_desc_max_lines"
+                                    android:paddingEnd="@dimen/scale_4dp"
+                                    android:paddingLeft="@dimen/scale_4dp"
+                                    android:paddingRight="@dimen/scale_4dp"
+                                    android:paddingStart="@dimen/scale_4dp"
+                                    android:text="@string/hint_address_initials"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_size_13sp" />
+
+                                <ImageView
+                                    android:id="@+id/address_drop_downs_single"
+                                    android:layout_width="@dimen/scale_30dp"
+                                    android:layout_height="@dimen/scale_30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginEnd="@dimen/scale_12dp"
+                                    android:layout_marginRight="12dp"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/ic_drop_down_arrow" />
+                            </RelativeLayout>
+                        </android.support.v7.widget.CardView>
+
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:text="@string/subscription_duration"
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_subscription_duration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginRight="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:text="@string/amount_paid"
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_amount_paid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginRight="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:text="@string/payment_method"
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_payment_method"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginRight="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/scale_13dp"
                                 android:layout_marginTop="@dimen/scale_17dp"
-                                android:text="Your Current Subscription"
+                                android:text="@string/subscribed_on"
                                 android:textColor="@color/black_variant"
-                                android:textSize="@dimen/text_size_15sp" />
+                                android:textSize="@dimen/text_size_13sp" />
 
-                            <com.cheep.custom_view.CFTextViewSemiBold
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_subscribed_on"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginRight="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.cheep.custom_view.CFTextViewRegular
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/scale_13dp"
-                                android:layout_marginTop="@dimen/scale_25dp"
-                                android:text="Cheep Care Package"
-                                android:textColor="@color/blue_variant_4"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:text="@string/your_subscription_expires_on"
+                                android:textColor="@color/black_variant"
+                                android:textSize="@dimen/text_size_13sp" />
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:id="@+id/text_subscription_end_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/scale_13dp"
+                                android:layout_marginRight="@dimen/scale_13dp"
+                                android:layout_marginTop="@dimen/scale_17dp"
+                                android:gravity="right"
+                                android:text=""
+                                android:textColor="#FFDA0000"
+                                android:textSize="@dimen/text_size_13sp" />
+                        </RelativeLayout>
 
-                                <RelativeLayout
-                                    android:id="@+id/all_address_layout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/scale_13dp"
-                                    android:layout_marginRight="@dimen/scale_13dp"
-                                    android:layout_marginTop="@dimen/scale_10dp"
-                                    android:layout_marginBottom="@dimen/scale_10dp"
-                                    android:background="@drawable/rounded_rect_white"
-                                    android:elevation="@dimen/scale_4dp"
-                                    android:orientation="horizontal"
-                                    android:visibility="visible">
-
-                                    <android.support.v7.widget.RecyclerView
-                                        android:id="@+id/subscription_recycler_view"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                                    </android.support.v7.widget.RecyclerView>
-
-                                    <ImageView
-                                        android:id="@+id/address_drop_downs"
-                                        android:layout_width="@dimen/scale_30dp"
-                                        android:layout_height="@dimen/scale_30dp"
-                                        android:scaleType="centerInside"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentTop="true"
-                                        android:layout_marginEnd="@dimen/scale_12dp"
-                                        android:layout_marginTop="@dimen/scale_12dp"
-                                        android:src="@drawable/ic_drop_down_arrow"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginRight="12dp" />
-                                    <ImageView
-                                        android:id="@+id/address_drop_up"
-                                        android:layout_width="@dimen/scale_30dp"
-                                        android:layout_height="@dimen/scale_30dp"
-                                        android:scaleType="centerInside"
-                                        android:layout_alignParentEnd="true"
-                                        android:layout_alignParentTop="true"
-                                        android:layout_marginEnd="@dimen/scale_12dp"
-                                        android:layout_marginTop="@dimen/scale_12dp"
-                                        android:src="@drawable/ic_up_arrow_blue"
-                                        android:visibility="gone"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginRight="12dp" />
-                                </RelativeLayout>
-
-                                <android.support.v7.widget.CardView
-                                    android:id="@+id/only_one_address_layout"
-                                    android:layout_gravity="center"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    card_view:cardCornerRadius="4dp"
-                                    app:cardElevation="@dimen/scale_4dp"
-                                    app:cardBackgroundColor="@color/white"
-                                    app:cardUseCompatPadding="true"
-                                    app:cardCornerRadius="@dimen/scale_4dp"
-                                    android:layout_marginLeft="@dimen/scale_6dp"
-                                    android:layout_marginStart="@dimen/scale_6dp"
-                                    android:layout_marginRight="@dimen/scale_6dp"
-                                    android:layout_marginEnd="@dimen/scale_6dp"
-                                    android:visibility="visible">
-
-                                    <RelativeLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center_vertical"
-                                        android:layout_weight="1"
-                                        android:padding="@dimen/scale_4dp"
-                                        android:orientation="horizontal">
-
-                                        <com.cheep.custom_view.CFTextViewSemiBold
-                                            android:id="@+id/text_address_category"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:drawableLeft="@drawable/icon_home_address"
-                                            android:drawableStart="@drawable/icon_home_address"
-                                            android:drawablePadding="@dimen/scale_5dp"
-                                            android:gravity="center"
-                                            android:layout_centerVertical="true"
-                                            android:paddingLeft="@dimen/scale_8dp"
-                                            android:paddingStart="@dimen/scale_8dp"
-                                            android:text="My sweet home"
-                                            android:textColor="@color/splash_gradient_end"
-                                            android:textSize="@dimen/text_size_11sp" />
-
-                                        <com.cheep.custom_view.CFTextViewRegular
-                                            android:id="@+id/text_full_address"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
-                                            android:layout_marginTop="@dimen/scale_3dp"
-                                            android:layout_toEndOf="@+id/text_address_category"
-                                            android:layout_toLeftOf="@+id/address_drop_downs_single"
-                                            android:layout_toRightOf="@+id/text_address_category"
-                                            android:layout_toStartOf="@+id/address_drop_downs_single"
-                                            android:ellipsize="end"
-                                            android:maxLines="@integer/freshchat_channel_desc_max_lines"
-                                            android:paddingEnd="@dimen/scale_4dp"
-                                            android:paddingLeft="@dimen/scale_4dp"
-                                            android:paddingRight="@dimen/scale_4dp"
-                                            android:paddingStart="@dimen/scale_4dp"
-                                            android:text="@string/hint_address_initials"
-                                            android:textColor="@color/black"
-                                            android:textSize="@dimen/text_size_13sp" />
-
-                                        <ImageView
-                                            android:id="@+id/address_drop_downs_single"
-                                            android:layout_width="@dimen/scale_30dp"
-                                            android:layout_height="@dimen/scale_30dp"
-                                            android:layout_alignParentRight="true"
-                                            android:layout_marginEnd="@dimen/scale_12dp"
-                                            android:layout_marginRight="12dp"
-                                            android:scaleType="centerInside"
-                                            android:src="@drawable/ic_drop_down_arrow" />
-                                    </RelativeLayout>
-                                </android.support.v7.widget.CardView>
-                            </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/relative_auto_renewal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:orientation="vertical"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
                                 <RelativeLayout
+                                    android:id="@+id/auto_renewal_rl"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
 
-                                    <com.cheep.custom_view.CFTextViewRegular
-
+                                    <com.cheep.custom_view.CFTextViewSemiBold
+                                        android:id="@+id/label_auto_renewal"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:text="@string/subscription_duration"
+                                        android:layout_marginTop="@dimen/scale_34dp"
+                                        android:text="@string/auto_renewal"
                                         android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
+                                        android:textSize="@dimen/text_size_14sp" />
 
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:id="@+id/text_subscription_duration"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                    <ToggleButton
+                                        android:id="@+id/auto_renewal_toggle"
+                                        android:layout_width="@dimen/scale_40dp"
+                                        android:layout_height="@dimen/scale_18dp"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignParentEnd="true"
                                         android:layout_alignParentRight="true"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
                                         android:layout_marginRight="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:gravity="right"
-                                        android:text=""
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
+                                        android:background="@drawable/selector_switch"
+                                        android:checked="true"
+                                        android:textOff=""
+                                        android:textOn=""
+                                        android:visibility="visible" />
+
                                 </RelativeLayout>
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
+
+                                <com.cheep.custom_view.CFTextViewRegular
+
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:text="@string/amount_paid"
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:id="@+id/text_amount_paid"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginRight="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:gravity="right"
-                                        android:text=""
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-                                </RelativeLayout>
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:text="@string/payment_method"
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:id="@+id/text_payment_method"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginRight="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:gravity="right"
-                                        android:text=""
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-                                </RelativeLayout>
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:text="@string/subscribed_on"
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:id="@+id/text_subscribed_on"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginRight="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:gravity="right"
-                                        android:text=""
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:text="@string/your_subscription_expires_on"
-                                        android:textColor="@color/black_variant"
-                                        android:textSize="@dimen/text_size_13sp" />
-
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:id="@+id/text_subscription_end_date"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentRight="true"
-                                        android:layout_marginLeft="@dimen/scale_13dp"
-                                        android:layout_marginRight="@dimen/scale_13dp"
-                                        android:layout_marginTop="@dimen/scale_17dp"
-                                        android:gravity="right"
-                                        android:text=""
-                                        android:textColor="#FFDA0000"
-                                        android:textSize="@dimen/text_size_13sp" />
-                                </RelativeLayout>
-                                <RelativeLayout
-                                    android:id="@+id/relative_auto_renewal"
-                                    android:visibility="visible"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:orientation="vertical"
-                                        android:layout_height="wrap_content">
-                                        <RelativeLayout
-                                            android:id="@+id/auto_renewal_rl"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="horizontal">
-
-                                            <com.cheep.custom_view.CFTextViewSemiBold
-                                                android:id="@+id/label_auto_renewal"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginLeft="@dimen/scale_13dp"
-                                                android:layout_marginTop="@dimen/scale_34dp"
-                                                android:text="@string/auto_renewal"
-                                                android:textColor="@color/black_variant"
-                                                android:textSize="@dimen/text_size_14sp" />
-
-                                            <ToggleButton
-                                                android:id="@+id/auto_renewal_toggle"
-                                                android:layout_width="@dimen/scale_40dp"
-                                                android:layout_height="@dimen/scale_18dp"
-                                                android:layout_alignParentBottom="true"
-                                                android:layout_alignParentEnd="true"
-                                                android:layout_alignParentRight="true"
-                                                android:layout_marginRight="@dimen/scale_13dp"
-                                                android:checked="true"
-                                                android:background="@drawable/selector_switch"
-                                                android:textOff=""
-                                                android:textOn=""
-                                                android:visibility="visible" />
-
-                                        </RelativeLayout>
-                                        <com.cheep.custom_view.CFTextViewRegular
-
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="@dimen/scale_15dp"
-                                            android:layout_marginLeft="@dimen/scale_13dp"
-                                            android:layout_marginTop="@dimen/scale_10dp"
-                                            android:checked="true"
-                                            android:layout_marginRight="@dimen/scale_13dp"
-                                            android:text="@string/your_subscription_package_will_renew_automatically_on_expiry_datebvia_same_payment_method"
-                                            android:textColor="@color/black_variant"
-                                            android:textSize="@dimen/text_size_12sp" />
-                                    </LinearLayout>
-                                </RelativeLayout>
-                                <LinearLayout
-                                    android:id="@+id/renew_ll"
-                                    android:visibility="visible"
-                                    android:layout_width="match_parent"
-                                    android:orientation="vertical"
-                                    android:layout_height="wrap_content">
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:orientation="horizontal"
-                                        android:layout_marginTop="@dimen/scale_22dp"
-                                        android:layout_height="wrap_content">
-                                        <com.cheep.custom_view.CFTextViewSemiBold
-                                            android:id="@+id/renew_btn"
-                                            android:layout_width="0dp"
-                                            android:layout_height="@dimen/scale_32dp"
-                                            android:layout_marginLeft="@dimen/scale_7dp"
-                                            android:text="@string/renew"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textColor="@color/blue_variant_4"
-                                            android:layout_marginRight="@dimen/scale_14dp"
-                                            android:layout_weight="1"
-                                            android:background="@drawable/rounded_rect_blue_border"/>
-                                        <com.cheep.custom_view.CFTextViewSemiBold
-                                            android:id="@+id/upgrade_btn"
-                                            android:layout_width="0dp"
-                                            android:layout_height="@dimen/scale_32dp"
-                                            android:layout_marginRight="@dimen/scale_7dp"
-                                            android:text="@string/upgrade"
-                                            android:layout_marginLeft="@dimen/scale_14dp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textColor="@color/white"
-                                            android:layout_weight="1"
-                                            android:background="@drawable/rounded_rect_blue"
-                                            android:visibility="gone"/>
-                                    </LinearLayout>
-                                    <com.cheep.custom_view.CFTextViewRegular
-                                        android:layout_width="match_parent"
-                                        android:layout_marginTop="@dimen/scale_16dp"
-                                        android:drawableLeft="@drawable/info_icon"
-                                        android:layout_marginLeft="@dimen/scale_7dp"
-                                        android:layout_marginRight="@dimen/scale_7dp"
-                                        android:layout_marginBottom="@dimen/scale_22dp"
-                                        android:drawablePadding="@dimen/scale_5dp"
-                                        android:textSize="@dimen/text_size_12sp"
-                                        android:text="@string/by_selecting_renew_your_package_will_automatically_be_charged_from_your_saved_card_details_and_it_will_be_updated_for_the_same_duration_by_selecting_upgrade_your_current_subscription_can_either_increase_in_duration_or_you_can_switch_to_cheep_premium_care_package"
-                                        android:layout_height="wrap_content" />
-                                </LinearLayout>
+                                    android:layout_marginBottom="@dimen/scale_15dp"
+                                    android:layout_marginLeft="@dimen/scale_13dp"
+                                    android:layout_marginRight="@dimen/scale_13dp"
+                                    android:layout_marginTop="@dimen/scale_10dp"
+                                    android:checked="true"
+                                    android:text="@string/your_subscription_package_will_renew_automatically_on_expiry_datebvia_same_payment_method"
+                                    android:textColor="@color/black_variant"
+                                    android:textSize="@dimen/text_size_12sp" />
                             </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/renew_ll"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/scale_22dp"
+                                android:orientation="horizontal">
+
+                                <com.cheep.custom_view.CFTextViewSemiBold
+                                    android:id="@+id/renew_btn"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/scale_32dp"
+                                    android:layout_marginLeft="@dimen/scale_7dp"
+                                    android:layout_marginRight="@dimen/scale_14dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/rounded_rect_blue_border"
+                                    android:gravity="center_horizontal|center_vertical"
+                                    android:text="@string/renew"
+                                    android:textColor="@color/blue_variant_4" />
+
+                                <com.cheep.custom_view.CFTextViewSemiBold
+                                    android:id="@+id/upgrade_btn"
+                                    android:layout_width="0dp"
+                                    android:layout_height="@dimen/scale_32dp"
+                                    android:layout_marginLeft="@dimen/scale_14dp"
+                                    android:layout_marginRight="@dimen/scale_7dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/rounded_rect_blue"
+                                    android:gravity="center_horizontal|center_vertical"
+                                    android:text="@string/upgrade"
+                                    android:textColor="@color/white"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <com.cheep.custom_view.CFTextViewRegular
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/scale_22dp"
+                                android:layout_marginLeft="@dimen/scale_7dp"
+                                android:layout_marginRight="@dimen/scale_7dp"
+                                android:layout_marginTop="@dimen/scale_16dp"
+                                android:drawableLeft="@drawable/info_icon"
+                                android:drawablePadding="@dimen/scale_5dp"
+                                android:text="@string/by_selecting_renew_your_package_will_automatically_be_charged_from_your_saved_card_details_and_it_will_be_updated_for_the_same_duration_by_selecting_upgrade_your_current_subscription_can_either_increase_in_duration_or_you_can_switch_to_cheep_premium_care_package"
+                                android:textSize="@dimen/text_size_12sp" />
                         </LinearLayout>
-                    </android.support.v4.widget.NestedScrollView>
+                    </LinearLayout>
+
                 </LinearLayout>
 
 
-                <FrameLayout
-                    android:id="@+id/bottom_frame"
-                    android:layout_width="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginTop="@dimen/scale_10dp"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <com.cheep.custom_view.CFTextViewBold
-                        android:id="@+id/upgrade_subscription_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/scale_37dp"
-                        android:background="@color/blue_variant_4"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:text="@string/upgrade_your_subscription"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_15sp"
-                        />
-                </FrameLayout>
-
-
-            </RelativeLayout>
-
-        </FrameLayout>
-
-
+            </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
     </LinearLayout>
 </layout>

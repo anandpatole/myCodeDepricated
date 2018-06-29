@@ -68,6 +68,7 @@ public class CheepCarePaymentDataModel {
     @SerializedName("package_id")
     @Expose
     public String packageId;
+    public String packageTitle;
     @SerializedName("address_id")
     @Expose
     public String addressId;
