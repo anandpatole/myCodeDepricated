@@ -503,51 +503,21 @@ taskDetailModel.packageData=pestControlPackageDataList;
         Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.CURL_NOTIFICATION_TO_SP);
     }
 
-    /**
-     * Create Dialog which would going to show on successful completion
-     */
-    Response.ErrorListener mCallCreateTaskWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-        }
-    };
-
-
-    Response.ErrorListener mCallGetProInstaBookErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            if (mDialog != null) {
-                mDialog.dismiss();
-            }
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityTaskCreateBinding.getRoot());
-        }
-    };
 
     public boolean isValidationCompleted() {
         // Date-Time of Task
         if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhenVerified) {
             Utility.showSnackBar(getString(R.string.validate_date), mActivityTaskCreateBinding.getRoot());
-            return false;
+            return true;
         }
 
         // place of Task
         if (!mTaskCreationPagerAdapter.mEnterTaskDetailFragment.isTaskWhereVerified) {
             Utility.showSnackBar(getString(R.string.validate_address_new_task), mActivityTaskCreateBinding.getRoot());
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////Post Task [End] /////////////////////////////////////////

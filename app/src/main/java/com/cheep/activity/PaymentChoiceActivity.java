@@ -92,6 +92,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     private String additionalChargeReason = Utility.EMPTY_STRING;
     private UrgentBookingDialog ugent_dialog;
     private OutOfOfficeHoursDialog out_of_office_dialog;
+    private String startDatetime = Utility.ZERO_STRING;
 
     /**
      * this is for payment for pending amount or pay later task
@@ -99,9 +100,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
      * @param context         context of activity
      * @param taskDetailModel task detail model class
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, String startDatetime) {
         Intent intent = new Intent(context, PaymentChoiceActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
+        intent.putExtra(Utility.Extra.START_DATETIME, startDatetime);
         intent.putExtra(Utility.Extra.IS_PAY_NOW, false);
         context.startActivity(intent);
     }
@@ -184,6 +186,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 quoteAmount = Double.parseDouble(getIntent().getStringExtra(Utility.Extra.QUOTE_AMOUNT));
             }
             isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
+            startDatetime = getIntent().getStringExtra(Utility.Extra.START_DATETIME);
 
             if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
                 mBinding.llCashPayment.setVisibility(View.GONE);
@@ -296,7 +299,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         } else if (isPayNow) {
             callCreateInstaTaskBooking(paymentLog);
         } else {
-//            callPayTaskPaymentWS(paymentLog);
+            callPayTaskPaymentWS(paymentLog);
             Log.e(TAG, "onSuccessOfAnyPaymentMode: is pay now false -- call pay task payment");
         }
     }
@@ -607,7 +610,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 }
             }
         });
-       /* UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
         //Add Header parameters
 
         Map<String, String> mHeaderParams = new HashMap<>();
@@ -625,6 +628,10 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, startDatetime);
+        mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGE, taskDetailModel.paymentSummaryModel.urgentBookingCharge);
+        mParams.put(NetworkUtility.TAGS.NON_OFFICE_HOURS_CHARGE, taskDetailModel.paymentSummaryModel.nonOfficeHoursCharge);
+
 
         mParams.put(NetworkUtility.TAGS.PRO_PAYMENT_STATUS, taskDetailModel.paymentSummaryModel.proPaymentStatus);
         mParams.put(NetworkUtility.TAGS.ADDITIONAL_PENDING_AMOUNT,
@@ -639,26 +646,26 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 , mHeaderParams
                 , mParams
                 , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);*/
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
 
 
-    /* Response.Listener mCallPayTaskPaymentWSResponseListener = new Response.Listener() {
-         @Override
-         public void onResponse(Object response) {
-             hideProgressDialog();
-             String strResponse = (String) response;
-             try {
-                 JSONObject jsonObject = new JSONObject(strResponse);
-                 Log.i(TAG, "onResponse: " + jsonObject.toString());
-                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                 switch (statusCode) {
-                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
- //                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
+    Response.Listener mCallPayTaskPaymentWSResponseListener = new Response.Listener() {
+        @Override
+        public void onResponse(Object response) {
+            hideProgressDialog();
+            String strResponse = (String) response;
+            try {
+                JSONObject jsonObject = new JSONObject(strResponse);
+                Log.i(TAG, "onResponse: " + jsonObject.toString());
+                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                switch (statusCode) {
+                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        //                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
 
-                                 *//*
-                                  Update the UI Accordingly.
-                                 *//*
+                                 /*
+                        Update the UI Accordingly.
+                                 */
 
                         //Refresh UI for Paid status
 
@@ -695,7 +702,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
         }
     };
-*/
     Response.ErrorListener mCallCompleteTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -1237,7 +1243,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                     @Override
                     public void rescheduleTask(String taskId) {
-                        showDateTimePickerDialog(taskId);
+//                        showDateTimePickerDialog(taskId);
                     }
                 });
     }
@@ -1302,14 +1308,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                     additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                 } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showUrgentBookingDialog(model);
+                                        showUrgentBookingDialog(model,taskId);
                                     } else {
                                         Log.e(TAG, "onTimeSet:call direct reschedule web service");
                                         callRescheduleTaskWS(taskId);
                                     }
                                 } else if (!startDateTimeSuperCalendar.isWorkingHour(model.starttime, model.endtime)) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showOutOfOfficeHours(model);
+                                        showOutOfOfficeHours(model,taskId);
                                     } else {
                                         callRescheduleTaskWS(taskId);
                                     }
@@ -1330,7 +1336,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         timePickerDialog.show();
     }
 
-    private void showOutOfOfficeHours(AdminSettingModel model) {
+    private void showOutOfOfficeHours(AdminSettingModel model,final String taskId) {
         final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                 + getString(R.string.label_between)
                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
@@ -1338,6 +1344,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new OutOfOfficeHoursDialog.OutOfOfficeHoursListener() {
             @Override
             public void onOutofOfficePayNow() {
+                taskDetailModel.taskId = taskId;
+                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
                 PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
                 Log.e(TAG, "onOutofOfficePayNow: selectedDateTime:: " + selectedDateTime);
             }
@@ -1352,7 +1360,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         out_of_office_dialog.setCancelable(false);
     }
 
-    private void showUrgentBookingDialog(AdminSettingModel model) {
+    private void showUrgentBookingDialog(AdminSettingModel model,final String taskId) {
         final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                 + getString(R.string.label_between)
                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
@@ -1361,6 +1369,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             @Override
             public void onUrgentPayNow() {
                 Log.e(TAG, "onUrgentPayNow: selectedDateTime:: " + selectedDateTime);
+                taskDetailModel.taskId = taskId;
+                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
                 PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
             }
 

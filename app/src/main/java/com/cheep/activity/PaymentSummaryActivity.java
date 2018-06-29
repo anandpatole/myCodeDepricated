@@ -13,6 +13,8 @@ import android.view.View;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.adapter.SelectedSubServiceAdapter;
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.databinding.ActivityPaymentSummaryBinding;
 import com.cheep.model.PaymentSummaryModel;
 import com.cheep.model.TaskDetailModel;
@@ -36,7 +38,7 @@ import static com.cheep.utils.Utility.getSpannableString;
 public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
     private static final String TAG = "PaymentSummaryCheepCareActivity";
-    private ActivityPaymentSummaryBinding activityPaymentSummaryBinding;
+    private ActivityPaymentSummaryBinding mBinding;
     private TaskDetailModel taskDetailModel;
     private PaymentSummaryModel paymentSummaryModel;
     private boolean isForReschedule = false;
@@ -60,20 +62,39 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
         /*
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
-        activityPaymentSummaryBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary);
 
         initiateUI();
         setListeners();
     }
 
+    //    {
+//        "data": {
+//        "additional_paid_amount": "0",
+//        "additional_pending_amount": "0",
+//        "pro_payment_amount": "250.0",
+//        "pro_payment_status": "pending",
+//        "wallet_balance_used": "0.00",
+//        "promocode_price": "0",
+//        "non_office_hours_charge": "0.00",
+//        "urgent_booking_charge": "0.00",
+//        "extra_charge_status": "pending",
+//        "total_amount": "250",
+//        "sub_total_amount": "250",
+//        "total_amount_status": "pending"
+//    },
+//        "message": "Task Summary fetched successfully.",
+//            "status": "success",
+//            "status_code": 200
+//    }
     @Override
     protected void initiateUI() {
 
-        setSupportActionBar(activityPaymentSummaryBinding.toolbar);
+        setSupportActionBar(mBinding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            activityPaymentSummaryBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Utility.hideKeyboard(mContext);
@@ -92,24 +113,13 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             isForReschedule = getIntent().getBooleanExtra(Utility.Extra.DATA_2, false);
         }
 
-        if (isForReschedule) {
-            activityPaymentSummaryBinding.rlPayNow.setSelected(true);
-            activityPaymentSummaryBinding.rlPayNow.setEnabled(true);
-            activityPaymentSummaryBinding.rlPayLater.setSelected(true);
-            activityPaymentSummaryBinding.rlPayLater.setEnabled(true);
-
-            activityPaymentSummaryBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
-            activityPaymentSummaryBinding.tvPaynow.setVisibility(View.GONE);
-        } else {
-            activityPaymentSummaryBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-            activityPaymentSummaryBinding.tvPaynow.setVisibility(View.VISIBLE);
-        }
 
         if (taskDetailModel != null) {
+            mBinding.tvCatName.setText(taskDetailModel.categoryModel.catName);
+            mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
+
             callPaymentSummaryWS();
-//            GlideUtility.loadImageView(mContext, activityPaymentSummaryBinding.imgService, taskDetailModel.categoryModel.catImageExtras.original, R.drawable.gradient_black);
-            if (taskDetailModel.selectedProvider != null) {
-//                GlideUtility.showCircularImageViewWithColorBorder(mContext, TAG, activityPaymentSummaryBinding.imgProfile, taskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.dark_blue_variant_1, true);
+            if (!isForReschedule && taskDetailModel.selectedProvider != null) {
                 String dateTime = "";
                 if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
                     dateTime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
@@ -124,7 +134,21 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                 spannableStringBuilder.append(getSpannableString(dateTime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
                 spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
                 spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.address, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-                activityPaymentSummaryBinding.txtdesc.setText(spannableStringBuilder);
+                mBinding.txtdesc.setText(spannableStringBuilder);
+            } else {
+                // address and time UI
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+                spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+                if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
+                    spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+                    String datetime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+                    spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+                }
+                spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
+                spannableStringBuilder.append(getSpannableString(taskDetailModel.taskAddress.getAddressWithInitials(), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+
+
+                mBinding.txtdesc.setText(spannableStringBuilder);
             }
         }
 
@@ -137,29 +161,123 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
      */
 
     public void viewPaymentDetails() {
-        if (paymentSummaryModel != null) {
-            if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
-                activityPaymentSummaryBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
-            else
-                activityPaymentSummaryBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
 
-            activityPaymentSummaryBinding.txtprofee.setText(getRuppeAmount(paymentSummaryModel.proPaymentAmount));
-            activityPaymentSummaryBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
-            activityPaymentSummaryBinding.txtsubtotal.setText(getRuppeAmount(paymentSummaryModel.subTotalAmount));
-            activityPaymentSummaryBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
-//            activityPaymentSummaryBinding.txtreferraldiscount.setText(getRuppeAmount(paymentSummaryModel.walletBalanceUsed));
-//            activityPaymentSummaryBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promoCodePrice));
+        AdminSettingModel adminSettingModel = PreferenceUtility.getInstance(this).getAdminSettings();
+        double catPrice = 0;
+        double additionalCharges = 0;
+        double nonWorkingHourCharges = 0;
+        double urgentBookingcharges = 0;
+        double subTotal = 0;
+        double total = 0;
+        if (paymentSummaryModel != null) {
+            if (isForReschedule) {
+
+
+                try {
+                    catPrice = Double.valueOf(taskDetailModel.categoryModel.catPrice);
+
+                    mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
+                    mBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+                    mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catPrice));
+
+                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
+                        mBinding.rladditionalOutOfOffice.setVisibility(View.VISIBLE);
+                        mBinding.viewOutOfOffice.setVisibility(View.VISIBLE);
+                        mBinding.rladditionalUrgentBooking.setVisibility(View.GONE);
+                        mBinding.viewUrgentBooking.setVisibility(View.GONE);
+                        mBinding.txtOutOfOfficeCharges.setText(getRuppeAmount(adminSettingModel.additionalChargeForSelectingSpecificTime));
+                        nonWorkingHourCharges = Double.valueOf(adminSettingModel.additionalChargeForSelectingSpecificTime);
+                    } else {
+                        mBinding.rladditionalOutOfOffice.setVisibility(View.GONE);
+                        mBinding.viewOutOfOffice.setVisibility(View.GONE);
+                        mBinding.rladditionalUrgentBooking.setVisibility(View.VISIBLE);
+                        mBinding.viewUrgentBooking.setVisibility(View.VISIBLE);
+                        mBinding.txtUrgentBookingCharges.setText(getRuppeAmount(adminSettingModel.additionalChargeForSelectingSpecificTime));
+                        urgentBookingcharges = Double.valueOf(adminSettingModel.additionalChargeForSelectingSpecificTime);
+                    }
+                    mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
+
+                    if (paymentSummaryModel.proPaymentStatus.equalsIgnoreCase(Utility.PAYMENT_STATUS.PENDING)) {
+                        subTotal += catPrice;
+                    }
+                    subTotal += additionalCharges;
+                    subTotal += nonWorkingHourCharges;
+                    subTotal += urgentBookingcharges;
+                    total = subTotal;
+
+                    mBinding.txtsubtotal.setText(getRuppeAmount(String.valueOf(subTotal)));
+                    mBinding.txttotal.setText(getRuppeAmount(String.valueOf(total)));
+                    paymentSummaryModel.subTotalAmount = String.valueOf(subTotal);
+                    paymentSummaryModel.totalAmount = String.valueOf(total);
+
+                    mBinding.tvPaynow.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catPrice));
+                mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
+
+                nonWorkingHourCharges = Double.parseDouble(paymentSummaryModel.nonOfficeHoursCharge);
+                urgentBookingcharges = Double.parseDouble(paymentSummaryModel.urgentBookingCharge);
+
+                if (nonWorkingHourCharges > 0) {
+                    mBinding.rladditionalOutOfOffice.setVisibility(View.VISIBLE);
+                    mBinding.viewOutOfOffice.setVisibility(View.VISIBLE);
+                    mBinding.rladditionalUrgentBooking.setVisibility(View.GONE);
+                    mBinding.viewUrgentBooking.setVisibility(View.GONE);
+                    mBinding.txtOutOfOfficeCharges.setText(getRuppeAmount(paymentSummaryModel.nonOfficeHoursCharge));
+                } else {
+                    mBinding.rladditionalOutOfOffice.setVisibility(View.GONE);
+                    mBinding.viewOutOfOffice.setVisibility(View.GONE);
+                    mBinding.rladditionalUrgentBooking.setVisibility(View.VISIBLE);
+                    mBinding.viewUrgentBooking.setVisibility(View.VISIBLE);
+                    mBinding.txtUrgentBookingCharges.setText(getRuppeAmount(paymentSummaryModel.urgentBookingCharge));
+                }
+                if (paymentSummaryModel.proPaymentStatus.equalsIgnoreCase(Utility.PAYMENT_STATUS.PENDING)) {
+                    subTotal += catPrice;
+                }
+                if (paymentSummaryModel.extraChargeStatus.equalsIgnoreCase(Utility.PAYMENT_STATUS.PENDING)) {
+                    subTotal += nonWorkingHourCharges;
+                    subTotal += urgentBookingcharges;
+                }
+                subTotal += additionalCharges;
+                subTotal += nonWorkingHourCharges;
+                subTotal += urgentBookingcharges;
+                total = subTotal;
+
+                if (paymentSummaryModel.totalAmountStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING)) {
+                    mBinding.txtsubtotal.setText(getRuppeAmount(String.valueOf(subTotal)));
+                    mBinding.txttotal.setText(getRuppeAmount(String.valueOf(total)));
+                    mBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
+                    mBinding.tvPaynow.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    mBinding.txtsubtotal.setText(getRuppeAmount(paymentSummaryModel.subTotalAmount));
+                    mBinding.txttotal.setText(getRuppeAmount(paymentSummaryModel.totalAmount));
+                    mBinding.textLabelTotalPaid.setText(getString(R.string.label_total_paid));
+
+                    paymentSummaryModel.subTotalAmount = String.valueOf(subTotal);
+                    paymentSummaryModel.totalAmount = String.valueOf(total);
+                    mBinding.tvPaynow.setVisibility(View.GONE);
+                }
+
+//            mBinding.txtreferraldiscount.setText(getRuppeAmount(paymentSummaryModel.walletBalanceUsed));
+//            mBinding.txtpromocode.setText(getRuppeAmount(paymentSummaryModel.promoCodePrice));
 
 //            if (getQuotePriceInInteger(paymentSummaryModel.walletBalanceUsed) > 0) {
-//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
-//                activityPaymentSummaryBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
+//                mBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+//                mBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_referral);
 //            } else if (getQuotePriceInInteger(paymentSummaryModel.promoCodePrice) > 0) {
-//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
-//                activityPaymentSummaryBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
+//                mBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
+//                mBinding.txtPromoCodeDisclaimer.setText(R.string.disclaimer_promo_code);
 //            } else {
-//                activityPaymentSummaryBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
+//                mBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
 //            }
 
+            }
         }
     }
 
@@ -180,6 +298,15 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setListeners() {
+        mBinding.tvPaynow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                taskDetailModel.paymentSummaryModel = paymentSummaryModel;
+                taskDetailModel.taskTotalPendingAmount = paymentSummaryModel.totalAmount;
+                String startDatetime = isForReschedule ? taskDetailModel.taskStartdate : Utility.ZERO_STRING;
+                PaymentChoiceActivity.newInstance(mContext, taskDetailModel, startDatetime);
+            }
+        });
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////// Payment Detail Detail Service[Start] ////////////////////////////////////////////////
@@ -190,7 +317,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
      */
     private void callPaymentSummaryWS() {
         if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, activityPaymentSummaryBinding.getRoot());
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
 
@@ -234,12 +361,12 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), activityPaymentSummaryBinding.getRoot());
+                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, activityPaymentSummaryBinding.getRoot());
+                        Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
@@ -264,7 +391,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             // Close Progressbar
             showProgressBar(false);
 
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), activityPaymentSummaryBinding.getRoot());
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
     };
@@ -274,8 +401,8 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void showProgressBar(boolean flag) {
-        activityPaymentSummaryBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
-        activityPaymentSummaryBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
+        mBinding.progress.setVisibility(flag ? View.VISIBLE : View.GONE);
+        mBinding.lnRoot.setVisibility(flag ? View.GONE : View.VISIBLE);
     }
 
     @Override

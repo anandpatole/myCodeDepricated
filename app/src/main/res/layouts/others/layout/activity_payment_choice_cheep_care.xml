@@ -250,7 +250,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/bg_auto_renew_text"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/tv_paytm_auto_renewal"
@@ -361,7 +362,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/bg_auto_renew_text"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
                             <com.cheep.custom_view.CFTextViewRegular
                                 android:id="@+id/tv_card_auto_renewal"

@@ -206,8 +206,6 @@ public class HomeActivity extends BaseAppCompatActivity
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 // Redirecting the user to Quote Screen
                 TaskSummaryForMultiCatActivity.getInstance(mContext, bundle.getString(TASK_ID));
-//                TaskSummaryActivity.getInstance(mContext, bundle.getString(TASK_ID));
-//                HireNewJobActivity.newInstance(mContext, taskID, spUserId);
             } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
                 // Do Nothing as we just need to redirect the user to Home screen
             } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_CREATE)) {
@@ -510,18 +508,13 @@ public class HomeActivity extends BaseAppCompatActivity
                     || Utility.TASK_STATUS.DISPUTED.equalsIgnoreCase(taskDetailModel.taskStatus)
                     || Utility.TASK_STATUS.ELAPSED.equalsIgnoreCase(taskDetailModel.taskStatus)) {
             } else {
-//                HireNewJobActivity.newInstance(mContext, taskDetailModel, false);
-//                TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel);
-//                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
                 TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel.taskId);
             }
         } else {
-//            JobSummaryActivity.newInstance(mContext, taskDetailModel, taskDetailModel.selectedProvider);
             if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
                 TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskDetailModel.taskId);
             else
                 TaskSummaryForMultiCatActivity.getInstance(mContext, taskDetailModel.taskId);
-//                TaskSummaryActivity.getInstance(mContext, taskDetailModel.taskId);
         }
     }
 

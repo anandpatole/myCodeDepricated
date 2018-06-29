@@ -819,6 +819,7 @@ public class Utility {
         String COMPLETED = "completed";
         String PENDING= "pending";
         String FAILED = "failed";
+        String PAID = "paid";
     }
 
     public interface TASK_STATUS {
