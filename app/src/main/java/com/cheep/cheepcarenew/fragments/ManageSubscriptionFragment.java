@@ -2,7 +2,6 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,17 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.cheepcarenew.adapters.ManageSubscriptionAddressAdapter;
 import com.cheep.cheepcarenew.model.ManageSubscriptionModel;
 import com.cheep.databinding.FragmentManageSubscriptionBinding;
@@ -31,7 +22,6 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.LogUtils;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
