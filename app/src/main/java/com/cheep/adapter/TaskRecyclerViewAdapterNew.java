@@ -356,8 +356,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
 
                         holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(R.string.label_pro_will_be_assigned_shortly);
-                        holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
-                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(model.paymentMethod);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(context.getString(R.string.rupee_symbol_x, model.taskPaidAmount));
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
                     } else {
