@@ -21,22 +21,17 @@ import java.util.Collections;
  */
 
 public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<ManageSubscriptionAddressAdapter.ViewHolder> {
+
     private ArrayList<ManageSubscriptionModel> mList;
-    private String selected = "";
-    int flag;
     AddressItemClickListener addressItemClickListener;
 
     public interface AddressItemClickListener {
-        void onClickItem(ArrayList<ManageSubscriptionModel> mList, int position);
+        void onClickItem(ManageSubscriptionModel model);
     }
 
-    public ManageSubscriptionAddressAdapter(ArrayList<ManageSubscriptionModel> mList, int flag, AddressItemClickListener listener) {
-        if (mList != null)
-            this.mList = mList;
-        else
-            this.mList = new ArrayList<>();
+    public ManageSubscriptionAddressAdapter(ArrayList<ManageSubscriptionModel> mList,AddressItemClickListener listener) {
 
-        this.flag = flag;
+        this.mList = mList;
         this.addressItemClickListener = listener;
     }
 
@@ -51,7 +46,7 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
         if (position == (getItemCount() - 1)) {
             holder.mRowAddressBinding.dividers.setVisibility(View.GONE);
         }
-        final ManageSubscriptionModel model = mList.get(holder.getAdapterPosition());
+        final ManageSubscriptionModel model = mList.get(position);
 
         holder.mRowAddressBinding.textFullAddress.setText(model.address);
         holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
@@ -59,9 +54,8 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
         holder.mRowAddressBinding.frontLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Collections.swap(mList, 0, position);
-                addressItemClickListener.onClickItem(mList, position);
+                //Collections.swap(mList, 0, position);
+                addressItemClickListener.onClickItem(getItem(position));
             }
         });
     }
@@ -69,6 +63,10 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public ManageSubscriptionModel getItem(int position) {
+        return mList.get(position);
     }
 
 
