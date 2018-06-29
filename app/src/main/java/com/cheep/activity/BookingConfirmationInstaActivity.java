@@ -38,6 +38,7 @@ import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.MessageEvent;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -158,8 +159,28 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
                         subServiceTotal = Double.valueOf(taskDetailModel.catPrice);
                     } else {
-                        mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
-                        subServiceTotal = 0;
+                        int remainingCount = 0;
+                        for (SubServiceDetailModel.PackageData packageData : taskDetailModel.packageData) {
+                            if (packageData != null && packageData.address_id.equalsIgnoreCase(taskDetailModel.taskAddress.address_id)) {
+                                try {
+
+                                    remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        if(remainingCount <= 0)
+                        {
+                            mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.catPrice)));
+                            subServiceTotal = Double.valueOf(taskDetailModel.catPrice);
+                        }
+                        else
+                            {
+                            mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
+                            subServiceTotal = 0;
+                        }
                     }
                 } else {
                     mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));

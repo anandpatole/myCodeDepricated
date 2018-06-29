@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/home_screen_category_image_inner_margin"
                 android:layout_marginTop="@dimen/home_screen_category_image_inner_margin"
-
                 android:src="@drawable/ic_subscribed_text_big"/>
 
             <LinearLayout
@@ -75,17 +74,45 @@
                         android:textSize="@dimen/text_size_18sp"/>
                 </LinearLayout>
 
-                <com.cheep.custom_view.CFTextViewSemiBold
-                    android:id="@+id/tvBook"
-                    android:layout_width="@dimen/home_screen_book_button_width"
-                    android:layout_height="@dimen/home_screen_book_button_height"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:background="@drawable/rounded_rect_blue"
-                    android:gravity="center"
-                    android:padding="@dimen/scale_6dp"
-                    android:text="@string/label_book"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_11sp"/>
+                    android:orientation="vertical">
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_old_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/strike"
+                        android:text="@string/price"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_12sp"/>
+
+                    <com.cheep.custom_view.CFTextViewBold
+                        android:id="@+id/tv_new_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/price"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14sp"
+                        android:layout_marginBottom="@dimen/scale_2dp"/>
+
+                    <com.cheep.custom_view.CFTextViewSemiBold
+                        android:id="@+id/tvBook"
+                        android:layout_width="@dimen/home_screen_book_button_width"
+                        android:layout_height="@dimen/home_screen_book_button_height"
+                        android:background="@drawable/rounded_rect_blue"
+                        android:gravity="center"
+                        android:padding="@dimen/scale_6dp"
+                        android:text="@string/label_book"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_11sp"/>
+
+                </LinearLayout>
+
 
                 <!--<com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_jobs_count"

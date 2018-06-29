@@ -117,6 +117,18 @@ public class SelectSubCategoryFragment extends BaseFragment implements WebCallCl
         } else {
             mTaskCreationActivity.showPostTaskButton(true, true);
         }
+
+
+        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+            if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
+showHideToolTip();
+            }
+            else
+            {
+                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     @SuppressLint("StringFormatMatches")
@@ -162,23 +174,34 @@ public class SelectSubCategoryFragment extends BaseFragment implements WebCallCl
     @Override
     public void volleyError(VolleyError error) {
         hideProgressDialog();
+
+        if(dialog!=null) {
+            dialog.dismiss();
+        }
     }
 
     @Override
     public void showSpecificMessage(String message) {
         hideProgressDialog();
+        if(dialog!=null) {
+            dialog.dismiss();
+        }
     }
 
     @Override
     public void forceLogout() {
         hideProgressDialog();
-
+        if(dialog!=null) {
+            dialog.dismiss();
+        }
     }
 
     @Override
     public void getNeedHelp() {
         hideProgressDialog();
-        dialog.dismiss();
+        if(dialog!=null) {
+            dialog.dismiss();
+        }
 
     }
 

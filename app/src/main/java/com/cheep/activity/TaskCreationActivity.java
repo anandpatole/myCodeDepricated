@@ -381,7 +381,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
 
         taskDetailModel.subCatList = mTaskCreationPagerAdapter.mSelectSubCategoryFragment.getSubCatList();
-
+taskDetailModel.packageData=pestControlPackageDataList;
         if (mJobCategoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
             if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
                 if (taskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {

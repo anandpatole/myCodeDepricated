@@ -61,8 +61,11 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +125,8 @@ public class Utility {
     public static final String SUBSCRIBE = "SUBSCRIBE";
     public static final String RENEW_SUBSCRIPTION = "RENEW_SUBSCRIPTION";
     public static final String TYPE_OF_PACKAGE = "packageType";
+    public static String YES = "yes";
+    public static int TEN = 10;
 
     //Date Formats
 
@@ -236,6 +241,7 @@ public class Utility {
     public static final int X_RATIO = 16;
     public static final int Y_RATIO = 9;
     public static final String DEBUG = "debug";
+    public static final String ONLY = "only";
 
     /*
     Home Screen Category Image Ratio
@@ -629,8 +635,8 @@ public class Utility {
         String DATA = "DATA";
         String IS_FIRST_TIME = "isFirstTime";
         String DATA_2 = "DATA_2";
-        String DATA_4 = "DATA_4";
         String DATA_3 = "DATA_3";
+        String DATA_4 = "DATA_4";
         String PASSWORD = "password";
         String SELECTED_IMAGE_PATH = "selectedImagePath";
         String CORRECT_OTP = "correctOTP";
@@ -1239,4 +1245,43 @@ public class Utility {
         return spannableString;
     }
 
+    public static int  getDifferenceBetweenTwoDate(String startDate, String endDate) {
+        Date date1 = null;
+        Date date2 = null;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
+        try {
+             date1 = simpleDateFormat.parse(startDate);
+             date2 = simpleDateFormat.parse(endDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //milliseconds
+        long different = date2.getTime() - date1.getTime();
+
+        LogUtils.LOGD("ManageSubscription","startDate : " + startDate);
+        LogUtils.LOGD("ManageSubscription","endDate : " + endDate);
+        LogUtils.LOGD("ManageSubscription","different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        LogUtils.LOGD("","REMAINING DAY:"+ elapsedDays);
+
+        return (int)elapsedDays;
+    }
 }

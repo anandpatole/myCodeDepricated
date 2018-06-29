@@ -19,7 +19,6 @@ import com.cheep.activity.AddMoneyActivity;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
-import com.cheep.activity.SubscriptionActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcare.model.CareCityDetail;
@@ -437,7 +436,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-       // mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
+        // mParams.put(NetworkUtility.TAGS.CART_DETAIL, cartDetail);
         //mParams.put(NetworkUtility.TAGS.SUBS_ID.toLowerCase(), subsId);
         mParams.put(NetworkUtility.TAGS.IS_RENEW, isSubscription);
 
@@ -568,8 +567,6 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             PAYTM_STEP = PAYTM_SEND_OTP;
         }
     }
-
-
 
 
     /**
@@ -809,10 +806,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
         if (PAYTM_STEP == PAYTM_SEND_OTP) {
             SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount), mBinding.paytmAutoRenewSwitch.isSelected());
-        } else if (mBinding.paytmAutoRenewSwitch.isSelected()) {
+        }
+        //this is commented because subscription is remove temporary -giteeka
+        /*else if (mBinding.paytmAutoRenewSwitch.isSelected()) {
             SubscriptionActivity.newInstance(mContext, String.valueOf(payableAmount), paytmUserDetail.paytmAccessToken,
                     paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId);
-        } else {
+        }*/
+        else {
             switch (PAYTM_STEP) {
                 case PAYTM_ADD_MONEY:
                     AddMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,

@@ -36,6 +36,7 @@ import com.cheep.dialogs.OutOfOfficeHoursDialog;
 import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -499,23 +500,134 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         updateTaskVerificationFlags();
                                     }
                                 } else {
-                                    if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                                + getString(R.string.label_between)
-                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
-                                        updateTaskVerificationFlags();
-                                    } else {
-                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
-                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
-                                        Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
-                                        updateTaskVerificationFlags();
+
+                                    if (mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+                                        int remainingCount = 0;
+                                        for (SubServiceDetailModel.PackageData packageData : mTaskCreationActivity.pestControlPackageDataList) {
+                                            if (packageData != null && packageData.address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
+                                                try {
+
+                                                    remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                        if (remainingCount <= 0)
+                                        {
+                                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                                if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+
+
+                                                    //    Utility.showSnackBar(getString(R.string.can_only_start_task_after_3_hours, "3"), mFragmentEnterTaskDetailBinding.getRoot());
+                                                    // mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                                    // mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                            + getString(R.string.label_between)
+                                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+
+
+                                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                                    updateTaskVerificationFlags();
+                                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
+                                                    ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                                    ugent_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
+                                                    ugent_dialog.setCancelable(false);
+                                                    return;
+                                                }
+                                            } else {
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                                Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                                updateTaskVerificationFlags();
+                                                return;
+
+                                            }
+//                            }
+                                            try {
+                                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                                    if (isTimeBetweenTwoTime(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_SS))) {
+                                                        String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                                + getString(R.string.label_between)
+                                                                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                                        mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                                        updateTaskVerificationFlags();
+                                                        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+                                                        out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, EnterTaskDetailFragment.this);
+                                                        out_of_office_dialog.show(getFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+                                                        out_of_office_dialog.setCancelable(false);
+                                                        return;
+                                                    }
+                                                } else {
+                                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                                    mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                                    Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                                    updateTaskVerificationFlags();
+                                                    return;
+                                                }
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                        + getString(R.string.label_between)
+                                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                                updateTaskVerificationFlags();
+                                            } else {
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                                Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                                updateTaskVerificationFlags();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                        + getString(R.string.label_between)
+                                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                                updateTaskVerificationFlags();
+                                            } else {
+                                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                                mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                                Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                                updateTaskVerificationFlags();
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                                            String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                                    + getString(R.string.label_between)
+                                                    + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setText(selectedDateTime);
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.VISIBLE);
+                                            updateTaskVerificationFlags();
+                                        } else {
+                                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+                                            mFragmentEnterTaskDetailBinding.textTaskWhen.setVisibility(View.GONE);
+                                            Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
+                                            updateTaskVerificationFlags();
+                                        }
                                     }
                                 }
-                            } else {
+                            }
+                            else {
 
                                 if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                     if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {

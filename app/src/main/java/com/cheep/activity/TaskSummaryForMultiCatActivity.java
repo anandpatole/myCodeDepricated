@@ -176,7 +176,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         setProSection();
 
         //set uploaded media
-        setUpMediaUI();
+      //  setUpMediaUI();
 
         //set task when
         setTaskWhen();
@@ -203,6 +203,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     }
 
     private void setProSection() {
+        mTaskDetailModel.selectedProvider.userName="ANAND";
         // Setup First section whether SP is final or not
         if (mTaskDetailModel.selectedProvider != null && !TextUtils.isEmpty(mTaskDetailModel.selectedProvider.providerId)) {
             // Provider is final.
@@ -237,7 +238,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
                 }
             });
+            // Manage UI Based on Status
+            updateUIBasedOnTaskStatus();
 
+            // Manage UnreadBadge count for Task
+            manageUnreadBadgeCounterForChat();
+
+//anand
             // Name of Provider
             mBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 
@@ -249,6 +256,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                 sVerified.setSpan(new RoundedBackgroundSpan(ContextCompat.getColor(this, R.color.splash_gradient_end), ContextCompat.getColor(this, R.color.white), 0), 0, sVerified.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 mBinding.textProviderName.setText(TextUtils.concat(sName, " ", sVerified));
             }
+
+
             // Distanceof Provider
             mBinding.textAddressKmAway.setText(mTaskDetailModel.selectedProvider.distance + getString(R.string.label_away));
 
@@ -303,11 +312,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             });
             showChatCallButton(true);
 
-            // Manage UI Based on Status
-            updateUIBasedOnTaskStatus();
 
-            // Manage UnreadBadge count for Task
-            manageUnreadBadgeCounterForChat();
         } else {
             // Setup First section whether SP is final or not
             // Provider is not final yet, so need to show the nearby available.

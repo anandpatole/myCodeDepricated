@@ -23,17 +23,20 @@ import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
+import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class SubscriptionBannerFragment extends BaseFragment {
 
     private static final String TAG = "SubscriptionBannerFragm";
     private CareCityDetail bannerImageModel;
     private FragmentSubscriptionBannerImageBinding binding;
-    SpannableString oldPrice = null, newPrice = null;
-    boolean isPriceIsZero;
+    private SpannableString oldPrice = null, newPrice = null;
+    private StringBuilder firstVariable,secondVariable;
+    private int stringWordCountAfterDivision;
 
 
     public ArrayList<CareCityDetail> cheepCareBannerModels;
@@ -83,7 +86,6 @@ public class SubscriptionBannerFragment extends BaseFragment {
     }
 
     private void init() {
-
         if (bannerImageModel != null) {
             Glide.with(mContext)
                     .load(R.drawable.gif_cheep_care_unit)
@@ -96,17 +98,29 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
             /*LogUtils.LOGE(TAG, "init: " + bannerImageModel.cityName);*/
             binding.tvTitle.setText(bannerImageModel.title);
-            String subtitle = addingSubtitleWithOldAndNewPrice(bannerImageModel.subtitle);
-            if(isPriceIsZero){
-                SpannableStringBuilder ss= drawLineOnText(subtitle);
-                binding.tvSubTitle.setText(ss);
-            }else {
-                binding.tvSubTitle.setText(subtitle);
+
+            int wordCount = getStringWordCount(bannerImageModel.subtitle);
+            getStringForTwoPart(wordCount,bannerImageModel.subtitle);
+
+            binding.tvSubTitle.setText(firstVariable);
+            binding.tvSubTitleRemaining.setText(secondVariable);
+
+            if (!bannerImageModel.oldPrice.equals(Utility.ZERO_VALUE.THREE_ZERO)) {
+                oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                        , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
+                binding.tvOldPrice.setText(oldPrice);
+                binding.tvOldPrice.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvOldPrice.setVisibility(View.GONE);
             }
 
-            //binding.tvSubTitle.setText(subtitle);
+            newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
+                    , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
+            binding.tvNewPrice.setText(newPrice);
+
             binding.tvCityName.setText(bannerImageModel.cityName);
             // set banner image
+
 
             int resId = R.drawable.banner_mumbai;
             switch (bannerImageModel.citySlug) {
@@ -164,31 +178,6 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
     }
 
-
-    private String addingSubtitleWithOldAndNewPrice(String subTitle) {
-        if (!bannerImageModel.oldPrice.equals(Utility.ZERO_VALUE.THREE_ZERO)) {
-            isPriceIsZero = true;
-            oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                    , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
-        } else {
-            isPriceIsZero = false;
-            oldPrice = SpannableString.valueOf("");
-        }
-        newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
-
-        return subTitle + " " + oldPrice + " " + newPrice;
-
-    }
-
-    private SpannableStringBuilder drawLineOnText(String subTitle) {
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(subTitle);
-        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-        spannableStringBuilder.setSpan(strikethroughSpan,49,57, Paint.STRIKE_THRU_TEXT_FLAG);
-        return spannableStringBuilder;
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -205,5 +194,39 @@ public class SubscriptionBannerFragment extends BaseFragment {
     public void onDetach() {
 //        Log.d(TAG, "onDetach() called");
         super.onDetach();
+    }
+
+    private int getStringWordCount(String data){
+        int count = 1;
+
+        for (int i = 0; i < data.length() - 1; i++)
+        {
+            if ((data.charAt(i) == ' ') && (data.charAt(i + 1) != ' '))
+            {
+                count++;
+
+            }
+        }
+        return  count;
+    }
+    private void getStringForTwoPart(int totalStringWordCount,String data){
+
+        stringWordCountAfterDivision = totalStringWordCount * 70/100;
+
+        firstVariable = new StringBuilder();
+        secondVariable = new StringBuilder();
+        String[] words = data.split(" ");
+        int count=0;
+        for(int i=0; i < words.length; i++){
+            if(stringWordCountAfterDivision+1 > count){
+                firstVariable.append(words[i] +" ");
+                LogUtils.LOGE(TAG, "FIRST: " + firstVariable);
+            }else {
+                secondVariable.append(words[i] + ", ");
+                LogUtils.LOGE(TAG, "SECOND: " + secondVariable);
+            }
+            count++;
+        }
+
     }
 }
