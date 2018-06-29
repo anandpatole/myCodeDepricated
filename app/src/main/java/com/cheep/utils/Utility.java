@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RatingBar;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.cheep.utils.SuperCalendar.SuperFormatter;
@@ -245,7 +247,8 @@ public class Utility {
     public static final String CHEEP_CARE_PACKAGE = "Cheep Care Package";
     public static final String CHEEP_CARE_PREMIUM_PACKAGE = "Cheep Care Premium Package";
     public static final String MONTH = "months";
-    public static final String PAYMENT_METHOD = "HDFC";
+    public static final String PAYMENT_TYPE_IS_PAYU = "payu";
+    public static final String HDFC = "HDFC";
 
     /*
     Home Screen Category Image Ratio
@@ -1288,4 +1291,41 @@ public class Utility {
 
         return (int)elapsedDays;
     }
+    // like 23th jun 2018
+    public static String getDate(String dateFromServer){
+        Date stringToDate = new Date();
+        String [] date=null;
+        String readableDate=null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
+        try {
+            stringToDate = simpleDateFormat.parse(dateFromServer);
+            SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
+            String DateToStr = format.format(stringToDate);
+
+            date = DateToStr.split(" ");
+            readableDate = getDayNumberSuffix(Integer.parseInt(date[0]));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return date[0]+readableDate+" "+date[1]+" "+date[2];
+    }
+
+    private static String getDayNumberSuffix(int day) {
+        if (day >= 11 && day <= 13) {
+            return "th";
+        }
+        switch (day % 10) {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+
 }

@@ -106,8 +106,7 @@
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/subscription_recycler_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/scale_300dp"
-                                android:nestedScrollingEnabled="false"
+                                android:layout_height="wrap_content"
                                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                             </android.support.v7.widget.RecyclerView>
@@ -251,7 +250,6 @@
                             android:orientation="horizontal">
 
                             <com.cheep.custom_view.CFTextViewRegular
-
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/scale_13dp"
@@ -269,7 +267,7 @@
                                 android:layout_marginRight="@dimen/scale_13dp"
                                 android:layout_marginTop="@dimen/scale_17dp"
                                 android:gravity="right"
-                                android:text=""
+                                android:text="20"
                                 android:textColor="@color/black_variant"
                                 android:textSize="@dimen/text_size_13sp" />
                         </RelativeLayout>
