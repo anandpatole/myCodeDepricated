@@ -34,8 +34,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
     private static final String TAG = "SubscriptionBannerFragm";
     private CareCityDetail bannerImageModel;
     private FragmentSubscriptionBannerImageBinding binding;
-    SpannableString oldPrice = null, newPrice = null;
-    boolean isPriceIsZero;
+    private SpannableString oldPrice = null, newPrice = null;
     private StringBuilder firstVariable,secondVariable;
     private int stringWordCountAfterDivision;
 
