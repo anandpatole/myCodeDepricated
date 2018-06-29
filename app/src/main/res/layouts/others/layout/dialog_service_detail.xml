@@ -86,7 +86,7 @@
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginStart="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_8dp"
-                    android:text="@string/dummy_long_desc" />
+                    tools:text="@string/dummy_long_desc" />
 
             </ScrollView>
 

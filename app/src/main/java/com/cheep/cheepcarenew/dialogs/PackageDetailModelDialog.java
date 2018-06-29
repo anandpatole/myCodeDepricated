@@ -179,13 +179,15 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(getContext()).getXAPIKey());
+        Map<String, String> mBodyParams = new HashMap<>();
+        mBodyParams.put(NetworkUtility.TAGS.MSG_TYPE, Utility.DETAIL_MSG_TYPE.PACKAGE);
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_BADGE_MESSAGE
                 , mCallGetCityCareDetailsWSErrorListener
                 , mCallGetCityCareDetailsWSResponseListener
                 , mHeaderParams
-                , null
+                , mBodyParams
                 , null);
 
         Volley.getInstance(getContext()).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_BADGE_MESSAGE);
