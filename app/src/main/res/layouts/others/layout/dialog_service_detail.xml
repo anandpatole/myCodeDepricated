@@ -24,9 +24,10 @@
                     android:id="@+id/imge1"
                     android:layout_width="@dimen/scale_70dp"
                     android:layout_height="@dimen/scale_80dp"
-                    android:layout_marginLeft="@dimen/scale_10dp"
+                    android:layout_marginLeft="@dimen/scale_40dp"
+                    android:layout_marginRight="@dimen/scale_5dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/bird_pro_clock"/>
+                    android:src="@drawable/satisfaction"/>
 
 
 

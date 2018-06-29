@@ -249,7 +249,7 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '27.1.1'
+    supportLibVer = '27+'
     gsonLibVer = '2.7'
     playServiceVer = '15.0.1'
     firebaseServiceVer = '11.8.0'
@@ -335,7 +335,7 @@ dependencies {
 //    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     implementation 'com.facebook.android:facebook-android-sdk:4.23.0'
 
-    implementation 'com.android.support:support-v4:27.1.1'
+ //   implementation 'com.android.support:support-v4:27.1.1'
     implementation "com.android.support:cardview-v7:$supportLibVer"
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     implementation 'me.relex:circleindicator:1.2.2@aar'
