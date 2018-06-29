@@ -395,9 +395,8 @@ public class PaymentDetailsActivity extends BaseAppCompatActivity {
             mActivityPaymentDetailBinding.tvPayNow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    payPendingAmount = true;
                     taskDetailModel.paymentSummaryModel = paymentSummaryModel;
-                    PaymentChoiceActivity.newInstance(mContext, taskDetailModel);
+                    PaymentChoiceActivity.newInstance(mContext, taskDetailModel,Utility.ZERO_STRING);
                 }
             });
         }

@@ -19,7 +19,7 @@ public class NetworkUtility {
 
         // Endpoints
 
-        public static final String GET_RELATIONSHIP_LIST=BASE_URL+"customers/profile/getRelationshipList";
+        public static final String GET_RELATIONSHIP_LIST = BASE_URL + "customers/profile/getRelationshipList";
         public static final String LOGIN = BASE_URL + "customers/auth/cheep_login";
         public static final String LOGOUT = BASE_URL + "customers/profile/logout";
         public static final String FRESHCHAT_RESTORE_ID = BASE_URL + "customers/profile/add_restoreId";
@@ -27,7 +27,7 @@ public class NetworkUtility {
         public static final String SEND_OTP = BASE_URL + "customers/auth/send_otp_to_number";
         public static final String VERIFY_OTP = BASE_URL + "customers/auth/verify_otp_code";
         public static final String PROFILE = BASE_URL + "customers/profile/details";
-        public static final String NEED_HELP=BASE_URL+"customers/category/needHelpForCategory";
+        public static final String NEED_HELP = BASE_URL + "customers/category/needHelpForCategory";
         public static final String FORG0T_PASSWORD = BASE_URL + "customers/auth/forgot_password";
         public static final String FAQS = BASE_URL + "customers/page_content/faqs";
         public static final String PAGE_CONTENT = BASE_URL + "customers/page_content";
@@ -322,8 +322,8 @@ public class NetworkUtility {
         String ADDRESS_INITIALS = "address_initials";
         String ADDRESS = "address";
         String CATEGORY = "category";
-        String  OUT_OF_OFFICE_HOURS_MSG="msg";
-        String  URGENT_BOOKING_MSG="msg";
+        String OUT_OF_OFFICE_HOURS_MSG = "msg";
+        String URGENT_BOOKING_MSG = "msg";
         String PASSWORD = "password";
         String LAT = "lat";
         String LNG = "lng";
@@ -399,8 +399,8 @@ public class NetworkUtility {
         String REPORT_ABUSE = "report_abuse";
         String CHEEPCODE = "cheepcode";
         String TRANSACTION_ID = "txnid";
-String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
-       String URGENT_BOOKING_CHARGES ="urgent_booking_charge";
+        String OUT_OF_OFFICE_CHARGES = "non_office_hours_charge";
+        String URGENT_BOOKING_CHARGES = "urgent_booking_charge";
         String REASON = "reason";
         String MONTHLY_SAVED_TOTAL = "monthly_saved_total";
         String TOTAL_EARNED = "total_earned";
@@ -514,22 +514,24 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String DETAIL = "detail";
         String CAT_NAME = "cat_name";
         String HOME = "home";
-        String OFFICE= "office";
+        String OFFICE = "office";
 
-        String REVIEW_BY_ME="review_by_me";
-        String RESTORE_ID="restore_id";
+        String REVIEW_BY_ME = "review_by_me";
+        String RESTORE_ID = "restore_id";
 
-        String IS_RENEW= "is_renew";
-        String ASSET_TYPE_ID= "asset_type_id";
+        String IS_RENEW = "is_renew";
+        String ASSET_TYPE_ID = "asset_type_id";
 
 
-        String TEXT= "text";
-        String CATEGORY_TIP= "category_tip";
+        String TEXT = "text";
+        String CATEGORY_TIP = "category_tip";
 
         String FEATURE_LIST = "feature_list";
         String PRICE_LIST = "price_list";
         String PACKAGE_DATA = "packageData";
-        String CAT_PRICE= "cat_price";
+        String CAT_PRICE = "cat_price";
+        String URGENT_BOOKING_CHARGE = "urgent_booking_charge";
+        String NON_OFFICE_HOURS_CHARGE = "non_office_hours_charge";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
@@ -648,7 +650,8 @@ String OUT_OF_OFFICE_CHARGES="non_office_hours_charge";
         String TECH_CARE = "techcare";
         String APPLIANCE_CARE = "appliancecare";
     }
-    public interface PACKAGE_DETAIL_TYPE{
+
+    public interface PACKAGE_DETAIL_TYPE {
         String premium = "premium";
         String normal = "normal";
     }

@@ -31,7 +31,6 @@ import android.widget.TimePicker;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.adapter.SelectedSubCatSummaryAdapter;
 import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
@@ -313,20 +312,20 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             // Setup First section whether SP is final or not
             // Provider is not final yet, so need to show the nearby available.
             updateUIBasedOnTaskStatus();
-            if (mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
-                mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
-                mBinding.lnProviderProfileSection.setVisibility(View.GONE);
-                mBinding.rlUnknownPro.setVisibility(View.GONE);
-                // Update Task Status
-               // mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
-                updateSPImageStacks(mTaskDetailModel.profile_img_arr);
-            } else {
+//            if (mTaskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
+//                mBinding.lnResponseReceived.setVisibility(View.VISIBLE);
+//                mBinding.lnProviderProfileSection.setVisibility(View.GONE);
+//                mBinding.rlUnknownPro.setVisibility(View.GONE);
+//                // Update Task Status
+//               // mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
+//                updateSPImageStacks(mTaskDetailModel.profile_img_arr);
+//            } else {
                 mBinding.lnResponseReceived.setVisibility(View.GONE);
                 mBinding.lnProviderProfileSection.setVisibility(View.GONE);
                 mBinding.rlUnknownPro.setVisibility(View.VISIBLE);
                 // Update Task Status
 //                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
-            }
+//            }
 
             // Hide Payment Summary textview
             mBinding.textViewPaymentSummary.setVisibility(View.GONE);
@@ -433,7 +432,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.textTaskWhere2.setVisibility(View.GONE);
         }
 
-        mBinding.textTaskWhereAddress.setText(mTaskDetailModel.taskAddress.address);
+        mBinding.textTaskWhereAddress.setText(mTaskDetailModel.taskAddress.getAddressWithInitials());
         mBinding.textTaskWhereAddress.setOnClickListener(mOnClickListener);
     }
 

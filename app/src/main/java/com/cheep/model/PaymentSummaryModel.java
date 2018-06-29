@@ -49,6 +49,36 @@ public class PaymentSummaryModel {
     @Expose
     public String totalAmountStatus;
 
+    //    {
+//        "data": {
+//        "additional_paid_amount": "0",
+//        "additional_pending_amount": "0",
+//        "pro_payment_amount": "250.0",
+//        "pro_payment_status": "pending",
+//        "wallet_balance_used": "0.00",
+//        "promocode_price": "0",
+//        "non_office_hours_charge": "0.00",
+//        "urgent_booking_charge": "0.00",
+//        "extra_charge_status": "pending",
+//        "total_amount": "250",
+//        "sub_total_amount": "250",
+//        "total_amount_status": "pending"
+//    },
+//        "message": "Task Summary fetched successfully.",
+//            "status": "success",
+//            "status_code": 200
+//    }
+
+    @SerializedName("non_office_hours_charge")
+    @Expose
+    public String nonOfficeHoursCharge;
+    @SerializedName("urgent_booking_charge")
+    @Expose
+    public String urgentBookingCharge;
+    @SerializedName("extra_charge_status")
+    @Expose
+    public String extraChargeStatus;
+
 
     public class TaskUserCategory {
 

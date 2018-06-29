@@ -145,13 +145,13 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="@dimen/scale_8dp"
-                        android:src="@drawable/ic_tick"
                        />
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/tv_label_category"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
+                        android:src="@drawable/ic_tick"
                         android:paddingRight="@dimen/scale_24dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp"

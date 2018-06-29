@@ -133,10 +133,9 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         // Enable Step Three Unverified state
         setTaskState(STEP_THREE_UNVERIFIED);
 
-        double subTotal = 0;
-        double subServiceTotal = 0;
-        double subServiceTotalWithGST = 0;
-        double additionalCharge = 0;
+        double subTotal;
+        double subServiceTotal;
+        double additionalCharge;
         // address and time UI
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
@@ -166,7 +165,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvLabelCategoryPrices.setText(getString(R.string.free));
                     subServiceTotal = 0;
                 }
-                /////////////
+
                 if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                     mBinding.tvPaynow.setVisibility(View.GONE);
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
@@ -780,7 +779,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void rescheduleTask(String taskId) {
-                        showDateTimePickerDialog(taskId);
+//                        showDateTimePickerDialog(taskId);
                     }
                 });
     }
@@ -844,14 +843,14 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                                     additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                 } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showUrgentBookingDialog(model);
+                                        showUrgentBookingDialog(model, taskId);
                                     } else {
                                         Log.e(TAG, "onTimeSet:call direct reschedule web service");
                                         callRescheduleTaskWS(taskId);
                                     }
                                 } else if (!startDateTimeSuperCalendar.isWorkingHour(model.starttime, model.endtime)) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showOutOfOfficeHours(model);
+                                        showOutOfOfficeHours(model, taskId);
                                     } else {
                                         callRescheduleTaskWS(taskId);
                                     }
@@ -872,7 +871,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         timePickerDialog.show();
     }
 
-    private void showOutOfOfficeHours(AdminSettingModel model) {
+    private void showOutOfOfficeHours(AdminSettingModel model, final String taskId) {
         final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                 + getString(R.string.label_between)
                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
@@ -880,6 +879,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         OutOfOfficeHoursDialog out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new OutOfOfficeHoursDialog.OutOfOfficeHoursListener() {
             @Override
             public void onOutofOfficePayNow() {
+                taskDetailModel.taskId = taskId;
+                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
                 PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
                 Log.e(TAG, "onOutofOfficePayNow: selectedDateTime:: " + selectedDateTime);
             }
@@ -894,7 +895,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         out_of_office_dialog.setCancelable(false);
     }
 
-    private void showUrgentBookingDialog(AdminSettingModel model) {
+    private void showUrgentBookingDialog(AdminSettingModel model, final String taskId) {
         final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                 + getString(R.string.label_between)
                 + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
@@ -903,6 +904,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
             @Override
             public void onUrgentPayNow() {
                 Log.e(TAG, "onUrgentPayNow: selectedDateTime:: " + selectedDateTime);
+                taskDetailModel.taskId = taskId;
+                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
                 PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
             }
 
