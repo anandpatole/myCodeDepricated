@@ -72,7 +72,9 @@
                 android:layout_width="@dimen/chat_profile_layout_width"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/img_profile"
                     android:layout_width="@dimen/chat_width"
@@ -83,7 +85,16 @@
                     android:src="@drawable/ic_cheep_circular_icon"
                     tools:ignore="ContentDescription"/>
 
+    <ImageView
 
+        android:layout_width="@dimen/scale_14dp"
+        android:layout_height="@dimen/scale_14dp"
+        android:layout_alignEnd="@+id/img_profile"
+        android:src="@drawable/icon_favourite_selected"
+        android:layout_marginTop="@dimen/scale_32dp"
+        android:visibility="visible"
+        android:layout_alignRight="@+id/img_profile" />
+</RelativeLayout>
                 <RatingBar
                     android:id="@+id/rating_bar"
                     android:layout_width="wrap_content"

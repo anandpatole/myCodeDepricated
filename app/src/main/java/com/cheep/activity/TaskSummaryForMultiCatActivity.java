@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SelectedSubServiceAdapter;
+import com.cheep.adapter.SubServiceSummaryAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
 import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
@@ -372,7 +373,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.textCategory.setText(mTaskDetailModel.categoryModel.catName);
         if(mTaskDetailModel.subCatList!=null) {
             mBinding.recyclerViewSubCategory.setLayoutManager(new LinearLayoutManager(this));
-            mBinding.recyclerViewSubCategory.setAdapter(new SelectedSubServiceAdapter(mTaskDetailModel.subCatList));
+            mBinding.recyclerViewSubCategory.setAdapter(new SubServiceSummaryAdapter(mTaskDetailModel.subCatList));
         }
        // mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(mTaskDetailModel.subCatList));
         mBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
@@ -432,8 +433,16 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         //Set Subscribed yes/no
         if(!mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
             mBinding.textTaskWhere2.setVisibility(View.VISIBLE);
-            mBinding.textTaskWhere2.setText(mTaskDetailModel.taskAddress.is_subscribe);
-        } else {
+            if(mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
+            {
+                mBinding.textTaskWhere2.setText(getString(R.string.sub_cheep_care));
+            }
+            else
+            {
+                mBinding.textTaskWhere2.setText(getString(R.string.sub_cheep_premium));
+            }
+        } else
+            {
             mBinding.textTaskWhere2.setVisibility(View.GONE);
         }
 

@@ -622,13 +622,13 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mBinding.lnResponseReceived.setVisibility(View.GONE);
             mBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
 
-            // Show Payment Summary textview
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+     //anand       // Show Payment Summary textview
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
                 s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
 
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            mBinding.textPaid.setVisibility(View.GONE);
             mBinding.textPaid.setText("(" + s + ")");
 
 
@@ -912,13 +912,15 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+       //anand
+             mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
@@ -929,8 +931,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -962,13 +965,15 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // Cancellation Reason
             mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -981,8 +986,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
 //            mBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // Cancellation Reason
             mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -996,8 +1002,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             // Reschedule request desc
             mBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -1020,8 +1027,9 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
         //Task's Reschedule request got cancelled
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            mBinding.textPaid.setVisibility(View.GONE);
 
             mBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
 

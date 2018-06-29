@@ -21,7 +21,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_160dp"
+                    android:layout_height="@dimen/scale_120dp"
                     android:background="@color/white">
 
                     <ImageView
@@ -61,7 +61,7 @@
                             android:gravity="center"
                             android:lines="1"
                             android:maxLines="1"
-                            android:padding="@dimen/scale_10dp"
+                            android:paddingTop="@dimen/scale_5dp"
                             android:singleLine="true"
                             android:text="@string/label_service_summary"
                             android:textAllCaps="false"
@@ -84,21 +84,22 @@
                         android:id="@+id/text_category_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/scale_20dp"
+                        android:layout_gravity="center_horizontal"
+
                         android:background="@android:color/transparent"
                         android:gravity="center"
                         android:lines="1"
+
                         android:textColor="@color/white"
-                        android:textSize="@dimen/toolbar_title_text_size"
-                        tools:text="" />
+                        android:textSize="@dimen/text_size_16sp"
+                        tools:text="ssdsdsds" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_task_status_top"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:layout_marginTop="@dimen/scale_5dp"
                         android:background="@drawable/background_task_status_top"
                         android:gravity="center"
                         android:lines="1"
@@ -106,7 +107,7 @@
                         android:paddingLeft="@dimen/scale_8dp"
                         android:paddingRight="@dimen/scale_8dp"
                         android:paddingTop="@dimen/scale_3dp"
-                        android:text=""
+                        android:text="xsdsdsdsd"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_14sp" />
                 </LinearLayout>
@@ -770,14 +771,14 @@
                         android:background="@color/transparent"
                         android:gravity="start"
                         android:paddingBottom="@dimen/scale_24dp"
-                        android:paddingLeft="@dimen/scale_40dp"
+                        android:paddingLeft="@dimen/scale_44dp"
                         android:paddingRight="@dimen/scale_16dp"
                         android:paddingTop="@dimen/scale_8dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey_dark_color_2"
                         android:textSize="@dimen/text_size_12sp"
                         android:visibility="visible"
-                        tools:text="" />
+                        tools:text="12tttt" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tv_confirm_availability"

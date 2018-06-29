@@ -213,9 +213,9 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mUpcomingTaskBinding.tvLiveFeed.setVisibility(View.GONE);
                 }
 
-
-                holder.mUpcomingTaskBinding.gridImageView.clear();
-                holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
+//anand
+                //holder.mUpcomingTaskBinding.gridImageView.clear();
+                // holder.mUpcomingTaskBinding.gridImageView.createWithUrls(getURIListFromStringList(model.profile_img_arr));
 
 
                 if (model.selectedProvider != null && !TextUtils.isEmpty(model.selectedProvider.providerId)) {
@@ -347,7 +347,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
 
                     } else if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK)
-                             || model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
+                            || model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
                         holder.mUpcomingTaskBinding.layoutIndividualProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutGroupProfile.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.layoutProNotFound.setVisibility(View.VISIBLE);
@@ -356,8 +356,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.GONE);
 
                         holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(R.string.label_pro_will_be_assigned_shortly);
-                        holder.mUpcomingTaskBinding.textPaidPrice.setText(Utility.EMPTY_STRING);
-                        holder.mUpcomingTaskBinding.textPaidLabel.setText(Utility.EMPTY_STRING);
+                        holder.mUpcomingTaskBinding.textPaidPrice.setText(model.paymentMethod);
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(context.getString(R.string.rupee_symbol_x, model.taskPaidAmount));
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvDiscount.setVisibility(View.GONE);
                     } else {
@@ -369,7 +369,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mUpcomingTaskBinding.tvViewTask.setVisibility(View.GONE);
                         holder.mUpcomingTaskBinding.tvViewQuotes.setVisibility(View.VISIBLE);
                         holder.mUpcomingTaskBinding.textPaidPrice.setText(model.paymentMethod);
-                        holder.mUpcomingTaskBinding.textPaidLabel.setText(context.getString(R.string.rupee_symbol_x,model.taskPaidAmount));
+                        holder.mUpcomingTaskBinding.textPaidLabel.setText(context.getString(R.string.rupee_symbol_x, model.taskPaidAmount));
                         holder.mUpcomingTaskBinding.tvSubscribed.setVisibility(View.GONE);
                         //discount
                         try {
@@ -556,7 +556,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             jobCategoryModel.catId = model.categoryModel.catId;
                             jobCategoryModel.catName = model.categoryModel.catName;
                             jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
-
+                            jobCategoryModel.isSubscribed=model.categoryModel.isSubscribed;
+                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
                             bannerImageModel = null;
                         }
                         listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
@@ -782,7 +783,8 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             jobCategoryModel.catId = model.categoryModel.catId;
                             jobCategoryModel.catName = model.categoryModel.catName;
                             jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
-
+                            jobCategoryModel.isSubscribed=Utility.BOOLEAN.YES;
+                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
                             bannerImageModel = null;
                         }
                         listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);

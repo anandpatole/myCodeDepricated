@@ -14,7 +14,8 @@
     <string name="label_dont_have_ac_signup">"Don't have an account?"</string>
     <string name="label_signup">Sign Up</string>
     <string name="label_add_photo">Add Photo</string>
-
+    <string name="sub_cheep_care">. Subscribed Under Cheep Care</string>
+    <string name="sub_cheep_premium">. Subscribed Under Cheep Premium</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -49,7 +50,7 @@
     <string name="label_english">English</string>
     <string name="label_hindi">Hindi</string>
     <string name="tab_home">Home</string>
-    <string name="tab_my_task">My Tasks</string>
+    <string name="tab_my_task">My Services</string>
     <string name="tab_me">Me</string>
     <string name="tab_chat">Chat</string>
     <string name="tab_alert">Alert</string>
@@ -68,7 +69,7 @@
     <string name="label_send_otp_again">"Not received the code? Click here!"</string>
     <string name="label_chat">Chat</string>
     <string name="label_can_wait">Can Wait</string>
-    <string name="label_my_task">My Tasks</string>
+    <string name="label_my_task">My Services</string>
     <string name="label_takleef_bata_ke_nahin_aati">Takleef bata ke nahin aati!</string>
     <string name="label_out_of_office_hours_info">We understand that emergencies can happen anytime and that is why we offer an \'Emergency Service\' during late hours. This will cost you only ₹%3s. Thank you</string>
     <string name="label_upcoming_tasks">Upcoming</string>
