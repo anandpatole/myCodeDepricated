@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,14 @@ import com.cheep.utils.Utility;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ManageSubscriptionFragment extends BaseFragment implements
@@ -74,7 +81,13 @@ public class ManageSubscriptionFragment extends BaseFragment implements
 
     @Override
     public void initiateUI() {
+        java.util.Date now = new Date();
+        Calendar myCal = Calendar.getInstance();
+        myCal.setTime(now);
+        myCal.add(Calendar.MONTH, +1);
+        now = myCal.getTime();
 
+        Log.i(TAG, "FUTUER DATE: "+now);
     }
 
     @Override
@@ -117,20 +130,25 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
         mBinding.allAddressLayout.setVisibility(View.GONE);
         mBinding.textFullAddress.setText(model.address);
-        if(model.packageType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)){
-              mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PREMIUM_PACKAGE);
-        }else {
-             mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PACKAGE);
+        if (model.packageType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+            mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PREMIUM_PACKAGE);
+        } else {
+            mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PACKAGE);
         }
-        mBinding.textSubscriptionDuration.setText(model.packageDuration+" "+Utility.MONTH);
+        mBinding.textSubscriptionDuration.setText(model.packageDuration + " " + Utility.MONTH);
         mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
-         mBinding.textPaymentMethod.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.textPaymentMethod.getContext()
-                               , R.string.rupee_symbol_x, model.paymentType)); mBinding.textAmountPaid.setText(model.paidAmount);
+        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, model.paidAmount));
 
-        mBinding.textSubscribedOn.setText(model.startDate);
-        mBinding.textSubscriptionEndDate.setText(model.endDate);
+        if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(model.paymentType)) {
+            mBinding.textPaymentMethod.setText(Utility.HDFC);
+        } else {
+           mBinding.textPaymentMethod.setText(model.paymentType);
+        }
+
+        mBinding.textSubscribedOn.setText(Utility.getDate(model.startDate)); // grt date like 23th jun 208
+        mBinding.textSubscriptionEndDate.setText(Utility.getDate(model.endDate));
         if (model.isRenew.equalsIgnoreCase(Utility.YES)) {
             mBinding.relativeAutoRenewal.setVisibility(View.VISIBLE);
             mBinding.renewLl.setVisibility(View.GONE);
