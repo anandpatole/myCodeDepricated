@@ -427,6 +427,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.DSA_CODE, paymentDataModel.dsaCode);
         mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
         mParams.put(NetworkUtility.TAGS.PACKAGE_ID, String.valueOf(paymentDataModel.packageId));
+        mParams.put(NetworkUtility.TAGS.PACKAGE_TITLE, String.valueOf(paymentDataModel.packageTitle));
         mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(paymentDataModel.addressId));
         mParams.put(NetworkUtility.TAGS.ASSET_TYPE_ID, String.valueOf(paymentDataModel.addressAssetTypeId));
         //mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));

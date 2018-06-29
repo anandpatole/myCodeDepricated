@@ -716,10 +716,16 @@ public class Utility {
         String SILVER = "3";
         String BRONZE = "4";
     }
+
     public interface ZERO_VALUE {
         String ONE_ZERO = "0";
         String TWO_ZERO = "0.0";
         String THREE_ZERO = "0.00";
+    }
+
+    public interface DETAIL_MSG_TYPE {
+        String PACKAGE = "package";
+        String CATEGORY = "category";
     }
 
     public interface FILTER_TYPES {
@@ -821,7 +827,7 @@ public class Utility {
         String PAYMENT_INITIATED = "payment_initiated";//not using it
         String PROCESSING = "processing";//not using it
         String COMPLETED = "completed";
-        String PENDING= "pending";
+        String PENDING = "pending";
         String FAILED = "failed";
         String PAID = "paid";
     }
@@ -1171,7 +1177,7 @@ public class Utility {
         });
     }
 
-    public static void onSuccessfulInstaBookingTaskCompletion(final Context context, JSONObject jsonObject,TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener listener) {
+    public static void onSuccessfulInstaBookingTaskCompletion(final Context context, JSONObject jsonObject, TaskConfirmedCCInstaBookDialog.TaskConfirmActionListener listener) {
 //        Utility.showToast(context, context.getString(R.string.label_task_created_successfully));
         TaskDetailModel taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), TaskDetailModel.class);
         String dateTime = "";
@@ -1183,7 +1189,7 @@ public class Utility {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime,taskDetailModel.taskId);
+        TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime, taskDetailModel.taskId);
         taskConfirmedCCInstaBookDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
         // TODO : commented code for nor this chat module will be added when pro will accepts from market place
         //-- by gieeka
@@ -1252,14 +1258,14 @@ public class Utility {
         return spannableString;
     }
 
-    public static int  getDifferenceBetweenTwoDate(String startDate, String endDate) {
+    public static int getDifferenceBetweenTwoDate(String startDate, String endDate) {
         Date date1 = null;
         Date date2 = null;
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
         try {
-             date1 = simpleDateFormat.parse(startDate);
-             date2 = simpleDateFormat.parse(endDate);
+            date1 = simpleDateFormat.parse(startDate);
+            date2 = simpleDateFormat.parse(endDate);
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1267,9 +1273,9 @@ public class Utility {
         //milliseconds
         long different = date2.getTime() - date1.getTime();
 
-        LogUtils.LOGD("ManageSubscription","startDate : " + startDate);
-        LogUtils.LOGD("ManageSubscription","endDate : " + endDate);
-        LogUtils.LOGD("ManageSubscription","different : " + different);
+        LogUtils.LOGD("ManageSubscription", "startDate : " + startDate);
+        LogUtils.LOGD("ManageSubscription", "endDate : " + endDate);
+        LogUtils.LOGD("ManageSubscription", "different : " + different);
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -1287,9 +1293,9 @@ public class Utility {
 
         long elapsedSeconds = different / secondsInMilli;
 
-        LogUtils.LOGD("","REMAINING DAY:"+ elapsedDays);
+        LogUtils.LOGD("", "REMAINING DAY:" + elapsedDays);
 
-        return (int)elapsedDays;
+        return (int) elapsedDays;
     }
     // like 23th jun 2018
     public static String getDate(String dateFromServer){

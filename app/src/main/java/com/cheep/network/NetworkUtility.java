@@ -496,6 +496,7 @@ public class NetworkUtility {
         String IS_PURCHASED = "is_purchased";
         String IS_SAME_PACKAGE_TYPE = "is_same_package_type";
         String PACKAGE_ID = "package_id";
+        String PACKAGE_TITLE = "package_title";
         String PACKAGE_TYPE = "package_type";
         String ADDRESS_ID = "address_id";
         String PACKAGE_DURATION = "package_duration";
@@ -534,6 +535,7 @@ public class NetworkUtility {
         String URGENT_BOOKING_CHARGE = "urgent_booking_charge";
         String NON_OFFICE_HOURS_CHARGE = "non_office_hours_charge";
         String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
+        String MSG_TYPE= "msg_type";
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;
