@@ -81,7 +81,13 @@ public class ManageSubscriptionFragment extends BaseFragment implements
 
     @Override
     public void initiateUI() {
+        java.util.Date now = new Date();
+        Calendar myCal = Calendar.getInstance();
+        myCal.setTime(now);
+        myCal.add(Calendar.MONTH, +1);
+        now = myCal.getTime();
 
+        Log.i(TAG, "FUTUER DATE: "+now);
     }
 
     @Override
@@ -133,9 +139,7 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
-       /* mBinding.textAmountPaid.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.textAmountPaid.getContext()
-                , R.string.rupee_symbol_x, model.paidAmount));*/
-        mBinding.textAmountPaid.setText(model.paidAmount);
+        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, model.paidAmount));
 
         if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(model.paymentType)) {
             mBinding.textPaymentMethod.setText(Utility.HDFC);
