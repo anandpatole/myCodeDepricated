@@ -133,9 +133,8 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
         mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
 
-       /* mBinding.textAmountPaid.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.textAmountPaid.getContext()
-                , R.string.rupee_symbol_x, model.paidAmount));*/
-        mBinding.textAmountPaid.setText(model.paidAmount);
+        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, model.paidAmount));
+//        mBinding.textAmountPaid.setText(model.paidAmount);
 
         if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(model.paymentType)) {
             mBinding.textPaymentMethod.setText(Utility.HDFC);
