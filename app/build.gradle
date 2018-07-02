@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.29" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.30" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -164,6 +164,9 @@ android {
         }
 
         live {
+
+
+
             versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("STAGING_BASE_URL"))
             buildConfigField("String", "BASE_URL_API", getProperty("STAGING_BASE_URL_API"))
