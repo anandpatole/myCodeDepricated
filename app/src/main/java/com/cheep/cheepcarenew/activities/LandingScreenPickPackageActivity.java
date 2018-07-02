@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,11 +172,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
-        /*// Start cheep care animations
-        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
-        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
 
         mBinding.tvCityName.setText(mCity.cityName);
+
+        final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.cheep_care_value));
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, 0, 5, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
+        mBinding.tvCheepCare.setText(sb);
 
         callGetCityLandingCareDetailWS();
 
@@ -212,7 +216,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         int resId = R.drawable.emoji_mic;
         switch (mCity.citySlug) {
             case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
-                resId = R.drawable.emoji_thumbs_up;
+                resId = R.drawable.emoji_hand;
                 break;
             case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
                 resId = R.drawable.emoji_mustache;
@@ -243,18 +247,16 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             if(i == 0){
                 spannableOne = new SpannableStringBuilder(mCityLandingPageModel.careCityDetail.landingScreenTitle1);
                 spannableOne.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
-                /*Drawable drawable = mContext.getResources().getDrawable(R.drawable.emoji_heart);
-                drawable.setBounds(20, 0, 0, 0);*/
                 ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
                 spannableOne.setSpan(spanThumb, spannableOne.length() - 1
-                        , spannableOne.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        , spannableOne.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }else if( i==1)
             {
                 spannableTwo = new SpannableStringBuilder(spannableOne);
                 spannableTwo.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
                 ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
                 spannableTwo.setSpan(spanThumb, spannableTwo.length() - 1
-                        , spannableTwo.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        , spannableTwo.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
             }
             else if( i==2)
@@ -263,7 +265,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 spannableThree.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
                 ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
                 spannableThree.setSpan(spanThumb, spannableThree.length() - 1
-                        , spannableThree.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        , spannableThree.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
 

@@ -461,7 +461,7 @@ public class HomeTabFragment extends BaseFragment {
         if (isPreviousLocationPresent()) {
             toggleErrorScreen(false);
             mFragmentTabHomeBinding.textLocation.setText(userDetails.getDisplayLocationName());
-            setDownArrowSize();
+
             errorLoadingHelper.showLoading();
             getBannerImageListFromServer();
             if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
@@ -494,14 +494,6 @@ public class HomeTabFragment extends BaseFragment {
              */
             updateLatLongOnServer(null, null);
         }
-    }
-    //
-    private void setDownArrowSize(){
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_arrow_down_white);
-        drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * 20),
-                (int) (drawable.getIntrinsicHeight() * 20));
-        ScaleDrawable sd = new ScaleDrawable(drawable, 0, 40, 40);
-        mFragmentTabHomeBinding.textLocation.setCompoundDrawables(null, null, sd.getDrawable(), null);
     }
 
     private void toggleErrorScreen(boolean showErrorScreen) {

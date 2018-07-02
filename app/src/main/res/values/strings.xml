@@ -27,12 +27,13 @@
 
     <!--SIDE MENU ITEM-->
     <string name="label_home">Home</string>
-    <string name="label_favourites">Favourites</string>
+    <string name="label_favourites">Favourite</string>
+    <string name="label_favourites_side_menu">Favourite PRO\'s</string>
     <string name="label_share_with_friend">Refer</string>
     <string name="label_help">Contact Us</string>
     <string name="label_faq">FAQ</string>
     <string name="label_rate_this_app">Rate CHEEP</string>
-    <string name="label_terms">T\'s &amp; C\'s</string>
+    <string name="label_terms">T&amp;S</string>
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
     <string name="hint_username">Username</string>
@@ -53,7 +54,7 @@
     <string name="tab_my_task">My Services</string>
     <string name="tab_me">Me</string>
     <string name="tab_chat">Chat</string>
-    <string name="tab_alert">Alert</string>
+    <string name="tab_emergency">Emergency</string>
     <string name="label_plumber">Plumber</string>
     <string name="dummy_chat" translatable="false">Lorem Ipsum dollar sit Lorem Ipsum dollar sitLorem Ipsum dollar sit Lorem Ipsum dollar sit amet simply dummy text for printing various values</string>
     <string name="dummy_location">Ahmedabad</string>
@@ -444,7 +445,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <!--
         <string name="label_featured">Featured</string>
     -->
-    <string name="label_featured">All Services</string>
+    <string name="label_featured">Featured</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
     <string name="empty_subscribed_list">Now with CHEEP Care, enjoy unbelievable
@@ -711,7 +712,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
-    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH </string>
     <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
     <string name="label_starting_price_cc">AVAILABLE AS LOW AS ₹%1s/MTH*</string>
     <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
