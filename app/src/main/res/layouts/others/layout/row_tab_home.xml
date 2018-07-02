@@ -86,16 +86,18 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/strike"
                         android:text="@string/price"
-                        android:layout_gravity="center"
                         android:textColor="@color/white"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginStart="@dimen/scale_10dp"
                         android:textSize="@dimen/text_size_12sp"/>
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_new_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginStart="@dimen/scale_10dp"
                         android:text="@string/price"
-                        android:layout_gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14sp"
                         android:layout_marginBottom="@dimen/scale_2dp"/>

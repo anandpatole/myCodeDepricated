@@ -23,21 +23,15 @@ import com.cheep.model.AddressModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.tags.MyLinearLayoutManager;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ManageSubscriptionFragment extends BaseFragment implements
@@ -48,7 +42,6 @@ public class ManageSubscriptionFragment extends BaseFragment implements
     private ArrayList<ManageSubscriptionModel> addressList;
     private ManageSubscriptionAddressAdapter adapter;
     private FragmentManageSubscriptionBinding mBinding;
-    private LinearLayoutManager linearLayoutManager;
     int dateDifference = 0;
 
     public static ManageSubscriptionFragment newInstance(ArrayList<AddressModel> list) {
@@ -112,10 +105,11 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.addressDropDowns.setVisibility(View.VISIBLE);
         mBinding.addressDropUp.setVisibility(View.GONE);
 
-        linearLayoutManager = new LinearLayoutManager(mContext);
-        mBinding.subscriptionRecyclerView.setLayoutManager(linearLayoutManager);
-        mBinding.subscriptionRecyclerView.setHasFixedSize(true);
+
+        MyLinearLayoutManager layoutManager= new MyLinearLayoutManager(mContext);
+        mBinding.subscriptionRecyclerView.setLayoutManager(layoutManager);
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
+        mBinding.subscriptionRecyclerView.setHasFixedSize(false);
         adapter = new ManageSubscriptionAddressAdapter(addressList, ManageSubscriptionFragment.this);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
 

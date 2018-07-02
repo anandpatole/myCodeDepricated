@@ -438,7 +438,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_ended_due_to_task_cancelled">"  This chat has ended as the task has been cancelled."</string>
     <string name="label_chat_ended_due_to_task_completed">"  This chat has ended as the task has been completed."</string>
     <string name="label_our_services">Our Services</string>
-    <string name="label_book">Book</string>
+    <string name="label_book">Book Now</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
     <!--
@@ -775,6 +775,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 
     <string name="label_book_task">Book Task</string>
+    <string name="india_largest">India\'s Largest AMC App</string>
 
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
