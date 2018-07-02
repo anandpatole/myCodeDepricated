@@ -193,13 +193,14 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge = 0;
-                    mBinding.viewLine2.setVisibility(View.GONE);
-
+                   // mBinding.viewLine2.setVisibility(View.GONE);
+                    mBinding.viewLine1.setVisibility(View.GONE);
                 } else {
                     mBinding.tvPaynow.setVisibility(View.VISIBLE);
                     mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
                     mBinding.tvGotcha.setVisibility(View.GONE);
-                    mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    //mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    mBinding.viewLine1.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                     // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                     mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
@@ -217,12 +218,12 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                     mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                     mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-                    mBinding.viewLine1.setVisibility(View.VISIBLE);
+                   // mBinding.viewLine1.setVisibility(View.VISIBLE);
                     mBinding.categoryTick.setVisibility(View.GONE);
                 } else {
                     mBinding.categoryTick.setVisibility(View.VISIBLE);
                     mBinding.recyclerViewPaid.setVisibility(View.GONE);
-                    mBinding.viewLine1.setVisibility(View.GONE);
+                   // mBinding.viewLine1.setVisibility(View.GONE);
                 }
 
             } else {
@@ -232,13 +233,15 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     // mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge = 0;
-                    mBinding.viewLine2.setVisibility(View.GONE);
+                    //mBinding.viewLine2.setVisibility(View.GONE);
+                    mBinding.viewLine1.setVisibility(View.GONE);
 
                 } else {
 
                     // mBinding.lnPayLaterPayNowButtons.setVisibility(View.VISIBLE);
                     // mBinding.tvGotcha.setVisibility(View.GONE);
-                    mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    //mBinding.viewLine2.setVisibility(View.VISIBLE);
+                    mBinding.viewLine1.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                     // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                     mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
@@ -261,21 +264,23 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                 mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-                mBinding.viewLine1.setVisibility(View.VISIBLE);
+               // mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.categoryTick.setVisibility(View.GONE);
             } else {
                 mBinding.categoryTick.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setVisibility(View.GONE);
-                mBinding.viewLine1.setVisibility(View.GONE);
+               // mBinding.viewLine1.setVisibility(View.GONE);
             }
 
         } else {
             if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                 mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                 additionalCharge = 0;
-                mBinding.viewLine2.setVisibility(View.GONE);
+               //mBinding.viewLine2.setVisibility(View.GONE);
+                mBinding.viewLine1.setVisibility(View.GONE);
             } else {
-                mBinding.viewLine2.setVisibility(View.VISIBLE);
+               // mBinding.viewLine2.setVisibility(View.VISIBLE);
+                mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                 // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
                 mBinding.tvAdditionalChargeReason.setText(taskDetailModel.additionalChargeReason);
@@ -297,12 +302,12 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                 mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-                mBinding.viewLine1.setVisibility(View.VISIBLE);
+               // mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.categoryTick.setVisibility(View.GONE);
             } else {
                 mBinding.categoryTick.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setVisibility(View.GONE);
-                mBinding.viewLine1.setVisibility(View.GONE);
+               // mBinding.viewLine1.setVisibility(View.GONE);
             }
         }
         mBinding.ivTermsTick.setSelected(true);

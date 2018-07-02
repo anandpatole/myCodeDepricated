@@ -35,7 +35,7 @@
                         android:maxLines="1"
                         android:padding="@dimen/scale_10dp"
                         android:singleLine="true"
-                        android:text="@string/label_payment_history"
+                        android:text="@string/booking_confirmation"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/toolbar_title_text_size"/>
@@ -144,6 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_tick"
                         android:layout_marginRight="@dimen/scale_8dp"
                        />
                     <com.cheep.custom_view.CFTextViewSemiBold
@@ -151,7 +152,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
-                        android:src="@drawable/ic_tick"
                         android:paddingRight="@dimen/scale_24dp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp"
@@ -166,7 +166,6 @@
                         android:paddingRight="@dimen/scale_24dp"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:maxLines="1"
-
                         android:singleLine="true"
                         tools:text="₹698"
                         android:textColor="@color/black"
@@ -268,9 +267,10 @@
                         android:orientation="vertical"
                         android:paddingLeft="@dimen/scale_24dp"
                         android:paddingRight="@dimen/scale_24dp"
+                        android:layout_marginBottom="@dimen/scale_20dp"
                         android:paddingTop="@dimen/scale_5dp">
 
-                        <com.cheep.custom_view.CFTextViewRegular
+                        <com.cheep.custom_view.CFTextViewSemiBold
                             android:id="@+id/tv_label_additional_charge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -284,15 +284,15 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_marginTop="@dimen/scale_14dp"
+                            android:layout_marginTop="@dimen/scale_10dp"
                             android:orientation="horizontal"
                             android:layout_height="wrap_content">
 
-                            <com.cheep.custom_view.CFTextViewRegular
+                            <com.cheep.custom_view.CFTextViewSemiBold
                                 android:id="@+id/tv_additional_charge_reason"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:gravity="center"
+                                android:gravity="bottom"
                                 android:layout_marginLeft="@dimen/scale_23dp"
                                 android:textSize="@dimen/text_size_12sp"
                                 android:textColor="@color/black"
@@ -303,7 +303,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
 
-                                android:gravity="right"
+                                android:gravity="right|center_vertical"
                                 android:drawablePadding="@dimen/scale_5dp"
                                 android:ellipsize="marquee"
 
@@ -337,7 +337,7 @@
                         android:layout_height="@dimen/scale_1dp"
                         android:layout_marginLeft="@dimen/scale_20dp"
                         android:layout_marginRight="@dimen/scale_20dp"
-                        android:layout_marginTop="@dimen/scale_10dp"
+
                         android:background="@color/grey_color"
                         android:visibility="visible"/>
 
@@ -348,6 +348,7 @@
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/scale_5dp"
                         android:paddingLeft="@dimen/scale_24dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
                         android:paddingRight="@dimen/scale_24dp"
                         android:paddingTop="@dimen/scale_5dp">
 
@@ -917,7 +918,7 @@
             android:gravity="center_horizontal|center_vertical"
             android:layout_alignParentBottom="true"
             android:background="@color/blue_variant_4"
-            android:text="Pay Now"/>
+            android:text="@string/book_pay"/>
 <!--
         <LinearLayout
             android:id="@+id/ln_pay_now"

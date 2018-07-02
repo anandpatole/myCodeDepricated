@@ -107,6 +107,7 @@ public class Utility {
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
     public static final String ONE_CHARACTER_SPACE = " ";
+    public static final String TWO_CHARACTER_SPACE = "  ";
     public static final String DEFAULT_LOCATION = "0.0";
     public static final String ACTION_NEW_JOB_CREATE = "action_new_job_create";
     public static final String ACTION_HIRE_PROVIDER = "action_hire_provider";

@@ -38,7 +38,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/yellow"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_reschedule"

@@ -90,17 +90,26 @@
                 android:paddingRight="@dimen/scale_30dp"
                 android:paddingTop="@dimen/scale_30dp">
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_when"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_icon_task_when"
                     android:drawablePadding="@dimen/scale_15dp"
                     android:text="@string/label_when"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_18sp"/>
-
+    <ImageView
+        android:layout_width="@dimen/scale_24dp"
+        android:layout_height="@dimen/scale_24dp"
+        android:paddingLeft="@dimen/scale_8dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_i_green"/>
+</LinearLayout>
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_task_when"
                     android:layout_width="match_parent"
@@ -313,7 +322,7 @@
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:maxLines="2"
                             android:paddingLeft="@dimen/scale_15dp"
-                            android:text="@string/lable_insta_get_pro"
+                            android:text="@string/a_cheep_care_pro_now"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_14sp"/>
                     </LinearLayout>

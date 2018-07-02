@@ -791,7 +791,8 @@ public class HomeActivity extends BaseAppCompatActivity
         if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && !model.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();
-        } else {
+        } else
+            {
             TaskCreationActivity.getInstance(mContext, model);
         }
 

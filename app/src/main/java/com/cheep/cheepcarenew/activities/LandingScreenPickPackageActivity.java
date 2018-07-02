@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -211,7 +212,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         int resId = R.drawable.emoji_mic;
         switch (mCity.citySlug) {
             case NetworkUtility.CARE_CITY_SLUG.MUMBAI:
-                resId = R.drawable.emoji_mic;
+                resId = R.drawable.emoji_thumbs_up;
                 break;
             case NetworkUtility.CARE_CITY_SLUG.HYDRABAD:
                 resId = R.drawable.emoji_mustache;
@@ -236,7 +237,40 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         // writing by majid khan 217 to 222
         mBinding.tvLandingScreenTipTitle.setText(mCityLandingPageModel.packageTip.title);
         mBinding.tvLandingScreenTipSubtitle.setText(mCityLandingPageModel.packageTip.subtitle);
-        mBinding.tvLandingScreenTitle1.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle1);
+
+        SpannableStringBuilder spannableOne =null,spannableTwo=null,spannableThree =null;
+        for(int i=0; i<3; i++){
+            if(i == 0){
+                spannableOne = new SpannableStringBuilder(mCityLandingPageModel.careCityDetail.landingScreenTitle1);
+                spannableOne.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+                /*Drawable drawable = mContext.getResources().getDrawable(R.drawable.emoji_heart);
+                drawable.setBounds(20, 0, 0, 0);*/
+                ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
+                spannableOne.setSpan(spanThumb, spannableOne.length() - 1
+                        , spannableOne.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }else if( i==1)
+            {
+                spannableTwo = new SpannableStringBuilder(spannableOne);
+                spannableTwo.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+                ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
+                spannableTwo.setSpan(spanThumb, spannableTwo.length() - 1
+                        , spannableTwo.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+            }
+            else if( i==2)
+            {
+                spannableThree = new SpannableStringBuilder(spannableTwo);
+                spannableThree.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+                ImageSpan spanThumb = new ImageSpan(mContext, R.drawable.emoji_heart, ImageSpan.ALIGN_BOTTOM);
+                spannableThree.setSpan(spanThumb, spannableThree.length() - 1
+                        , spannableThree.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+            }
+        }
+
+
+        mBinding.tvLandingScreenTitle1.setText(spannableThree);
+
         mBinding.tvLandingScreenTitle2.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle2);
         mBinding.imgCheepTips.setVisibility(View.VISIBLE);
 

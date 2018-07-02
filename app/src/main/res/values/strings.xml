@@ -32,7 +32,7 @@
     <string name="label_help">Contact Us</string>
     <string name="label_faq">FAQ</string>
     <string name="label_rate_this_app">Rate CHEEP</string>
-    <string name="label_terms">T\'s &amp; C\'s</string>
+    <string name="label_terms">T&amp;C Apply</string>
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
     <string name="hint_username">Username</string>
@@ -74,8 +74,11 @@
     <string name="label_out_of_office_hours_info">We understand that emergencies can happen anytime and that is why we offer an \'Emergency Service\' during late hours. This will cost you only ₹%3s. Thank you</string>
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
+    <string name="service_specification">Service Specification</string>
     <string name="rate_card_repair">Repairs</string>
+    <string name="booking_confirmation">Booking Confirmation</string>
     <string name="rate_card_electrician">Electrician</string>
+    <string name="service_selection">Service Selection</string>
     <string name="rate_card_painter">Painter</string>
     <string name="rate_card_application_repair">Application Repair</string>
     <string name="rate_card_tech_repair">Tech Repair</string>
@@ -89,6 +92,8 @@
     <string name="rupee_symbol_x">₹%1$s</string>
     <string name="dummy_email">mohankumar@gmail.com</string>
     <string name="label_phone_no">Phone Number</string>
+    <string name="a_cheep_care_pro_now">a Cheep Care PRO now</string>
+    <string name="book_pay"><![CDATA[Book & Pay]]></string>
     <string name="label_phone_no_value">7207002829</string>
     <string name="label_add_contact">Add contact</string>
     <string name="label_emergency_info">Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app</string>
@@ -341,7 +346,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="can_only_start_task_after_3_hours">Date Time must be after %1s hour.</string>
     <string name="reschedule_task_must_within_one_month">Reschedule time must be within one month from start time of task.</string>
 
-    <string name="step_1_desc">Please tell us what needs to be done</string>
+    <string name="step_1_desc">Please tell us what needs to be serviced</string>
     <string name="step_2_desc">Please tell us when and where</string>
     <string name="step_3_desc">Please check details below and book</string>
     <string name="hint_task_desc">Please tell us more about your requirement</string>
@@ -438,7 +443,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_ended_due_to_task_cancelled">"  This chat has ended as the task has been cancelled."</string>
     <string name="label_chat_ended_due_to_task_completed">"  This chat has ended as the task has been completed."</string>
     <string name="label_our_services">Our Services</string>
-    <string name="label_book">Book</string>
+    <string name="label_book">Book Now</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
     <!--
@@ -637,7 +642,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_pincode">Please enter valid Pincode</string>
     <string name="label_pay_later">Pay Later</string>
     <string name="description_pay_now">Recommended if you are busy or travelling and may not have the time to pay later, or if you want to gift this service to your family or friends and don\'t want them to pay</string>
-    <string name="description_pay_later">Recommended only if you wish to pay after you avail the service. Payment will have to be made immediately to our PRO on completion of the task.</string>
+    <string name="description_pay_later">Recommended only if you wish to pay after you avail the service. Payment will have to be made immediately to our PRO on completion of the Service.</string>
 
     <string name="label_paid">Paid</string>
     <string name="label_not_paid">Not Paid</string>
@@ -775,6 +780,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 
     <string name="label_book_task">Book Task</string>
+    <string name="india_largest">India\'s Largest AMC App</string>
 
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>

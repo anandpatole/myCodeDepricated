@@ -121,7 +121,7 @@
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:layout_toEndOf="@+id/img_cheep_tips"
                             android:layout_toRightOf="@+id/img_cheep_tips"
-                            android:textColor="@color/black"
+                            android:textColor="@color/splash_gradient_end"
                             android:textSize="@dimen/text_size_15sp" />
 
                         <com.cheep.custom_view.CFTextViewRegular
@@ -151,7 +151,7 @@
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_good_morning_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/scale_29dp"
                         android:layout_marginLeft="@dimen/scale_29dp"
