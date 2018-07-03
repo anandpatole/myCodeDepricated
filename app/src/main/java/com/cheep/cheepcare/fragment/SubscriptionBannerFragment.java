@@ -121,7 +121,7 @@ public class SubscriptionBannerFragment extends BaseFragment {
             }
 
             newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                    , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
+                    , R.string.rupee_symbol_x_package_price,bannerImageModel.newPrice);
             binding.tvNewPrice.setText(newPrice);
 
             binding.tvCityName.setText(bannerImageModel.cityName);

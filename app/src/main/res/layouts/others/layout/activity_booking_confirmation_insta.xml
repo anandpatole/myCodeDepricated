@@ -654,7 +654,7 @@
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
                             android:padding="@dimen/scale_5dp"
-                            android:text="@string/label_terms"
+                            android:text="@string/label_terms1"
                             android:textColor="@color/grey_variant_20"
                             android:textSize="@dimen/text_size_12sp"/>
 

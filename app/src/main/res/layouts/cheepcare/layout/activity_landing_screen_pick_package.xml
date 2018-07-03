@@ -39,11 +39,21 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_with_heart_text" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/tv_cheep_care"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_cheep_care_text_landing" />
+                    android:text="@string/cheep_care_value"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/india_largest"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 

@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_cheep_india"
+            android:src="@drawable/ic_cheep_we_work"
             tools:ignore="ContentDescription"/>
 
         <ImageView
@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="84dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="@dimen/scale_60dp"
+            android:layout_marginLeft="@dimen/scale_20dp"
             android:src="@drawable/ic_sparrow"
             tools:ignore="ContentDescription"/>
 
@@ -45,7 +45,6 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="@dimen/scale_35dp"
-
             android:text="@string/label_copywrite"
             android:textColor="@color/colorPrimary"/>
 

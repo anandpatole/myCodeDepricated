@@ -75,7 +75,7 @@
                     android:padding="@dimen/scale_6dp"
                     android:text="@string/label_subscribe"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_10sp" />
+                    android:textSize="@dimen/text_size_11sp" />
 
             </LinearLayout>
 

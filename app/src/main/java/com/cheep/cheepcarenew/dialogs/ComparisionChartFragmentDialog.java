@@ -132,11 +132,15 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             String TYPE = comparisionChartModel.priceLists.get(i).type;
 
             if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
-                mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvPremiumNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
+               // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                mBinding.tvPremiumOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
+                //mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
-                mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvNormalNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
+                mBinding.tvNormalOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
+                //mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                //mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             }
 
         }

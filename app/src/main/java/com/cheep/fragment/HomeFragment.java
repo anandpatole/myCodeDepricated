@@ -71,7 +71,7 @@ public class HomeFragment extends BaseFragment {
     public static final String TAB_MY_TASK = MyTaskTabFragment.TAG;
     public static final String TAB_ME = ProfileDetailsFragment.TAG;
     public static final String TAB_CHAT = ChatTabFragment.TAG;
-    public static final String TAB_ALERT = "ALERT";
+    public static final String TAB_EMERGENCY = "EMERGENCY";
 
     private DrawerLayoutInteractionListener mListener;
     private TextView textLastSelectedTab = null;
@@ -235,7 +235,7 @@ public class HomeFragment extends BaseFragment {
         mBinding.textTabMyTask.setOnClickListener(tabClickListener);
 //        mBinding.textTabMe.setOnClickListener(tabClickListener);
         mBinding.textTabChat.setOnClickListener(tabClickListener);
-        mBinding.textTabAlert.setOnClickListener(tabClickListener);
+        mBinding.textTabEmergency.setOnClickListener(tabClickListener);
 
     }
 
@@ -352,8 +352,8 @@ public class HomeFragment extends BaseFragment {
                 case R.id.text_tab_chat:
                     setCurrentTab(TAB_CHAT);
                     break;
-                case R.id.text_tab_alert:
-                    setCurrentTab(TAB_ALERT);
+                case R.id.text_tab_emergency:
+                    setCurrentTab(TAB_EMERGENCY);
                     break;
             }
         }
@@ -368,7 +368,7 @@ public class HomeFragment extends BaseFragment {
         setSelected(mBinding.textTabMyTask, false);
 //        setSelected(mBinding.textTabMe, false);
         setSelected(mBinding.textTabChat, false);
-        setSelected(mBinding.textTabAlert, false);
+        setSelected(mBinding.textTabEmergency, false);
 
     }
 
@@ -512,8 +512,8 @@ public class HomeFragment extends BaseFragment {
                 }
                 loadFragment(ChatTabFragment.TAG, fragmentToCommit);
                 break;
-            case TAB_ALERT:
-                if (mBinding.textTabAlert.isSelected()) {
+            case TAB_EMERGENCY:
+                if (mBinding.textTabEmergency.isSelected()) {
                     // Alert is active so show the alert dialog
                     showAlertDialog();
                 } else {
@@ -635,7 +635,7 @@ public class HomeFragment extends BaseFragment {
     //showAlertDialog for Last Tab
     private void showAlertDialog() {
         final BottomAlertDialog dialog = new BottomAlertDialog(mContext);
-        dialog.setTitle(getString(R.string.tab_alert));
+        dialog.setTitle(getString(R.string.tab_emergency));
         dialog.setMessage(getString(R.string.label_alert_msg));
         dialog.addPositiveButton(getString(R.string.label_yes), new View.OnClickListener() {
             @Override
@@ -842,7 +842,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void enableAlert(boolean flag) {
         Log.d(TAG, "enableAlert() called with: flag = [" + flag + "]");
-        mBinding.textTabAlert.setSelected(flag);
+        mBinding.textTabEmergency.setSelected(flag);
     }
 
     /**

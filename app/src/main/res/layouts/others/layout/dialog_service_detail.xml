@@ -12,7 +12,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/dialog_background">
+            android:background="@drawable/dialog_background_service">
 
             <RelativeLayout
                 android:id="@+id/relative"
@@ -24,8 +24,8 @@
                     android:id="@+id/imge1"
                     android:layout_width="@dimen/scale_60dp"
                     android:layout_height="@dimen/scale_70dp"
-                    android:layout_marginLeft="@dimen/scale_25dp"
-                    android:layout_marginRight="@dimen/scale_5dp"
+                    android:layout_marginLeft="@dimen/scale_28dp"
+
                     android:layout_centerVertical="true"
                     android:src="@drawable/satisfaction"/>
 
@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/scale_4dp"
                         android:layout_marginLeft="@dimen/scale_4dp"
-                        android:layout_marginRight="@dimen/scale_4dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
                         android:layout_marginStart="@dimen/scale_4dp"
                         android:text="@string/heading1"
                         android:textColor="@color/heading_color"
@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/scale_4dp"
                         android:layout_marginLeft="@dimen/scale_4dp"
-                        android:layout_marginRight="@dimen/scale_4dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
                         android:layout_marginStart="@dimen/scale_4dp"
                         android:textAllCaps="true"
                         android:text="@string/heading2"

@@ -32,7 +32,7 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/bird_cheep_logo"
+                    android:src="@drawable/cheep_care_logo_for_login"
                     tools:ignore="ContentDescription" />
 
                 <com.cheep.custom_view.CFTextViewRegular

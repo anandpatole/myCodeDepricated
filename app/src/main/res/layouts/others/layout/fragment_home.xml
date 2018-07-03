@@ -222,7 +222,7 @@
                     android:visibility="gone" />
 
                 <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_tab_alert"
+                    android:id="@+id/text_tab_emergency"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -230,7 +230,7 @@
                     android:drawableTop="@drawable/tab_alert"
                     android:gravity="center"
                     android:padding="@dimen/scale_5dp"
-                    android:text="@string/tab_alert"
+                    android:text="@string/tab_emergency"
                     android:textAllCaps="false"
                     android:textColor="@drawable/tab_alert_text_color"
                     android:textSize="@dimen/text_size_11sp"

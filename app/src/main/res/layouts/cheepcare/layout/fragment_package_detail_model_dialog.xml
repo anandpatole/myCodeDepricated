@@ -21,19 +21,21 @@
 
             <ImageView
                 android:id="@+id/imge1"
-                android:layout_width="70dp"
-                android:layout_height="80dp"
+                android:layout_width="@dimen/scale_60dp"
+                android:layout_height="@dimen/scale_70dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/scale_12dp"
                 android:src="@drawable/bird_pro_clock"/>
 
             <ImageView
                 android:id="@+id/imge2"
                 android:layout_toRightOf="@+id/imge1"
                 android:layout_toEndOf="@+id/imge1"
-                android:layout_width="70dp"
-                android:layout_height="80dp"
+                android:layout_width="@dimen/scale_60dp"
+                android:layout_marginLeft="@dimen/scale_5dp"
+                android:layout_height="@dimen/scale_70dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/bird_pro_clock"/>
+                android:src="@drawable/satisfaction"/>
 
             <LinearLayout
                 android:layout_toRightOf="@+id/imge2"
@@ -41,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+
                 android:orientation="vertical">
 
                 <com.cheep.custom_view.CFTextViewBold
@@ -54,7 +57,8 @@
                     android:text="@string/heading1"
                     android:textColor="@color/heading_color"
                     android:textAllCaps="true"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_12sp"/>
 
                 <com.cheep.custom_view.CFTextViewBold
                     android:id="@+id/tv_heading2"
@@ -65,9 +69,10 @@
                     android:layout_marginRight="@dimen/scale_4dp"
                     android:layout_marginStart="@dimen/scale_4dp"
                     android:textAllCaps="true"
+                    android:gravity="center"
                     android:text="@string/heading2"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_14sp"/>
+                    android:textSize="@dimen/text_size_12sp"/>
 
             </LinearLayout>
 

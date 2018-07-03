@@ -3,9 +3,9 @@
 <!-- insetRight and insetLeft add the margins -->
 <inset
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@color/white"
-    android:insetBottom="@dimen/scale_10dp"
-    android:insetRight="@dimen/scale_0dp"
-    android:insetLeft="@dimen/scale_0dp"
-    android:insetTop="@dimen/scale_10dp">
+    android:drawable="@drawable/round_dialog_bg"
+    android:insetBottom="@dimen/scale_80dp"
+    android:insetRight="@dimen/scale_40dp"
+    android:insetLeft="@dimen/scale_40dp"
+    android:insetTop="@dimen/scale_80dp">
 </inset>
