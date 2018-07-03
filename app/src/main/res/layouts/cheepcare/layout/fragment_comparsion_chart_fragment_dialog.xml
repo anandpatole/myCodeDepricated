@@ -10,7 +10,9 @@
         android:orientation="vertical"
         tools:context="com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog">
 
+
         <com.cheep.custom_view.CFTextViewSemiBold
+
             android:id="@+id/textHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +24,9 @@
             android:padding="@dimen/scale_5dp"
             android:text="@string/comparision_message"
             android:textColor="@color/black"
+
             android:textSize="@dimen/text_size_15sp" />
+
 
         <LinearLayout
             android:id="@+id/linearHeaderLine"
@@ -30,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textHeading"
             android:background="@color/gray_chart_upper"
-            android:weightSum="3">
+            android:weightSum="3.2">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -58,7 +62,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.cheep.custom_view.CFTextViewBold
@@ -115,6 +119,7 @@
 
                 <LinearLayout
                     android:orientation="vertical"
+                    android:elevation="@dimen/scale_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

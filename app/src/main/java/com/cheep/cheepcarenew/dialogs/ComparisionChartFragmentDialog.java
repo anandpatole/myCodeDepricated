@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +117,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
     }
 
+
     private void setListener() {
         mBinding.tvBookKnowPremimu.setOnClickListener(this);
         mBinding.tvBookKnowCare.setOnClickListener(this);
@@ -124,6 +128,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         final ComparisionChatAdapter adapter = new ComparisionChatAdapter();
         mBinding.recyclerView.setAdapter(adapter);
         setPrice();
+        makeHeadingTextBold();
     }
 
     private void setPrice() {
@@ -145,7 +150,12 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
         }
     }
-
+    private void makeHeadingTextBold(){
+        final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.comparision_message));
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, 5, 13, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
+        mBinding.textHeading.setText(sb);
+    }
 
     // open show Package Detail Model Fragment Dialog
     private void showPackageDetailModelFragmentDialog() {
@@ -164,12 +174,10 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             case R.id.tv_book_know_premimu:
                 PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
                 showPackageDetailModelFragmentDialog();
-                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
             case R.id.tv_book_know_care:
                 PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
                 showPackageDetailModelFragmentDialog();
-                //AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comparisionChartModel);
                 break;
         }
     }

@@ -17,10 +17,15 @@ import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySignupBinding;
+import com.cheep.fragment.InfoFragment;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -54,13 +60,12 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
  */
 
 public class SignupActivity extends BaseAppCompatActivity {
+
     private static final String TAG = SignupActivity.class.getSimpleName();
     private ActivitySignupBinding mActivitySignupBinding;
-
     private String mCurrentPhotoPath;
-
     private UserDetails userDetails;
-//    private String selectedImagePath;
+
 
     public static void newInstance(Context context, UserDetails userDetails) {
         Intent intent = new Intent(context, SignupActivity.class);
@@ -85,54 +90,6 @@ public class SignupActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
-
-        //Setup terms & condition text
-        /*SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.label_sign_agreement));
-
-        mSpannableStringBuilder.setSpan(new ClickableSpan() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                InfoActivity.newInstance(mContext, NetworkUtility.TAGS.PAGEID_TYPE.TERMS);
-                                            }
-                                        },
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms") + 5,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mSpannableStringBuilder.setSpan(new UnderlineSpan(),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms") + 5,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.white)),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Terms") + 5,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        //Privacy Policy Underline and Clickable
-
-        mSpannableStringBuilder.setSpan(new ClickableSpan() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                InfoActivity.newInstance(mContext, NetworkUtility.TAGS.PAGEID_TYPE.PRIVACY);
-                                            }
-                                        },
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Privacy"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().lastIndexOf("Policy") + 6,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mSpannableStringBuilder.setSpan(new UnderlineSpan(),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Privacy"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().lastIndexOf("Policy") + 6,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mSpannableStringBuilder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.white)),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Privacy"),
-                mActivitySignupBinding.textTermsCondition.getText().toString().indexOf("Policy") + 6,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mActivitySignupBinding.textTermsCondition.setText(mSpannableStringBuilder);
-        mActivitySignupBinding.textTermsCondition.setMovementMethod(LinkMovementMethod.getInstance());*/
 
 
         //Check if we got any user details that need to be updated
@@ -167,21 +124,7 @@ public class SignupActivity extends BaseAppCompatActivity {
             mActivitySignupBinding.editUserMobileNumber.setEnabled(true);
         }
 
-        /*//Setting toolbar
-        setSupportActionBar(mActivitySignupBinding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
-            mActivitySignupBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utility.hideKeyboard(mContext);
-                    onBackPressed();
-                }
-            });
-        }*/
-
-
+        setTermAndCondition();
     }
 
     @Override
@@ -207,107 +150,6 @@ public class SignupActivity extends BaseAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*if (requestCode == Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: CurrentPath" + mCurrentPhotoPath);
-
-            File f = new File(mCurrentPhotoPath);
-//            Uri contentUri = Uri.fromFile(f);
-            Uri contentUri = FileProvider.getUriForFile(mContext, BuildConfig.FILE_PROVIDER_URL, f);
-
-            Intent intent = CropImage
-                    .activity(contentUri)
-
-                    //Set Aspect ration
-                    .setAspectRatio(1, 1)
-
-                    //Set Activity Title
-                    .setActivityTitle(getString(R.string.label_crop_image))
-                    .setActivityMenuIconColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-
-                    //AutoZoom enabled
-                    .setAutoZoomEnabled(true)
-
-                    //Allow rotation
-                    .setAllowRotation(true)
-
-                    //Check output compression quality
-                    .setOutputCompressQuality(100)
-
-                    //Whether guidelines will be shown or not
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setGuidelinesColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-
-                    //Border Color
-                    .setBorderLineColor(ContextCompat.getColor(mContext, R.color.white))
-                    .setBorderLineThickness(getResources().getDimension(R.dimen.scale_3dp))
-
-                    //Border Corner Color
-                    .setBorderCornerColor(ContextCompat.getColor(mContext, R.color.white))
-                    .setOutputUri(getCroppedUri())
-//                    Shape
-                    .setCropShape(CropImageView.CropShape.OVAL)
-
-                    .getIntent(this);
-
-            startActivityForResult(intent, Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE);
-        } else if (requestCode == Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY && resultCode == RESULT_OK) {
-            Log.i(TAG, "onActivityResult: " + data.getData().toString());
-
-            Intent intent = CropImage
-                    .activity(data.getData())
-
-                    //Set Aspect ration
-                    .setAspectRatio(1, 1)
-
-                    //Set Activity Title
-                    .setActivityTitle(getString(R.string.label_crop_image))
-                    .setActivityMenuIconColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-
-                    //AutoZoom enabled
-                    .setAutoZoomEnabled(true)
-
-                    //Allow rotation
-                    .setAllowRotation(true)
-
-                    //Check output compression quality
-                    .setOutputCompressQuality(100)
-
-                    //Whether guidelines will be shown or not
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setGuidelinesColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-
-                    //Border Color
-                    .setBorderLineColor(ContextCompat.getColor(mContext, R.color.white))
-                    .setBorderLineThickness(getResources().getDimension(R.dimen.scale_3dp))
-
-                    //Border Corner Color
-                    .setBorderCornerColor(ContextCompat.getColor(mContext, R.color.white))
-                    .setOutputUri(getCroppedUri())
-//                    Shape
-                    .setCropShape(CropImageView.CropShape.OVAL)
-
-                    .getIntent(this);
-
-            startActivityForResult(intent, REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE);
-
-
-        } else if (requestCode == Utility.REQUEST_CODE_CROP_GET_FILE_ADD_PROFILE && resultCode == RESULT_OK) {
-
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                //Checking if current path is already exist then no need to get it from result
-                if (TextUtils.isEmpty(mCurrentPhotoPath)) {
-                    Uri resultUri = result.getUri();
-                    mCurrentPhotoPath = MediaUtility.getPath(this, resultUri);
-                }
-                Log.i(TAG, "onActivityResult: Path:" + mCurrentPhotoPath);
-                //Load the image from Glide
-                GlideUtility.showCircularImageView(mContext, TAG, mActivitySignupBinding.imgProfile, mCurrentPhotoPath, R.drawable.icon_profile_img, true);
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                Log.i(TAG, "onActivityResult: Crop Error" + error.toString());
-            }
-        }*/
     }
 
     public Uri getCroppedUri() {
@@ -391,7 +233,12 @@ public class SignupActivity extends BaseAppCompatActivity {
         builder.show();
 
     }
-
+    private void setTermAndCondition(){
+        SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.terms_and_condition));
+        mActivitySignupBinding.tvDesclaimer.setText(mSpannableStringBuilder);
+        mActivitySignupBinding.tvDesclaimer.setMovementMethod(LinkMovementMethod.getInstance());
+        mActivitySignupBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_checked);
+    }
     private void dispatchTakePictureIntent(int requestCode, int requestPermissionCode) {
         //Go ahead with Camera capturing
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -405,29 +252,6 @@ public class SignupActivity extends BaseAppCompatActivity {
             startCameraCaptureChooser(requestCode);
         }
     }
-
-    /*public void startCameraCaptureChooser(int requestCode) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivityForResult(takePictureIntent, requestCode);
-            }
-        }
-    }*/
 
     public void startCameraCaptureChooser(int requestCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

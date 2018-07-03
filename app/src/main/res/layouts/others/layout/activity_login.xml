@@ -152,47 +152,42 @@
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
 
-                <!--</LinearLayout>-->
-
-                <!--<View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@drawable/shadow_transparent_blue"
-                    android:visibility="visible" />
-
                 <LinearLayout
-                    android:id="@+id/layout_signup"
+                    android:id="@+id/ln_desclaimer"
+                    android:layout_marginTop="@dimen/scale_16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="@dimen/scale_20dp"
-                    android:visibility="visible">
+                    android:layout_marginLeft="@dimen/scale_30dp"
+                    android:layout_marginRight="@dimen/scale_30dp"
+                    android:visibility="visible"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_checkbox"
+                        android:scaleType="fitXY"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/scale_8dp"
+                        android:src="@drawable/ic_checkbox_icon_unchecked" />
 
                     <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_desclaimer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="@string/label_dont_have_ac_signup"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_12sp" />
-
-                    <com.cheep.custom_view.CFTextViewSemiBold
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:letterSpacing="0.3"
-                        android:text="@string/label_signup"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_12sp"
-                        app:letterSpacing="0.3"
-                        tools:ignore="UnusedAttribute" />
-                </LinearLayout>-->
+                        android:gravity="top|left"
+                        android:text="@string/terms_and_condition"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14sp" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

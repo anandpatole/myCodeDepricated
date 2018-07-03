@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -51,6 +54,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
     private UserDetails mUserDetails;
     private String selectedImagePath;
     private LocationInfo mSelectedLocationInfo;
+    private boolean isDesclaimerEnabled = false;
 
     public static void newInstance(Context context, UserDetails userDetails, String password, String selectedImagePath, String correctOTP) {
         Intent intent = new Intent(context, VerificationActivity.class);
@@ -140,6 +144,8 @@ public class VerificationActivity extends BaseAppCompatActivity {
         }
         // to open keyboard automatically when activity opens
         mActivityVerificationBinding.editOtp1.requestFocus();
+
+
     }
 
     private ArrayList<EditText> sequenceList;
@@ -170,6 +176,14 @@ public class VerificationActivity extends BaseAppCompatActivity {
         //Click Listener
         mActivityVerificationBinding.btnNearlyThere.setOnClickListener(onClickListener);
         mActivityVerificationBinding.tvResendCode.setOnClickListener(onClickListener);
+        setTermAndCondition();
+    }
+
+    private void setTermAndCondition(){
+        SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.terms_and_condition));
+        mActivityVerificationBinding.tvDesclaimer.setText(mSpannableStringBuilder);
+        mActivityVerificationBinding.tvDesclaimer.setMovementMethod(LinkMovementMethod.getInstance());
+        mActivityVerificationBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_checked);
     }
 
 
@@ -461,7 +475,6 @@ public class VerificationActivity extends BaseAppCompatActivity {
             Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityVerificationBinding.getRoot());
             return false;
         }
-
 
         //No Need to check otp locally as we are checking otp with webservice
 
