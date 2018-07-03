@@ -214,6 +214,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_pattern_email">Something seems wrong, please enter a valid email address</string>
     <string name="validate_empty_password">Hey! Looks like you forgot to enter the password</string>
     <string name="validate_otp_empty">Please enter the correct OTP or try again for a new OTP.</string>
+    <string name="validate_term">Please Check Term And Condition.</string>
     <string name="validate_password_length">Sorry, your password needs to be atleast 6 characters!</string>
     <string name="label_something_went_wrong">Oops! Seems like something went wrong, why don’t you try again or get in touch!</string>
     <string name="label_playservice_not_available">Google Play Service not available.</string>
@@ -699,8 +700,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_not_now">Not Now</string>
     <string name="label_next">Next</string>
 
-    <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
-    <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
+    <string name="hint_apply_cheep_promo_code">Apply Cheep Promo code?</string>
+    <string name="hint_apply_cheep_mate_code">Have a Cheep Mate Code?</string>
     <string name="label_empty_string" />
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
@@ -709,6 +710,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="info_package_payment_summary">Under CHEEP Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_invalid_code">Invalid Code</string>
     <string name="label_applied_promo_code_message_cheep_care">Yay! You saved %1$s %2$s</string>
+    <string name="terms_and_condition" >By signing in, you agree T&amp;C Apply.</string>
 
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>

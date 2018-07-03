@@ -39,11 +39,21 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_with_heart_text" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/tv_cheep_care"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_cheep_care_text_landing" />
+                    android:text="@string/cheep_care_value"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/india_largest"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -102,8 +112,8 @@
 
                         <ImageView
                             android:id="@+id/imgVerification"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/scale_8dp"
                             android:src="@drawable/verified_icon" />
@@ -251,7 +261,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/months_3"
                                     android:textColor="@color/selector_text_price_package_care_title"
-                                    android:textSize="@dimen/text_size_18sp" />
+                                    android:textSize="@dimen/text_size_16sp" />
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/tv_3_save_month"
@@ -260,7 +270,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/save_money_3"
                                     android:textColor="@color/selector_text_price_package_care_sub_title"
-                                    android:textSize="@dimen/text_size_16sp" />
+                                    android:textSize="@dimen/text_size_14sp" />
 
                             </LinearLayout>
 
@@ -296,7 +306,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/months_6"
                                     android:textColor="@color/selector_text_price_package_care_title"
-                                    android:textSize="@dimen/text_size_18sp" />
+                                    android:textSize="@dimen/text_size_16sp" />
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/tv_6_save_month"
@@ -305,7 +315,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/save_money_6"
                                     android:textColor="@color/selector_text_price_package_care_sub_title"
-                                    android:textSize="@dimen/text_size_16sp" />
+                                    android:textSize="@dimen/text_size_14sp" />
 
                             </LinearLayout>
 
@@ -351,7 +361,7 @@
                                             android:padding="@dimen/scale_2dp"
                                             android:text="@string/months_12"
                                             android:textColor="@color/selector_text_price_package_care_title"
-                                            android:textSize="@dimen/text_size_18sp" />
+                                            android:textSize="@dimen/text_size_16sp" />
 
                                         <com.cheep.custom_view.CFTextViewRegular
                                             android:id="@+id/tv_12_save_month"
@@ -360,7 +370,7 @@
                                             android:padding="@dimen/scale_2dp"
                                             android:text="@string/save_money_12"
                                             android:textColor="@color/selector_text_price_package_care_sub_title"
-                                            android:textSize="@dimen/text_size_16sp" />
+                                            android:textSize="@dimen/text_size_14sp" />
 
                                     </LinearLayout>
 
@@ -399,7 +409,7 @@
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_mean_package_amount"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:padding="@dimen/scale_2dp"
                         android:text="@string/total_amount"
                         android:textColor="@color/splash_gradient_end"
@@ -453,7 +463,7 @@
                                 android:gravity="center"
                                 android:text="@string/hint_apply_cheep_promo_code"
                                 android:textColor="@color/grey_varient_10"
-                                android:textSize="@dimen/text_size_13sp" />
+                                android:textSize="@dimen/text_size_12sp" />
 
                             <ImageView
                                 android:id="@+id/iv_tick_promo_code"
@@ -524,7 +534,7 @@
                                 android:gravity="center"
                                 android:text="@string/hint_apply_cheep_mate_code"
                                 android:textColor="@color/grey_varient_10"
-                                android:textSize="@dimen/text_size_13sp" />
+                                android:textSize="@dimen/text_size_12sp" />
 
                             <ImageView
                                 android:id="@+id/iv_tick_mate_code"

@@ -10,7 +10,7 @@
         android:orientation="vertical"
         tools:context="com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog">
 
-        <com.cheep.custom_view.CFTextViewRegular
+        <com.cheep.custom_view.CFTextViewBold
             android:id="@+id/textHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             android:padding="@dimen/scale_10dp"
             android:text="@string/comparision_message"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_18sp" />
+            android:textSize="@dimen/text_size_16sp" />
 
         <LinearLayout
             android:id="@+id/linearHeaderLine"

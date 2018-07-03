@@ -185,18 +185,6 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_13sp" />
 
-                <!--<com.cheep.custom_view.AppButton
-                    android:id="@+id/btn_nearly_there"
-                    style="@style/AppButtonBlueBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/scale_30dp"
-                    android:layout_marginRight="@dimen/scale_30dp"
-                    android:layout_marginBottom="@dimen/scale_20dp"
-                    android:layout_marginTop="@dimen/scale_30dp"
-                    android:text="@string/label_lets_get_cheeping"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary" />-->
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/btn_nearly_there"
                     android:layout_width="match_parent"
@@ -207,10 +195,39 @@
                     android:layout_marginTop="@dimen/scale_30dp"
                     android:background="@drawable/btn_blue_sign_up"
                     android:gravity="center"
-                    android:text="@string/label_brilliant_its_time_to_cheep"
+                    android:text="@string/label_you_nearly_there"
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_19sp" />
+
+                <LinearLayout
+                    android:id="@+id/ln_desclaimer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_30dp"
+                    android:layout_marginRight="@dimen/scale_30dp"
+                    android:visibility="visible"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_checkbox"
+                        android:scaleType="fitXY"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/scale_8dp"
+                        android:src="@drawable/ic_checkbox_icon_unchecked" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/tv_desclaimer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|left"
+                        android:text="@string/terms_and_condition"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </ScrollView>

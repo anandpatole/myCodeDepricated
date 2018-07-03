@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -243,11 +246,15 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
-        /*// Start cheep care animations
-        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
-        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
+
+
 
         mBinding.tvCityName.setText(cityLandingPageModel.careCityDetail.cityName);
+
+        final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.cheep_care_value));
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, 0, 5, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
+        mBinding.tvCheepCare.setText(sb);
 
 
     }
