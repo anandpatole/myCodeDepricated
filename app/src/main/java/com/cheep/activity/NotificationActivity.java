@@ -3,7 +3,9 @@ package com.cheep.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -14,6 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.NotificationRecyclerViewAdapter;
+import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
+import com.cheep.cheepcarenew.fragments.ProfileDetailsFragmentnew;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityNotificationBinding;
 import com.cheep.model.NotificationModel;
@@ -276,7 +280,17 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             TaskSummaryActivity.getInstance(mContext, model.task_id);
         } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
             // Do Nothing for this TYPE of Notification.
-        } else {
+        }
+        else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
+        {
+
+      Intent intent=new Intent(mContext,HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
+            startActivity(intent);
+          // HomeActivity.getSupportFragmentManager().beginTransaction().replace(R.id.content, subscription, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
+        }
+        else {
             // Need to redirect the user to Task Detail Screen
            /* TaskDetailModel taskDetailModel = new TaskDetailModel();
             taskDetailModel.taskId = model.task_id;
