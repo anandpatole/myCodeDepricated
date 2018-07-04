@@ -217,6 +217,7 @@ public class HomeTabFragment extends BaseFragment {
         callAddressSizeListWS();
     }
 
+
     private void callAddressSizeListWS() {
         WebCallClass.getAddressAssetSizeWS(mContext, mCommonResponseListenerAdminSetting);
     }
@@ -327,7 +328,17 @@ public class HomeTabFragment extends BaseFragment {
 
         callGetAdminSettings();
     }
-
+private void hideCityBannerLayout()
+{
+    for(CareCityDetail detail: careBannerModelArrayList)
+    {
+        if(detail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+        {
+            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerLayout.setVisibility(View.GONE);
+            break;
+        }
+    }
+}
     private void callGetAdminSettings() {
         if (!Utility.isConnected(mContext)) {
             Log.d(TAG, "callGetAdminSettings: unable to call and get admin settings" + Math.ceil(3.4));
@@ -752,6 +763,8 @@ public class HomeTabFragment extends BaseFragment {
                                 break;
                             }
                         }
+
+                        hideCityBannerLayout();
                         /*SpannableString oldPrice = null,newPrice= null;
                         for(int i=0; i<careBannerModelArrayList.size(); i++){
                             if(!careBannerModelArrayList.get(i).oldPrice.equals("0")){

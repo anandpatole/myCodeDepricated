@@ -45,6 +45,7 @@
             android:visibility="visible"/>-->
 
         <RelativeLayout
+            android:id="@+id/view_pager_subscription_banner_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_cheep_care_banner"
             android:focusableInTouchMode="true"
