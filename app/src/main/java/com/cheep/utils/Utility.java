@@ -22,7 +22,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RatingBar;
@@ -144,6 +143,7 @@ public class Utility {
 //    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
 
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
+    public static final String DATE_FORMAT_HH= SuperFormatter.HOUR_24_HOUR;
     public static final String DATE_FORMAT_HH_MM_SS = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
@@ -700,6 +700,7 @@ public class Utility {
         String QUOTE_AMOUNT = "quoteAmount";
         String SP_USER_ID = "sp_user_id ";
         String IS_SUBSCRIPTION = "is_subscription";
+        String BROADCAST_TYPE = "broadCastType";
     }
 
 //    public interface cat {
@@ -809,6 +810,7 @@ public class Utility {
         // different limits
         int OTHER_SUBSCRIBED_ADDRESS_SELECTED = 24;
         int ADDRESS_SELECTED_POP_UP = 25;
+        int PAYTM_RESPONSE_FOR_RESCHEDULE= 26;
     }
 
     public interface REQUEST_TYPE {

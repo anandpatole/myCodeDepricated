@@ -132,8 +132,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     @Override
     protected void initiateUI() {
 
-        mBinding.cartAutoRenewSwitch.setSelected(true);
-        mBinding.paytmAutoRenewSwitch.setSelected(true);
+        mBinding.cartAutoRenewSwitch.setSelected(false);
+        mBinding.paytmAutoRenewSwitch.setSelected(false);
         mBinding.tvCardAutoRenewal.setText(R.string.label_auto_renew_activated);
         mBinding.tvPaytmAutoRenewal.setText(R.string.label_auto_renew_activated);
         paymentFor = getIntent().getStringExtra(Utility.Extra.PAYMENT_VIEW);
@@ -806,7 +806,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         UserDetails.PaytmUserDetail paytmUserDetail = userDetails.mPaytmUserDetail;
 
         if (PAYTM_STEP == PAYTM_SEND_OTP) {
-            SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount), mBinding.paytmAutoRenewSwitch.isSelected());
+            SendOtpActivity.newInstance(mContext, true, String.valueOf(payableAmount), mBinding.paytmAutoRenewSwitch.isSelected(), Utility.BROADCAST_TYPE.PAYTM_RESPONSE);
         }
         //this is commented because subscription is remove temporary -giteeka
         /*else if (mBinding.paytmAutoRenewSwitch.isSelected()) {
@@ -817,11 +817,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             switch (PAYTM_STEP) {
                 case PAYTM_ADD_MONEY:
                     AddMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
+                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, Utility.BROADCAST_TYPE.PAYTM_RESPONSE);
                     break;
                 case PAYTM_WITHDRAW:
                     WithdrawMoneyActivity.newInstance(mContext, String.valueOf(payableAmount), paytmPayableAmount, paytmUserDetail.paytmAccessToken,
-                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
+                            paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true, Utility.BROADCAST_TYPE.PAYTM_RESPONSE);
                     break;
             }
         }

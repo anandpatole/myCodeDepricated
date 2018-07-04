@@ -416,7 +416,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.imgBadge.setVisibility(View.GONE);
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
-                    holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
 
                 }
 

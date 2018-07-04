@@ -40,10 +40,6 @@ public class TaskDetailModel implements Serializable {
     @SerializedName("task_category")
     public JobCategoryModel categoryModel;
 
-    @SerializedName("cat_price")
-    public String catPrice;
-
-
     @SerializedName("task_subcategory")
     public String subCategoryName = Utility.EMPTY_STRING;
 
@@ -147,8 +143,18 @@ public class TaskDetailModel implements Serializable {
 
     @SerializedName("is_any_amount_pending")
     public String isAnyAmountPending;
+
     @SerializedName("payment_method")
     public String paymentMethod;
+
+    @SerializedName("extra_charge_status")
+    public String extraChargeStatus;
+
+    @SerializedName("non_office_hours_charge")
+    public String nonOfficeHoursCharge;
+
+    @SerializedName("urgent_booking_charge")
+    public String urgentBookingCharge;
 
 
     public String quoteAmountStrategicPartner;

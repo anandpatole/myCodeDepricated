@@ -47,12 +47,15 @@ import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
 import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
+import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
 import com.cheep.databinding.RowUpcomingTaskBinding;
+import com.cheep.dialogs.OutOfOfficeHoursDialog;
+import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.fragment.BaseFragment;
@@ -1306,7 +1309,7 @@ public class HomeActivity extends BaseAppCompatActivity
         datePickerDialog.show();
     }
 
-    private void showTimePickerDialog(final int which, final TaskDetailModel exploreDataModel, final RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
+    private void showTimePickerDialog(final int which, final TaskDetailModel taskDetailModel, final RowUpcomingTaskBinding mRowUpcomingTaskBinding) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
 
@@ -1328,7 +1331,7 @@ public class HomeActivity extends BaseAppCompatActivity
                                 Log.i(TAG, "onTimeSet: Time: " + startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_HH_MM_AM));
 
                                 Calendar calRescEnd = Calendar.getInstance();
-                                calRescEnd.setTimeInMillis(Long.valueOf(exploreDataModel.taskStartdate));
+                                calRescEnd.setTimeInMillis(Long.valueOf(taskDetailModel.taskStartdate));
                                 calRescEnd.add(Calendar.MONTH, 1);
                                 Log.i(TAG, "onTimeSet: " + calRescEnd.getTimeInMillis());
                                 if (startDateTimeSuperCalendar.getTimeInMillis() > calRescEnd.getTimeInMillis()) {
@@ -1336,7 +1339,48 @@ public class HomeActivity extends BaseAppCompatActivity
                                     return;
                                 }
                                 // Call Webservice now
-                                callRescheduleTaskWS(exploreDataModel.taskId, String.valueOf(startDateTimeSuperCalendar.getTimeInMillis()));
+                                SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
+                                AdminSettingModel adminSettingModel = PreferenceUtility.getInstance(HomeActivity.this).getAdminSettings();
+                                if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+
+                                    if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL)) {
+                                        double nonWorkingHourCharges = 0, urgentBookingCharge = 0;
+                                        try {
+                                            nonWorkingHourCharges = Double.valueOf(taskDetailModel.nonOfficeHoursCharge);
+                                            urgentBookingCharge = Double.valueOf(taskDetailModel.urgentBookingCharge);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        Log.e(TAG, "onTimeSet: nonOfficeHoursCharge -- " + nonWorkingHourCharges);
+                                        Log.e(TAG, "onTimeSet: urgentBookingCharge -- " + urgentBookingCharge);
+                                        if (nonWorkingHourCharges > 0 || urgentBookingCharge > 0) {
+                                            // user has already selected extra charges to pay
+                                            callRescheduleTaskWS(taskDetailModel.taskId, String.valueOf(startDateTimeSuperCalendar.getTimeInMillis()));
+                                        } else {
+                                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                                showUrgentBookingDialog(adminSettingModel, taskDetailModel);
+                                            } else if (startDateTimeSuperCalendar.isNonWorkingHour(adminSettingModel.starttime, adminSettingModel.endtime)) {
+                                                showOutOfOfficeHours(adminSettingModel, taskDetailModel);
+                                            } else {
+                                                callRescheduleTaskWS(taskDetailModel.taskId, String.valueOf(startDateTimeSuperCalendar.getTimeInMillis()));
+                                            }
+                                        }
+                                    } else {
+                                        if (taskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM))
+                                            callRescheduleTaskWS(taskDetailModel.taskId, String.valueOf(startDateTimeSuperCalendar.getTimeInMillis()));
+                                        else {
+                                            if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                                showUrgentBookingDialog(adminSettingModel, taskDetailModel);
+                                            } else if (startDateTimeSuperCalendar.isNonWorkingHour(adminSettingModel.starttime, adminSettingModel.endtime)) {
+                                                showOutOfOfficeHours(adminSettingModel, taskDetailModel);
+                                            } else {
+                                                callRescheduleTaskWS(taskDetailModel.taskId, String.valueOf(startDateTimeSuperCalendar.getTimeInMillis()));
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                                }
 
 
 //                                mActivityHireNewJobBinding.textDate.setText(startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM));
@@ -1353,6 +1397,39 @@ public class HomeActivity extends BaseAppCompatActivity
         timePickerDialog.show();
     }
 
+    private void showOutOfOfficeHours(AdminSettingModel model, final TaskDetailModel taskDetailModel) {
+        OutOfOfficeHoursDialog out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new OutOfOfficeHoursDialog.OutOfOfficeHoursListener() {
+            @Override
+            public void onOutofOfficePayNow() {
+                String s = String.valueOf(startDateTimeSuperCalendar.getCalendar().getTimeInMillis());
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, s, Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+            }
+
+            @Override
+            public void onOutofOfficeCanWait() {
+            }
+        });
+        out_of_office_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
+        out_of_office_dialog.setCancelable(false);
+    }
+
+    private void showUrgentBookingDialog(AdminSettingModel model, final TaskDetailModel taskDetailModel) {
+        UrgentBookingDialog ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new UrgentBookingDialog.UrgentBookingListener() {
+            @Override
+            public void onUrgentPayNow() {
+                String s = String.valueOf(startDateTimeSuperCalendar.getCalendar().getTimeInMillis());
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, s, Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
+            }
+
+            @Override
+            public void onUrgentCanWait() {
+            }
+        });
+        ugent_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
+        ugent_dialog.setCancelable(false);
+    }
+
+
     /**
      * Call Delete(Cancel)task webservice
      */
@@ -1365,7 +1442,7 @@ public class HomeActivity extends BaseAppCompatActivity
         WebCallClass.rescheduleTask(mContext, taskId, startDateTimeTimeStamp, new WebCallClass.RescheduleTaskListener() {
             @Override
             public void onSuccessOfReschedule() {
-
+                hideProgressDialog();
             }
         }, mCommonResponseListener);
     }

@@ -622,7 +622,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
             mBinding.lnResponseReceived.setVisibility(View.GONE);
             mBinding.lnProviderProfileSection.setVisibility(View.VISIBLE);
 
-     //anand       // Show Payment Summary textview
+            //anand       // Show Payment Summary textview
             mBinding.textViewPaymentSummary.setVisibility(View.GONE);
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
@@ -716,7 +716,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 //                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
 //                    } else {
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
-                        PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel,false);
+                    PaymentSummaryActivity.newInstance(TaskSummaryActivity.this, mTaskDetailModel, Utility.EMPTY_STRING, Utility.EMPTY_STRING);
 //                    }
                 }
             });
@@ -912,8 +912,8 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-       //anand
-             mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+            //anand
+            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
             mBinding.textPaid.setVisibility(View.GONE);
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
@@ -1156,7 +1156,7 @@ public class TaskSummaryActivity extends BaseAppCompatActivity {
 
                     if (pendingAmount > 0) {
 //                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel, false);
+                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel,  Utility.EMPTY_STRING, Utility.EMPTY_STRING);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
