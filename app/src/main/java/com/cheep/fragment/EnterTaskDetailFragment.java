@@ -211,7 +211,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
         Log.d(TAG, "initiateUI() called");
         model = PreferenceUtility.getInstance(mContext).getAdminSettings();
-
+        Calendar now = Calendar.getInstance();
+        if (tpd == null)
+        {            tpd = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
+                    EnterTaskDetailFragment.this,
+                    now.get(Calendar.HOUR_OF_DAY),
+                    now.get(Calendar.MINUTE),
+                    false
+            );
+        }
         //Update Where lable with icon
         updateWhereLabelWithIcon(false);
 
@@ -411,7 +419,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     EnterTaskDetailFragment.this,
                     now.get(Calendar.HOUR_OF_DAY),
                     now.get(Calendar.MINUTE),
-                    false
+                    Utility.BOOLEAN_NEW.NO
             );
         }
         else {
@@ -420,15 +428,15 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     now.get(Calendar.HOUR_OF_DAY),
                     now.get(Calendar.MINUTE),
                     now.get(Calendar.SECOND),
-                    false
+                    Utility.BOOLEAN_NEW.NO
             );
-            tpd.setThemeDark(false);
-            tpd.enableMinutes(false);
-            tpd.dismissOnPause(true);
-            tpd.enableSeconds(false);
+            tpd.setThemeDark( Utility.BOOLEAN_NEW.NO);
+            tpd.enableMinutes( Utility.BOOLEAN_NEW.NO);
+            tpd.dismissOnPause( Utility.BOOLEAN_NEW.YES);
+            tpd.enableSeconds( Utility.BOOLEAN_NEW.NO);
 
 
-            tpd.setTitle("Select Time");
+            //tpd.setTitle("Select Time");
         tpd.setVersion(com.wdullaer.materialdatetimepicker.time.TimePickerDialog.Version.VERSION_2);
 
             tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
