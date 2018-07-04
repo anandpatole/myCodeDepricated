@@ -101,114 +101,107 @@
                 <android.support.v7.widget.CardView
                     android:id="@+id/card_view"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_110dp"
-                    android:background="@color/white"
+                    android:layout_height="@dimen/scale_100dp"
+                    app:cardBackgroundColor="@color/white"
                     app:cardElevation="@dimen/scale_4dp">
 
                     <RelativeLayout
                         android:id="@+id/relativeCheepCarePackage"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/scale_110dp">
+                        android:layout_height="match_parent">
 
                         <ImageView
                             android:id="@+id/imgVerification"
-                            android:layout_width="@dimen/scale_40dp"
-                            android:layout_height="@dimen/scale_40dp"
+                            android:layout_width="@dimen/scale_19dp"
+                            android:layout_height="@dimen/scale_19dp"
                             android:layout_centerVertical="true"
-                            android:padding="@dimen/scale_8dp"
+                            android:layout_marginLeft="@dimen/scale_22dp"
+                            android:layout_marginStart="@dimen/scale_22dp"
                             android:src="@drawable/verified_icon" />
+                         <RelativeLayout
+                             android:layout_width="match_parent"
+                             android:layout_height="match_parent"
+                             android:layout_marginLeft="@dimen/scale_54dp"
+                             android:layout_marginStart="@dimen/scale_54dp">
 
-                        <LinearLayout
-                            android:id="@+id/asa"
-                            android:layout_width="@dimen/scale_268dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/scale_8dp"
-                            android:layout_marginStart="@dimen/scale_8dp"
-                            android:layout_toEndOf="@+id/imgVerification"
-                            android:layout_toRightOf="@+id/imgVerification"
-                            android:orientation="vertical">
+                             <RelativeLayout
+                                 android:id="@+id/relatvice_price"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="@dimen/scale_40dp">
 
+                                 <com.cheep.custom_view.CFTextViewRegular
+                                     android:id="@+id/tv_old_price"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     android:background="@drawable/strike"
+                                     android:text="@string/price"
+                                     android:layout_alignParentRight="true"
+                                     android:layout_alignParentEnd="true"
+                                     android:layout_marginRight="@dimen/scale_50dp"
+                                     android:layout_marginEnd="@dimen/scale_50dp"
+                                     android:textColor="@color/splash_gradient_end"
+                                     android:layout_marginTop="@dimen/scale_8dp"
+                                     android:textSize="@dimen/text_size_11sp" />
 
-                            <com.cheep.custom_view.CFTextViewBold
-                                android:id="@+id/tv_package_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/cheep_care_package"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_18sp"
-                                android:maxLines="1"
-                                android:ellipsize="end"/>
+                                 <com.cheep.custom_view.CFTextViewBold
+                                     android:id="@+id/tv_package_name"
+                                     android:layout_width="match_parent"
+                                     android:layout_height="wrap_content"
+                                     android:text="@string/cheep_care_package"
+                                     android:textColor="@color/splash_gradient_end"
+                                     android:textSize="@dimen/text_size_17sp"
+                                     android:maxLines="1"
+                                     android:layout_toLeftOf="@+id/tv_new_price"
+                                     android:layout_toStartOf="@+id/tv_new_price"
+                                     android:layout_alignParentBottom="true"
+                                     android:ellipsize="end"/>
 
+                                 <com.cheep.custom_view.CFTextViewBold
+                                     android:id="@+id/tv_new_price"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     android:text="@string/price"
+                                     android:layout_alignParentRight="true"
+                                     android:layout_alignParentEnd="true"
+                                     android:textColor="@color/splash_gradient_end"
+                                     android:layout_marginRight="@dimen/scale_26dp"
+                                     android:layout_marginEnd="@dimen/scale_26dp"
+                                     android:textSize="@dimen/text_size_16sp"
+                                     android:layout_alignParentBottom="true"/>
 
-                            <com.cheep.custom_view.CFTextViewSemiBold
-                                android:id="@+id/tv_package_description"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/complete_visit_time"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_16sp"
-                                android:maxLines="1"
-                                android:padding="@dimen/scale_2dp"
-                                android:ellipsize="end"/>
+                             </RelativeLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                             <com.cheep.custom_view.CFTextViewRegular
+                                 android:id="@+id/tv_package_description"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_below="@+id/relatvice_price"
+                                 android:text="@string/complete_visit_time"
+                                 android:textColor="@color/black_variant"
+                                 android:textSize="@dimen/text_size_12sp"
+                                 android:maxLines="1"
+                                 android:padding="@dimen/scale_2dp"
+                                 android:ellipsize="end"/>
 
-                                <ImageView
-                                    android:id="@+id/img_home_and_office_icon"
-                                    android:layout_width="@dimen/scale_20dp"
-                                    android:layout_height="@dimen/scale_20dp"
-                                    android:src="@drawable/ic_home"/>
-
-
-                                <com.cheep.custom_view.CFTextViewRegular
-                                    android:id="@+id/tv_address"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/scale_6dp"
-                                    android:layout_marginLeft="@dimen/scale_6dp"
-                                    android:text="@string/cheep_package_address"
-                                    android:textColor="@color/sixty_opacity"
-                                    android:textSize="@dimen/text_size_16sp"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"/>
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="@dimen/scale_8dp"
-                            android:layout_toRightOf="@id/asa"
-                            android:layout_marginRight="@dimen/scale_8dp"
-                            android:orientation="vertical">
-
-                            <com.cheep.custom_view.CFTextViewRegular
-                                android:id="@+id/tv_old_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/strike"
-                                android:text="@string/price"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_14sp" />
-
-                            <com.cheep.custom_view.CFTextViewBold
-                                android:id="@+id/tv_new_price"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/price"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_18sp" />
+                             <com.cheep.custom_view.CFTextViewSemiBold
+                                 android:id="@+id/tv_address"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:layout_below="@+id/tv_package_description"
+                                 android:layout_centerVertical="true"
+                                 android:layout_marginTop="@dimen/scale_3dp"
+                                 android:ellipsize="end"
+                                 android:maxLines="2"
+                                 android:paddingEnd="@dimen/scale_4dp"
+                                 android:paddingLeft="@dimen/scale_4dp"
+                                 android:paddingRight="@dimen/scale_4dp"
+                                 android:paddingStart="@dimen/scale_4dp"
+                                 android:text="@string/hint_address_initials"
+                                 android:textColor="@color/grey_varient_16_opacity"
+                                 android:textSize="@dimen/text_size_12sp" />
 
 
-                        </LinearLayout>
+                         </RelativeLayout>
 
                     </RelativeLayout>
 
@@ -221,37 +214,40 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/card_view"
                     android:layout_marginBottom="@dimen/scale_12dp"
-                    android:layout_marginTop="@dimen/scale_12dp"
+                    android:layout_marginTop="@dimen/scale_25dp"
+                    android:layout_marginLeft="@dimen/scale_42dp"
+                    android:layout_marginRight="@dimen/scale_42dp"
                     android:gravity="center"
-                    android:padding="@dimen/scale_8dp"
                     android:text="@string/cheep_package_duration"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_18sp" />
+                    android:textColor="@color/black_variant"
+                    android:textSize="@dimen/text_size_15sp" />
 
 
                 <LinearLayout
                     android:id="@+id/linearPriceSelection"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_110dp"
+                    android:layout_height="@dimen/scale_70dp"
                     android:layout_below="@+id/tv_heading"
+                    android:layout_marginLeft="@dimen/scale_42dp"
+                    android:layout_marginRight="@dimen/scale_42dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="@dimen/scale_0dp"
-                        android:layout_height="@dimen/scale_100dp"
+                        android:layout_height="@dimen/scale_70dp"
                         android:layout_weight="1">
 
                         <android.support.v7.widget.CardView
                             android:id="@+id/card_3_months"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/scale_90dp"
+                            android:layout_height="@dimen/scale_60dp"
                             app:cardBackgroundColor="@color/selector_bg_price_package_care"
                             app:cardCornerRadius="@dimen/scale_4dp"
                             app:cardElevation="@dimen/scale_4dp"
                             app:cardUseCompatPadding="true">
 
                             <LinearLayout
-                                android:layout_width="122dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -260,10 +256,9 @@
                                     android:id="@+id/tv_3_month"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:padding="@dimen/scale_2dp"
                                     android:text="@string/months_3"
                                     android:textColor="@color/selector_text_price_package_care_title"
-                                    android:textSize="@dimen/text_size_16sp" />
+                                    android:textSize="@dimen/text_size_11sp" />
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/tv_3_save_month"
@@ -272,7 +267,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/save_money_3"
                                     android:textColor="@color/selector_text_price_package_care_sub_title"
-                                    android:textSize="@dimen/text_size_14sp" />
+                                    android:textSize="@dimen/text_size_9sp" />
 
                             </LinearLayout>
 
@@ -283,13 +278,13 @@
 
                     <LinearLayout
                         android:layout_width="@dimen/scale_0dp"
-                        android:layout_height="@dimen/scale_100dp"
+                        android:layout_height="@dimen/scale_70dp"
                         android:layout_weight="1">
 
                         <android.support.v7.widget.CardView
                             android:id="@+id/card_6_months"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/scale_90dp"
+                            android:layout_height="@dimen/scale_60dp"
                             app:cardBackgroundColor="@color/selector_bg_price_package_care"
                             app:cardCornerRadius="@dimen/scale_4dp"
                             app:cardElevation="@dimen/scale_4dp"
@@ -308,7 +303,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/months_6"
                                     android:textColor="@color/selector_text_price_package_care_title"
-                                    android:textSize="@dimen/text_size_16sp" />
+                                    android:textSize="@dimen/text_size_11sp" />
 
                                 <com.cheep.custom_view.CFTextViewRegular
                                     android:id="@+id/tv_6_save_month"
@@ -317,7 +312,7 @@
                                     android:padding="@dimen/scale_2dp"
                                     android:text="@string/save_money_6"
                                     android:textColor="@color/selector_text_price_package_care_sub_title"
-                                    android:textSize="@dimen/text_size_14sp" />
+                                    android:textSize="@dimen/text_size_9sp" />
 
                             </LinearLayout>
 
@@ -329,7 +324,7 @@
 
                     <LinearLayout
                         android:layout_width="@dimen/scale_0dp"
-                        android:layout_height="@dimen/scale_100dp"
+                        android:layout_height="@dimen/scale_70dp"
                         android:layout_weight="1">
 
                         <RelativeLayout
@@ -344,7 +339,7 @@
                                 <android.support.v7.widget.CardView
                                     android:id="@+id/card_12_months"
                                     android:layout_width="match_parent"
-                                    android:layout_height="@dimen/scale_90dp"
+                                    android:layout_height="@dimen/scale_60dp"
                                     app:cardBackgroundColor="@color/selector_bg_price_package_care"
                                     app:cardCornerRadius="@dimen/scale_4dp"
                                     app:cardElevation="@dimen/scale_4dp"
@@ -363,7 +358,7 @@
                                             android:padding="@dimen/scale_2dp"
                                             android:text="@string/months_12"
                                             android:textColor="@color/selector_text_price_package_care_title"
-                                            android:textSize="@dimen/text_size_16sp" />
+                                            android:textSize="@dimen/text_size_11sp" />
 
                                         <com.cheep.custom_view.CFTextViewRegular
                                             android:id="@+id/tv_12_save_month"
@@ -372,7 +367,7 @@
                                             android:padding="@dimen/scale_2dp"
                                             android:text="@string/save_money_12"
                                             android:textColor="@color/selector_text_price_package_care_sub_title"
-                                            android:textSize="@dimen/text_size_14sp" />
+                                            android:textSize="@dimen/text_size_9sp" />
 
                                     </LinearLayout>
 
@@ -386,12 +381,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
                                 android:layout_centerInParent="true"
-                                android:layout_marginBottom="@dimen/scale_6dp"
+                                android:layout_marginBottom="@dimen/scale_8dp"
                                 android:background="@color/yellow"
                                 android:padding="@dimen/scale_2dp"
                                 android:text="@string/best_value"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/text_size_14sp" />
+                                android:textSize="@dimen/text_size_8sp" />
 
 
                         </RelativeLayout>
@@ -408,11 +403,10 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.cheep.custom_view.CFTextViewBold
+                    <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/tv_mean_package_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/scale_2dp"
                         android:text="@string/total_amount"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_30sp" />
@@ -420,14 +414,15 @@
                     <com.cheep.custom_view.CFTextViewRegular
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/scale_2dp"
                         android:text="@string/inclusive_taxes"
                         android:textColor="@color/colorGray"
-                        android:textSize="@dimen/text_size_18sp" />
+                        android:padding="@dimen/scale_2dp"
+                        android:textSize="@dimen/text_size_10sp" />
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginBottom="@dimen/scale_4dp"
                         android:src="@drawable/ic_i_for_taxes" />
 
                 </LinearLayout>
@@ -437,7 +432,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/linearPriceValue"
-                    android:layout_marginTop="@dimen/scale_30dp"
+                    android:layout_marginTop="@dimen/scale_20dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
@@ -446,7 +441,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginEnd="@dimen/scale_5dp"
-                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginLeft="@dimen/scale_20dp"
                         android:layout_marginRight="@dimen/scale_5dp"
                         android:layout_marginStart="@dimen/scale_10dp"
                         android:layout_weight="1"
@@ -464,8 +459,8 @@
                                 android:layout_toLeftOf="@+id/iv_tick_promo_code"
                                 android:gravity="center"
                                 android:text="@string/hint_apply_cheep_promo_code"
-                                android:textColor="@color/grey_varient_10"
-                                android:textSize="@dimen/text_size_12sp" />
+                                android:textColor="@color/selector_text_price_package_care_sub_title"
+                                android:textSize="@dimen/text_size_11sp" />
 
                             <ImageView
                                 android:id="@+id/iv_tick_promo_code"
@@ -518,8 +513,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:layout_marginLeft="@dimen/scale_10dp"
-                        android:layout_marginRight="@dimen/scale_5dp"
+                        android:layout_marginLeft="@dimen/scale_5dp"
+                        android:layout_marginRight="@dimen/scale_20dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -535,8 +530,8 @@
                                 android:layout_toLeftOf="@+id/iv_tick_mate_code"
                                 android:gravity="center"
                                 android:text="@string/hint_apply_cheep_mate_code"
-                                android:textColor="@color/grey_varient_10"
-                                android:textSize="@dimen/text_size_12sp" />
+                                android:textColor="@color/selector_text_price_package_care_sub_title"
+                                android:textSize="@dimen/text_size_11sp" />
 
                             <ImageView
                                 android:id="@+id/iv_tick_mate_code"
@@ -595,9 +590,11 @@
 
                     <ImageView
                         android:id="@+id/imgInfo"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:padding="@dimen/scale_10dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="@dimen/scale_20dp"
+                        android:layout_marginStart="@dimen/scale_20dp"
+                        android:layout_marginTop="@dimen/scale_4dp"
                         android:src="@drawable/ic_info_blue" />
 
                     <com.cheep.custom_view.CFTextViewRegular
@@ -606,9 +603,11 @@
                         android:layout_toEndOf="@+id/imgInfo"
                         android:layout_toRightOf="@+id/imgInfo"
                         android:padding="@dimen/scale_2dp"
+                        android:layout_marginLeft="@dimen/scale_8dp"
+                        android:layout_marginStart="@dimen/scale_8dp"
                         android:text="@string/cheep_package_info"
-                        android:textColor="@color/colorGray"
-                        android:textSize="@dimen/text_size_14sp" />
+                        android:textColor="@color/selector_text_price_package_care_sub_title"
+                        android:textSize="@dimen/text_size_11sp" />
 
                 </RelativeLayout>
 

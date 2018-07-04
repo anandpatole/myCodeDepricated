@@ -133,6 +133,8 @@ public class Utility {
     public static final String TYPE_OF_PACKAGE = "packageType";
     public static String YES = "yes";
     public static int TEN = 10;
+    public static final String HOME = "Home";
+    public static final String OFFICE = "Office";
 
     //Date Formats
 
