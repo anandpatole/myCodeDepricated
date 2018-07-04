@@ -25,7 +25,7 @@
                 android:layout_height="@dimen/scale_70dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/scale_12dp"
-                android:src="@drawable/bird_pro_clock"/>
+                android:src="@drawable/tops_final_logo"/>
 
             <ImageView
                 android:id="@+id/imge2"

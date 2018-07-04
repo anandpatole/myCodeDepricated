@@ -114,6 +114,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     private AddressCategorySelectionDialog addressCategorySelectionDialog;
     private AddressListProfileDialog addressListDialog;
     private UserDetails userDetails;
+    private AddressRecyclerViewAdapterProfile adapterAddressRecyclerView;
 
     //    private String mCurrentPhotoPath;
     private File photoFile;
@@ -745,12 +746,12 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         }
     }
 
-    AddressRecyclerViewAdapterProfile adapterAddressRecyclerView;
+
 
     /**
      * Loads address in choose address dialog box in recycler view
      */
-    private boolean fillAddressRecyclerView1(RecyclerView recyclerView) {
+    /*private boolean fillAddressRecyclerView1(RecyclerView recyclerView) {
         //Setting RecyclerView Adapter
 
 
@@ -761,7 +762,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
         //Here we are checking if address is not there then open add address dialog immediatly
         return addressList == null || addressList.isEmpty();
-    }
+    }*/
 
     private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
         //Setting RecyclerView Adapter
@@ -785,26 +786,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 homeActivity.mLocationTrackService.requestLocationUpdate();
                 return;
             }
-            /*if (isLocationEnabled() == false) {
-                if (isGPSEnabled() == false) {
-                    showGPSEnableDialog();
-                    return;
-                }
-            }*/
 
-            /*String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (locationProviders == null || locationProviders.equals("")) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }
-
-            LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }*/
         }
 
         try {
@@ -814,20 +796,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             Intent intent = intentBuilder.build(getActivity());
             startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-
-            //TODO: Adding dummy place when playservice is not there
-         /*   if (edtAddress != null) {
-                edtAddress.setText(getString(R.string.label_dummy_address_with) + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                edtAddress.setFocusable(true);
-                edtAddress.setFocusableInTouchMode(true);
-                try {
-                    edtAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
-                } catch (Exception exe) {
-                    exe.printStackTrace();
-                    edtAddress.setTag(new LatLng(0, 0));
-                }
-            }*/
-
             e.printStackTrace();
             Utility.showToast(mContext, getString(R.string.label_playservice_not_available));
         }
@@ -982,7 +950,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     /* need to show only one address then i
      take zero position data from list*/
     private void setAddress() {
-        if (addressList != null) {
+        if (addressList != null && addressList.size() >0) {
+            mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
             for (int i = 0; i < addressList.size(); i++) {
                 mBinding.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(addressList.get(0).category));
                 mBinding.tvAddressCategory.setText(addressList.get(0).category);
@@ -990,11 +959,13 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 hideAndShowView(addressList.get(0).is_subscribe);
                 break;
             }
+        }else {
+            mBinding.linearAddressLayout.setVisibility(View.GONE);
         }
     }
     /*this method is used , when address is  subscribe
      then edit and delete text view not visible */
-    /* In AddressModel have one variable is_subscribe if this variable is none this mens
+    /* In AddressModel have one variable is_subscribe if this variable is none this means
      * address is not subscribe */
     private void hideAndShowView(String isSubscribe){
         if(isSubscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)){

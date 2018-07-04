@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -77,6 +81,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private String selectedMonth;
     private double amountAfterDiscount;
     private String packageType;
+    private String isHomeOrOffice;
 
 
     public static void newInstance(Context context) {
@@ -198,8 +203,35 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
         }
 
-        mBinding.imgHomeAndOfficeIcon.setImageResource(Utility.getAddressCategoryBlueIcon(addressModel.category));
-        mBinding.tvAddress.setText(addressModel.getAddressWithInitials());
+        if(addressModel.category.equalsIgnoreCase(NetworkUtility.TAGS.HOME)){
+            isHomeOrOffice = Utility.HOME;
+        }else{
+            isHomeOrOffice = Utility.OFFICE;
+        }
+
+        final SpannableStringBuilder sb = new SpannableStringBuilder("  "+isHomeOrOffice +"  "+ addressModel.getAddressWithInitials());
+        final ForegroundColorSpan fcs = new ForegroundColorSpan(getResources().getColor(R.color.splash_gradient_end));
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, 0, 6, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 6 characters Bold
+        sb.setSpan(fcs, 0, 6, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        int resId = R.drawable.icon_address_home_active;
+        switch (addressModel.category) {
+            case NetworkUtility.TAGS.HOME:
+                resId = R.drawable.icon_address_home_active;
+                break;
+            case NetworkUtility.TAGS.OFFICE:
+                resId = R.drawable.icon_address_office_active;
+                break;
+        }
+
+
+        ImageSpan span = new ImageSpan(mContext, resId, ImageSpan.ALIGN_BASELINE);
+        sb.append(Utility.ONE_CHARACTER_SPACE).append(Utility.ONE_CHARACTER_SPACE);
+        sb.setSpan(span, 0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mBinding.tvAddress.setText(sb);
+
     }
 
 
