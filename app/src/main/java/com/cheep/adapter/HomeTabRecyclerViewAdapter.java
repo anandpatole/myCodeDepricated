@@ -175,9 +175,8 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             holder.mRowTabHomeBinding.ivLiveAnimated.setVisibility(View.GONE);
             holder.mRowTabHomeBinding.tvLiveFeed.setVisibility(View.GONE);
         }
-
-        holder.mRowTabHomeBinding.tvOldPrice.setText(mContext.getString(R.string.rupee_symbol_x,model.catOldPrice));
-        holder.mRowTabHomeBinding.tvNewPrice.setText(mContext.getString(R.string.rupee_symbol_x, model.catPrice+" "+Utility.ONLY));
+        holder.mRowTabHomeBinding.tvOldPrice.setText(model.catOldPrice);
+        holder.mRowTabHomeBinding.tvNewPrice.setText(model.catNewPrice+" "+Utility.ONLY);
 
         // LIVE Pro stacks
         updateLIVEProStackImages(holder.mRowTabHomeBinding, (ArrayList<String>) model.proImagesPerCategory);

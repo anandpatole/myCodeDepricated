@@ -77,6 +77,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     private String generatedOrderId;
     private boolean isLowBalance;
     private boolean isSubscription = false;
+    private int broadCastType = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
 
     private double payableAmount;
     private ActivityVerifyOtpBinding mActivityVerifyOtpBinding;
@@ -85,13 +86,14 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     // set timer interval 1 sec
     private static final long RESEND_OTP_TIMER_INTERVAL = 1000;
 
-    public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount, boolean isSubscription) {
+    public static void newInstance(Context context, String mobileNumber, String state, boolean isPaytm, String amount, boolean isSubscription, int broadCastType) {
         Intent intent = new Intent(context, VerifyOtpActivity.class);
         intent.putExtra(Utility.Extra.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Utility.Extra.STATE, state);
         intent.putExtra(Utility.Extra.DATA, isPaytm);
         intent.putExtra(Utility.Extra.AMOUNT, amount);
         intent.putExtra(Utility.Extra.IS_SUBSCRIPTION, isSubscription);
+        intent.putExtra(Utility.Extra.BROADCAST_TYPE, broadCastType);
         context.startActivity(intent);
     }
 
@@ -126,6 +128,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
             isPaytm = getIntent().getExtras().getBoolean(Utility.Extra.DATA);
             amount = getIntent().getExtras().getString(Utility.Extra.AMOUNT);
             isSubscription = getIntent().getExtras().getBoolean(Utility.Extra.IS_SUBSCRIPTION, false);
+            broadCastType = getIntent().getExtras().getInt(Utility.Extra.BROADCAST_TYPE);
         }
 
 
@@ -492,11 +495,11 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
 //            BTN_WHICH = BTN_IS_ADD_AMOUNT;
                 //TODO: add amount
                 payableAmount = Math.ceil(Double.parseDouble(amount) - paytmWalletBalance);
-                AddMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance);
+                AddMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, broadCastType);
             } else {
 //            BTN_WHICH = BTN_IS_CONFIRM;
                 //TODO: withdraw money
-                WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, isPaytm);
+                WithdrawMoneyActivity.newInstance(mContext, amount, payableAmount, mAccessToken, mMobileNumber, mResourceOwnerCustomerId, paytmWalletBalance, isPaytm, broadCastType);
             }
             // finish activity as now account is linked.
             // this event is fired to finish send otp and verify otp activity
@@ -596,7 +599,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
+        if (event.BROADCAST_ACTION ==broadCastType) {
             // We need to finish this activity regardless of the response is success or failure
             finish();
         }

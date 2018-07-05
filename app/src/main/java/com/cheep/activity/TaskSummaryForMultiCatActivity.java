@@ -31,7 +31,6 @@ import android.widget.TimePicker;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.adapter.SubServiceSummaryAdapter;
 import com.cheep.cheepcare.activity.RateAndReviewActivity;
 import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
@@ -177,7 +176,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         setProSection();
 
         //set uploaded media
-      //  setUpMediaUI();
+        //  setUpMediaUI();
 
         //set task when
         setTaskWhen();
@@ -204,7 +203,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     }
 
     private void setProSection() {
-        mTaskDetailModel.selectedProvider.userName="ANAND";
+        mTaskDetailModel.selectedProvider.userName = "ANAND";
         // Setup First section whether SP is final or not
         if (mTaskDetailModel.selectedProvider != null && !TextUtils.isEmpty(mTaskDetailModel.selectedProvider.providerId)) {
             // Provider is final.
@@ -306,7 +305,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //                    if (mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
 //                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
 //                    } else {
-                        PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel,false);
+                    PaymentSummaryActivity.newInstance(TaskSummaryForMultiCatActivity.this, mTaskDetailModel, Utility.EMPTY_STRING, Utility.EMPTY_STRING);
 
 //                    }
                 }
@@ -326,10 +325,10 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //               // mBinding.textTaskStatusTop.setText(getString(R.string.label_receiving_quotes));
 //                updateSPImageStacks(mTaskDetailModel.profile_img_arr);
 //            } else {
-                mBinding.lnResponseReceived.setVisibility(View.GONE);
-                mBinding.lnProviderProfileSection.setVisibility(View.GONE);
-                mBinding.rlUnknownPro.setVisibility(View.VISIBLE);
-                // Update Task Status
+            mBinding.lnResponseReceived.setVisibility(View.GONE);
+            mBinding.lnProviderProfileSection.setVisibility(View.GONE);
+            mBinding.rlUnknownPro.setVisibility(View.VISIBLE);
+            // Update Task Status
 //                mBinding.textTaskStatusTop.setText(Utility.EMPTY_STRING);
 //            }
 
@@ -371,11 +370,11 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         // Set Second Section
 //        mBinding.textSubCategoryName.setText(mTaskDetailModel.subCategoryName);
         mBinding.textCategory.setText(mTaskDetailModel.categoryModel.catName);
-        if(mTaskDetailModel.subCatList!=null) {
+        if (mTaskDetailModel.subCatList != null) {
             mBinding.recyclerViewSubCategory.setLayoutManager(new LinearLayoutManager(this));
             mBinding.recyclerViewSubCategory.setAdapter(new SubServiceSummaryAdapter(mTaskDetailModel.subCatList));
         }
-       // mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(mTaskDetailModel.subCatList));
+        // mBinding.recyclerView.setAdapter(new SelectedSubCatSummaryAdapter(mTaskDetailModel.subCatList));
         mBinding.textTaskDesc.setText(mTaskDetailModel.taskDesc);
 
         // By Default makethe task completion dialog as gone
@@ -421,28 +420,24 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         // Setup WHERE section
 
         // Set Category/Nickname
-        if(mTaskDetailModel.taskAddress.nickname != null && !TextUtils.isEmpty(mTaskDetailModel.taskAddress.nickname)) {
+        if (mTaskDetailModel.taskAddress.nickname != null && !TextUtils.isEmpty(mTaskDetailModel.taskAddress.nickname)) {
             //mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.nickname);
             mBinding.textTaskWhere1.setText(Utility.getAddressCategoryString(mTaskDetailModel.taskAddress.category));
             mBinding.textTaskWhere1.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(mTaskDetailModel.taskAddress.category), 0, 0, 0);
         } else {
-            mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.category.substring(0,1).toUpperCase() + mTaskDetailModel.taskAddress.category.substring(1));
+            mBinding.textTaskWhere1.setText(mTaskDetailModel.taskAddress.category.substring(0, 1).toUpperCase() + mTaskDetailModel.taskAddress.category.substring(1));
             mBinding.textTaskWhere1.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(mTaskDetailModel.taskAddress.category), 0, 0, 0);
         }
 
         //Set Subscribed yes/no
-        if(!mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
+        if (!mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
             mBinding.textTaskWhere2.setVisibility(View.VISIBLE);
-            if(mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL))
-            {
+            if (mTaskDetailModel.taskAddress.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                 mBinding.textTaskWhere2.setText(getString(R.string.sub_cheep_care));
-            }
-            else
-            {
+            } else {
                 mBinding.textTaskWhere2.setText(getString(R.string.sub_cheep_premium));
             }
-        } else
-            {
+        } else {
             mBinding.textTaskWhere2.setVisibility(View.GONE);
         }
 
@@ -667,7 +662,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.textContactCheepViaChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 //   HotlineHelper.getInstance(mContext).showConversation(mContext);
+                    //   HotlineHelper.getInstance(mContext).showConversation(mContext);
                     FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 }
             });
@@ -877,7 +872,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
                     if (pendingAmount > 0) {
 //                        PaymentDetailsActivity.newInstance(mContext, mTaskDetailModel);
-                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel,false);
+                        PaymentSummaryActivity.newInstance(mContext, mTaskDetailModel, Utility.EMPTY_STRING, Utility.EMPTY_STRING);
                     } else {
                         callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
 //                        mBinding.textTaskCompletionYes.setText(R.string.label_yes);
@@ -913,7 +908,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnTaskMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mBinding.imgMoreLessTask.isSelected()){
+                if (mBinding.imgMoreLessTask.isSelected()) {
                     mBinding.lnTaskDesc.setVisibility(View.GONE);
                     mBinding.textViewMoreLessTask.setText(getString(R.string.view_more));
                     mBinding.imgMoreLessTask.setSelected(false);
@@ -930,7 +925,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         mBinding.lnWhereMoreLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mBinding.imgMoreLessWhere.isSelected()){
+                if (mBinding.imgMoreLessWhere.isSelected()) {
                     mBinding.textTaskWhereAddress.setVisibility(View.GONE);
                     mBinding.textViewMoreLessWhere.setText(getString(R.string.view_more));
                     mBinding.imgMoreLessWhere.setSelected(false);
@@ -1159,9 +1154,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
                         finish();
                         break;
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 mCallTaskDetailWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
@@ -1176,7 +1169,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 
             // Close Progressbar
             //showProgressBar(false);
-hideProgressDialog();
+            hideProgressDialog();
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
 
         }
@@ -1343,7 +1336,7 @@ hideProgressDialog();
         dialog.addNegativeButton(getString(R.string.label_chat), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // HotlineHelper.getInstance(mContext).showConversation(mContext);
+                // HotlineHelper.getInstance(mContext).showConversation(mContext);
                 FreshChatHelper.getInstance(mContext).showConversation(mContext);
                 dialog.dismiss();
             }

@@ -1005,7 +1005,7 @@ public class WebCallClass {
         }
         mParams.put(NetworkUtility.TAGS.CITY_ID, userDetails.CityID);
         mParams.put(NetworkUtility.TAGS.CAT_ID, taskDetailModel.categoryModel.catId);
-        mParams.put(NetworkUtility.TAGS.CAT_PRICE, taskDetailModel.categoryModel.catPrice);
+        mParams.put(NetworkUtility.TAGS.CAT_PRICE, taskDetailModel.categoryModel.catNewPrice);
         mParams.put(NetworkUtility.TAGS.START_DATETIME, taskDetailModel.taskStartdate);
 
         String selectedServices = new Gson().toJson(taskDetailModel.subCatList);
@@ -1325,7 +1325,7 @@ public class WebCallClass {
         void onSuccessOfPendingTaskPaid(String taskStatus);
     }
 
-    public static void payPendingTaskPaymentWS(final Context mContext, String txnId, String paymentLog, String paymentMethod, TaskDetailModel taskDetailModel, final CommonResponseListener commonListener, final PayPendingTaskPaymentListener pendingTaskPaymentListener) {
+    public static void payPendingTaskPaymentWS(final Context mContext, String txnId, String paymentLog, String paymentMethod, TaskDetailModel taskDetailModel, String startDatetime, final CommonResponseListener commonListener, final PayPendingTaskPaymentListener pendingTaskPaymentListener) {
 
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
@@ -1385,6 +1385,10 @@ public class WebCallClass {
         mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
         mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
+        mParams.put(NetworkUtility.TAGS.START_DATETIME, startDatetime);
+
+        mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGE, taskDetailModel.paymentSummaryModel.urgentBookingCharge);
+        mParams.put(NetworkUtility.TAGS.NON_OFFICE_HOURS_CHARGE, taskDetailModel.paymentSummaryModel.nonOfficeHoursCharge);
 
         mParams.put(NetworkUtility.TAGS.PRO_PAYMENT_STATUS, taskDetailModel.paymentSummaryModel.proPaymentStatus);
         mParams.put(NetworkUtility.TAGS.ADDITIONAL_PENDING_AMOUNT,

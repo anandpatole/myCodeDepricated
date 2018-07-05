@@ -361,7 +361,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
 
         TaskDetailModel taskDetailModel = new TaskDetailModel();
         taskDetailModel.additionalChargeReason = mTaskCreationPagerAdapter.mEnterTaskDetailFragment.additionalChargeReason;
-        taskDetailModel.catPrice = mJobCategoryModel.catPrice;
+//        taskDetailModel.catPrice = mJobCategoryModel.catPrice;
         if (!getSubCatList().isEmpty()) {
 
             taskDetailModel.subCategoryName = getSubCatList().get(0).name;

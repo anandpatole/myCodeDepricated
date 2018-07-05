@@ -61,9 +61,10 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
     // returned in response of verify otp api
     private String mResourceOwnerCustomerId;
+    private int broadCastType = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
 
     public static void newInstance(Context context, String amount, double payableAmount
-            , String accessToken, String mobileNumber, String resourceOwnerCustomerId, double paytmWalletBalance) {
+            , String accessToken, String mobileNumber, String resourceOwnerCustomerId, double paytmWalletBalance, int broadCastType) {
         Intent intent = new Intent(context, AddMoneyActivity.class);
         intent.putExtra(Utility.Extra.AMOUNT, amount);
         intent.putExtra(Utility.Extra.PAYABLE_AMOUNT, payableAmount);
@@ -71,6 +72,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Utility.Extra.CUST_ID, resourceOwnerCustomerId);
         intent.putExtra(Utility.Extra.PAYTM_WALLET_BALANCE, paytmWalletBalance);
+        intent.putExtra(Utility.Extra.BROADCAST_TYPE, broadCastType);
         context.startActivity(intent);
     }
 
@@ -92,6 +94,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
             mMobileNumber = getIntent().getExtras().getString(Utility.Extra.MOBILE_NUMBER);
             mResourceOwnerCustomerId = getIntent().getExtras().getString(Utility.Extra.CUST_ID);
             paytmWalletBalance = getIntent().getExtras().getDouble(Utility.Extra.PAYTM_WALLET_BALANCE);
+            broadCastType = getIntent().getExtras().getInt(Utility.Extra.BROADCAST_TYPE);
         }
 
         mActivitySendOtpBinding.ivMobile.setVisibility(View.GONE);
@@ -397,7 +400,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
                 if (TextUtils.isEmpty(responseInJson)) {
                     // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                     paytmResponse.isSuccess = false;
                     messageEvent.paytmResponse = paytmResponse;
@@ -425,7 +428,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 //                    TODO : Once withdraw api called, need to remove below code
                    /* // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     messageEvent.paytmResponse = paytmResponse;
 
                     // Send the event
@@ -440,7 +443,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
                     // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     messageEvent.paytmResponse = paytmResponse;
 
                     // Send the event
@@ -455,7 +458,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -477,7 +480,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
             // Create the message event and sent the broadcast to @PaymentChoiceActivity
             MessageEvent messageEvent = new MessageEvent();
-            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            messageEvent.BROADCAST_ACTION = broadCastType;
             MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
             paytmResponse.isSuccess = false;
             messageEvent.paytmResponse = paytmResponse;
@@ -519,7 +522,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
             if (TextUtils.isEmpty(responseInJsonOrInHTML)) {
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -543,7 +546,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 messageEvent.paytmResponse = paytmResponse;
 
                 // Send the event
@@ -554,7 +557,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -574,7 +577,7 @@ public class AddMoneyActivity extends BaseAppCompatActivity {
 
             // Create the message event and sent the broadcast to @PaymentChoiceActivity
             MessageEvent messageEvent = new MessageEvent();
-            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            messageEvent.BROADCAST_ACTION = broadCastType;
             MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
             paytmResponse.isSuccess = false;
             messageEvent.paytmResponse = paytmResponse;

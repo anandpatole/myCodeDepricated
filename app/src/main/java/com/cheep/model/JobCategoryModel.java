@@ -29,7 +29,7 @@ public class JobCategoryModel implements Serializable {
     public String catIcon;
 
     @SerializedName("cat_new_price")
-    public String catPrice;
+    public String catNewPrice;
 
    @SerializedName("cat_old_price")
     public String catOldPrice;
