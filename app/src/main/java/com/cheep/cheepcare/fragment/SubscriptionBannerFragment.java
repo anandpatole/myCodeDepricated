@@ -125,9 +125,9 @@ public class SubscriptionBannerFragment extends BaseFragment {
             binding.tvNewPrice.setText(newPrice);
 
             binding.tvCityName.setText(bannerImageModel.cityName);
+            binding.tvOnly.setText("only.");
+
             // set banner image
-
-
             int resId = R.drawable.banner_mumbai;
             switch (bannerImageModel.citySlug) {
                 case NetworkUtility.CARE_CITY_SLUG.MUMBAI:

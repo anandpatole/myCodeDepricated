@@ -104,6 +104,7 @@
     <color name="black">#000000</color>
     <color name="black_variant">#FF000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_opacity">#FFFEFFFF</color>
 <color name="blue_variant_4">#FF006DDA</color>
     <color name="colorGray">#5f5f5f</color>
     <color name="colorSemiGray">#ACACAC</color>
@@ -133,6 +134,7 @@
     <color name="task_canceled_red">#EB3727</color>
     <color name="task_elapses_red">#F06608</color>
     <color name="black_varient_1">#010101</color>
+    <color name="black_varient_1_0pacity">#FF010101</color>
     <color name="c_F2F2F2">#F2F2F2</color>
 
     <color name="gray_chart_upper">#06FFCC01</color>

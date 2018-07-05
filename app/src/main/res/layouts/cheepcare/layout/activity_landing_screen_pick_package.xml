@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/india_largest"
-                    android:textSize="@dimen/text_size_14sp"
+                    android:textSize="@dimen/text_size_8sp"
                     android:textColor="@color/black"/>
 
             </LinearLayout>

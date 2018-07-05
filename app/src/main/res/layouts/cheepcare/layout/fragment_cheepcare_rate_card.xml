@@ -57,7 +57,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_120dp"
+                    android:layout_height="@dimen/scale_80dp"
                     android:orientation="vertical">
 
                     <ImageView
@@ -70,14 +70,16 @@
 
                     <com.cheep.custom_view.CFTextViewSemiBold
                         android:id="@+id/title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/scale_8dp"
                         android:layout_toEndOf="@+id/cheep_rate_img"
                         android:layout_toRightOf="@+id/cheep_rate_img"
                         android:text="@string/cheep_rate_card_info"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="@dimen/text_size_15sp"
+                        android:textColor="@color/blue_variant_4"
+                        android:textSize="@dimen/text_size_13sp"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginEnd="@dimen/scale_8dp"
                         android:textStyle="bold" />
 
                     <com.cheep.custom_view.CFTextViewRegular
@@ -89,9 +91,11 @@
                         android:layout_toEndOf="@+id/cheep_rate_img"
                         android:layout_toRightOf="@+id/cheep_rate_img"
                         android:gravity="bottom"
+                        android:layout_marginRight="@dimen/scale_8dp"
+                        android:layout_marginEnd="@dimen/scale_8dp"
                         android:text="@string/cheep_rate_card_info1"
-                        android:textColor="@color/black_translucent_1"
-                        android:textSize="@dimen/text_size_13sp" />
+                        android:textColor="@color/black_varient_1_0pacity"
+                        android:textSize="@dimen/text_size_10sp" />
                 </RelativeLayout>
 
                 <View
@@ -107,7 +111,7 @@
                     android:paddingStart="@dimen/scale_10dp"
                     android:paddingTop="@dimen/scale_8dp"
                     android:text="@string/text_cheep_rate_card_categories"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_variant"
                     android:textSize="@dimen/text_size_19sp"
                     android:textStyle="bold" />
 
