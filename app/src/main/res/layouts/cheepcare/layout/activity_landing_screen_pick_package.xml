@@ -185,7 +185,7 @@
                         android:paddingStart="@dimen/scale_20dp"
                         android:text="@string/packages_for_needs"
                         android:textColor="@color/black_varient_1"
-                        android:textSize="@dimen/text_size_16sp" />
+                        android:textSize="@dimen/text_size_14sp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_cheep_care_packages"
