@@ -96,7 +96,6 @@
 
                     <RatingBar
                         android:id="@+id/user_rating"
-
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -208,7 +207,6 @@
                     android:id="@+id/text_manage_cheep_care_subscription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:drawablePadding="@dimen/scale_20dp"
                     android:drawableRight="@drawable/side_arrow"
                     android:gravity="center_vertical"
@@ -278,152 +276,160 @@
                     android:layout_height="@dimen/scale_1dp"
                     android:background="@color/grey_varient_3" />
 
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/label_manage_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_40dp"
-                    android:paddingTop="@dimen/scale_15dp"
-                    android:text="@string/label_manages_address"
-                    android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_13sp" />
-
                 <LinearLayout
+                    android:id="@+id/linearAddressLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/scale_4dp"
-                    android:paddingRight="@dimen/scale_16dp"
-                    android:paddingTop="@dimen/scale_8dp">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/profile_layout"
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/label_manage_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/scale_40dp"
+                        android:paddingTop="@dimen/scale_15dp"
+                        android:text="@string/label_manages_address"
+                        android:textColor="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_13sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/scale_4dp"
+                        android:paddingRight="@dimen/scale_16dp"
+                        android:paddingTop="@dimen/scale_8dp">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/profile_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/scale_40dp">
+
+                                <ImageView
+                                    android:id="@+id/img_address"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/icon_home_address" />
+
+                                <com.cheep.custom_view.CFTextViewSemiBold
+                                    android:id="@+id/tv_address_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/scale_8dp"
+                                    android:layout_marginStart="@dimen/scale_8dp"
+                                    android:gravity="center"
+                                    android:textColor="@color/splash_gradient_end"
+                                    android:textSize="@dimen/text_size_12sp"
+                                    tools:text="My sweet home" />
+
+                            </LinearLayout>
+
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_full_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/scale_3dp"
+                                android:paddingLeft="@dimen/scale_40dp"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_size_14sp"
+                                tools:text="Adinath Chowk, London" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:paddingLeft="@dimen/scale_40dp">
 
-                            <ImageView
-                                android:id="@+id/img_address"
+                            <com.cheep.custom_view.CFTextViewSemiBold
+                                android:id="@+id/tv_edit"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/icon_home_address"/>
+                                android:layout_gravity="center_vertical"
+                                android:paddingBottom="@dimen/scale_10dp"
+                                android:paddingRight="@dimen/scale_10dp"
+                                android:paddingTop="@dimen/scale_10dp"
+                                android:text="Edit"
+                                android:textColor="@color/blue_variant_4"
+                                tools:ignore="ContentDescription" />
 
                             <com.cheep.custom_view.CFTextViewSemiBold
-                                android:id="@+id/tv_address_category"
+                                android:id="@+id/tv_delete"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_marginLeft="@dimen/scale_8dp"
-                                android:layout_marginStart="@dimen/scale_8dp"
-                                android:textColor="@color/splash_gradient_end"
-                                android:textSize="@dimen/text_size_12sp"
-                                tools:text="My sweet home" />
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="@dimen/scale_23dp"
+                                android:paddingBottom="@dimen/scale_10dp"
+                                android:paddingLeft="@dimen/scale_10dp"
+                                android:paddingTop="@dimen/scale_10dp"
+                                android:text="Delete"
+                                android:textColor="@color/blue_variant_4"
+                                tools:ignore="ContentDescription" />
 
                         </LinearLayout>
-
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/tv_full_address"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/scale_3dp"
-                            android:paddingLeft="@dimen/scale_40dp"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_14sp"
-                            tools:text="Adinath Chowk, London" />
-
                     </LinearLayout>
 
-                    <LinearLayout
+                    <!--<android.support.v7.widget.RecyclerView
+                        android:id="@+id/text_address_recycler_new"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/scale_40dp">
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:visibility="visible"/>-->
 
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/tv_edit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:paddingBottom="@dimen/scale_10dp"
-                            android:paddingRight="@dimen/scale_10dp"
-                            android:paddingTop="@dimen/scale_10dp"
-                            android:text="Edit"
-                            android:textColor="@color/blue_variant_4"
-                            tools:ignore="ContentDescription" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_1dp"
+                        android:layout_marginBottom="@dimen/scale_12dp"
+                        android:layout_marginLeft="@dimen/scale_15dp"
+                        android:layout_marginRight="@dimen/scale_15dp"
+                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:background="@color/grey_varient_3" />
 
-                        <com.cheep.custom_view.CFTextViewSemiBold
-                            android:id="@+id/tv_delete"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/scale_23dp"
-                            android:paddingBottom="@dimen/scale_10dp"
-                            android:paddingLeft="@dimen/scale_10dp"
-                            android:paddingTop="@dimen/scale_10dp"
-                            android:text="Delete"
-                            android:textColor="@color/blue_variant_4"
-                            tools:ignore="ContentDescription" />
 
-                    </LinearLayout>
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_view_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/scale_40dp"
+                        android:paddingTop="@dimen/scale_4dp"
+                        android:text="@string/label_view_more"
+                        android:textColor="@color/blue_variant_4"
+                        android:textSize="@dimen/text_size_13sp" />
+
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_view_less"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/scale_40dp"
+                        android:paddingTop="@dimen/scale_4dp"
+                        android:text="@string/label_view_less"
+                        android:textColor="@color/blue_variant_4"
+                        android:textSize="@dimen/text_size_13sp"
+                        android:visibility="gone" />
+
+                    <View
+
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_1dp"
+                        android:layout_marginTop="@dimen/scale_23dp"
+                        android:background="@color/grey_varient_3"
+                        android:elevation="@dimen/scale_1dp"
+                        android:shadowColor="@color/black" />
+
                 </LinearLayout>
-
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/text_address_recycler_new"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/scale_10dp"
-                    android:visibility="visible"/>-->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginBottom="@dimen/scale_12dp"
-                    android:layout_marginLeft="@dimen/scale_15dp"
-                    android:layout_marginRight="@dimen/scale_15dp"
-                    android:layout_marginTop="@dimen/scale_8dp"
-                    android:background="@color/grey_varient_3" />
-
-
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_view_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_40dp"
-                    android:paddingTop="@dimen/scale_4dp"
-                    android:text="@string/label_view_more"
-                    android:textColor="@color/blue_variant_4"
-                    android:textSize="@dimen/text_size_13sp" />
-
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_view_less"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/scale_40dp"
-                    android:paddingTop="@dimen/scale_4dp"
-                    android:text="@string/label_view_less"
-                    android:textColor="@color/blue_variant_4"
-                    android:textSize="@dimen/text_size_13sp"
-                    android:visibility="gone" />
-
-                <View
-
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_23dp"
-                    android:background="@color/grey_varient_3"
-                    android:elevation="@dimen/scale_1dp"
-                    android:shadowColor="@color/black" />
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/label_add_new_address"

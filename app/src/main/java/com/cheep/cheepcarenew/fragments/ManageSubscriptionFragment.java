@@ -15,10 +15,13 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
+import com.cheep.activity.HomeActivity;
+import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.cheepcarenew.adapters.ManageSubscriptionAddressAdapter;
 import com.cheep.cheepcarenew.model.ManageSubscriptionModel;
 import com.cheep.databinding.FragmentManageSubscriptionBinding;
 import com.cheep.fragment.BaseFragment;
+import com.cheep.fragment.HomeFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -88,8 +91,14 @@ public class ManageSubscriptionFragment extends BaseFragment implements
         mBinding.autoRenewalToggle.setOnClickListener(this);
         mBinding.addressDropDownsSingle.setOnClickListener(this);
         mBinding.addressDropDowns.setOnClickListener(this);
-
+mBinding.back.setOnClickListener(this);
     }
+
+    @Override
+    public boolean onBackPressed() {
+        return super.onBackPressed();
+    }
+
 
     @Override
     public void onDetach() {
@@ -176,6 +185,9 @@ public class ManageSubscriptionFragment extends BaseFragment implements
                 mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
                 mBinding.allAddressLayout.setVisibility(View.GONE);
                 break;
+            case R.id.back:
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
+      break;
         }
     }
 
@@ -258,4 +270,6 @@ public class ManageSubscriptionFragment extends BaseFragment implements
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
+
+
 }

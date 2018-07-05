@@ -37,24 +37,24 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/scale_55dp">
 
-                <com.cheep.custom_view.CFTextViewSemiBold
+                <com.cheep.custom_view.CFTextViewBold
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
+
                     android:text="@string/label_your_pro_is_booked"
                     android:textColor="@color/grey_varient_8"
-                    android:textSize="@dimen/text_size_18sp"/>
+                    android:textSize="@dimen/text_size_19sp"/>
 
                 <com.cheep.custom_view.CFTextViewSemiBold
                     android:id="@+id/text_task_creation_acknowledgment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/scale_8dp"
+
                     android:gravity="left"
-                    android:padding="@dimen/scale_8dp"
+                    android:padding="@dimen/scale_16dp"
                     android:text="@string/msg_task_confirmed_instabook_2"
                     android:textColor="@color/grey_dark_color_2"
                     android:textSize="@dimen/text_size_11sp"/>
@@ -62,7 +62,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginTop="@dimen/scale_3dp"
+                    android:layout_marginTop="@dimen/scale_8dp"
                     android:background="@color/grey_dark_color_2"/>
 
                 <LinearLayout
@@ -79,7 +79,7 @@
                         android:gravity="center"
                         android:text="@string/label_thanks"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_18sp"/>
 
                     <View
                         android:layout_width="@dimen/scale_1dp"
@@ -97,7 +97,7 @@
                         android:gravity="center"
                         android:text="@string/label_reschedule"
                         android:textColor="@color/splash_gradient_end"
-                        android:textSize="@dimen/text_size_16sp"/>
+                        android:textSize="@dimen/text_size_18sp"/>
 
                 </LinearLayout>
             </LinearLayout>

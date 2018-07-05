@@ -50,6 +50,7 @@ import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
+import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -167,14 +168,16 @@ public class HomeActivity extends BaseAppCompatActivity
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
-        //For managing notification redirect to job summary
-        if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
-            onNewIntent(getIntent());
+
+
         initiateUI();
 
         //Register BroadCast
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
+        //For managing notification redirect to job summary
+        if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
+            onNewIntent(getIntent());
     }
 
     @Override
@@ -204,7 +207,18 @@ public class HomeActivity extends BaseAppCompatActivity
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 ProviderProfileActivity.newInstance(mContext, taskID, spUserId);
-            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
+            }
+            else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
+            {
+
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
+                if (mFragment == null) {
+                    loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
+                } else {
+                    //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
+                }
+            }
+            else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 // Redirecting the user to Quote Screen
@@ -334,24 +348,27 @@ public class HomeActivity extends BaseAppCompatActivity
         ArrayList<SlideMenuListModel> list = new ArrayList<>();
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites_side_menu), R.drawable.icon_fav_off, false, false));
-
-        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card), R.drawable.icon_rate, false, false));
-        // TODO: Icon change Refer And Earn
-//        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-//            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
-       // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
-       // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, true));
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
+        }
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, true));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_terms), R.drawable.icon_privacy, false, true));
-//        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, false));
         } else {
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_login), R.drawable.icon_logout, false, false));
         }
-//        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
+        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
+        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, false));
+         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
 
         return list;
     }
@@ -370,7 +387,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 HomeFragment homeFragment = (HomeFragment) mFragment;
                 homeFragment.setCurrentTab(HomeFragment.TAB_HOME);
             }
-        } else if (slideMenuListModel.title.equals(getString(R.string.label_favourites))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_favourites_side_menu))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(FavouriteFragment.TAG);
             if (mFragment == null) {
                 loadFragment(FavouriteFragment.TAG, FavouriteFragment.newInstance());
@@ -794,8 +811,7 @@ public class HomeActivity extends BaseAppCompatActivity
         if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && !model.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();
-        } else
-            {
+        } else {
             TaskCreationActivity.getInstance(mContext, model);
         }
 
@@ -841,18 +857,16 @@ public class HomeActivity extends BaseAppCompatActivity
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
-//<<<<<<< HEAD
-//
-//
+
 //            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
 //            if (fragment != null) {
 //                if (!((BaseFragment) fragment).onBackPressed()) {
 //                    super.onBackPressed();
 //                }
-//=======
+
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
-//>>>>>>> 03b05bb80fabf64ef2bdde8716c46c6977993068
+
             } else {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                 if (fragment != null) {
@@ -862,7 +876,10 @@ public class HomeActivity extends BaseAppCompatActivity
                 } else {
                     Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                     if (mFragment == null) {
-                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+
+                       loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+
+
                     } else {
                         super.onBackPressed();
                     }

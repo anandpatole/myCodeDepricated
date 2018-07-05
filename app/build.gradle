@@ -368,6 +368,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation 'com.wdullaer:materialdatetimepicker:3.6.2'
     /////////////////////////////
     implementation 'com.mixpanel.android:mixpanel-android:5.+'
     implementation project(':sdkui')

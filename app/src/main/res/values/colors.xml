@@ -29,6 +29,7 @@
     <color name="grey_varient_14">#6C6C6C</color>
     <color name="grey_varient_15">#999999</color>
     <color name="grey_varient_16">#535353</color>
+    <color name="grey_varient_16_opacity">#FF6A6A6A</color>
     <color name="grey_varient_17">#9a9a9a</color>
     <color name="grey_varient_18">#b0b0b0</color>
     <color name="grey_variant_19">#F6F6F6</color>
@@ -103,6 +104,7 @@
     <color name="black">#000000</color>
     <color name="black_variant">#FF000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_opacity">#FFFEFFFF</color>
 <color name="blue_variant_4">#FF006DDA</color>
     <color name="colorGray">#5f5f5f</color>
     <color name="colorSemiGray">#ACACAC</color>
@@ -132,6 +134,7 @@
     <color name="task_canceled_red">#EB3727</color>
     <color name="task_elapses_red">#F06608</color>
     <color name="black_varient_1">#010101</color>
+    <color name="black_varient_1_0pacity">#FF010101</color>
     <color name="c_F2F2F2">#F2F2F2</color>
 
     <color name="gray_chart_upper">#06FFCC01</color>
@@ -143,6 +146,7 @@
     <color name="ack_color">#FF3A3A3A</color>
     <color name="ack_details_color">#FF6A6A6A</color>
     <color name="bg_auto_renew_text">#99c8c8c8</color>
+    <color name="strike_color">#FFC52828</color>
 
 
 </resources>
