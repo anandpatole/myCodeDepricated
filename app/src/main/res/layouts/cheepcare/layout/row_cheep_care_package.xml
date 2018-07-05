@@ -46,9 +46,9 @@
                     android:drawablePadding="@dimen/scale_24dp"
                     android:drawableRight="@drawable/ic_right_arrow_in_white_circle"
                     android:ellipsize="marquee"
-                    android:maxLines="2"
+                    android:singleLine="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_17sp"
+                    android:textSize="@dimen/text_size_15sp"
                     tools:text="@string/hint_email"/>
 
                 <com.cheep.custom_view.CFTextViewRegular
@@ -56,9 +56,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/scale_7dp"
-                    android:ellipsize="marquee"
-                    android:maxLines="2"
-                    android:minLines="2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_11sp"
                     tools:text="@string/enter_min_amount"/>
@@ -79,18 +76,19 @@
         </LinearLayout>
         <TextView
             android:id="@+id/tv_premium_and_normal"
-            android:layout_width="120dp"
-            android:padding="@dimen/scale_2dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="majid"
+            tools:text="majid khan "
             android:gravity="center"
+            android:textAlignment="center"
             android:background="@drawable/background_premium"
             android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/scale_4dp"
-            android:layout_marginRight="@dimen/scale_4dp"
-            android:layout_marginEnd="@dimen/scale_4dp"
+            android:padding="@dimen/scale_2dp"
+            android:layout_marginBottom="@dimen/scale_10dp"
+            android:layout_marginRight="@dimen/scale_10dp"
+            android:layout_marginEnd="@dimen/scale_10dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/scale_12dp"/>
+            android:textSize="@dimen/text_size_10sp"/>
 
         <ImageView
             android:id="@+id/tv_vip"

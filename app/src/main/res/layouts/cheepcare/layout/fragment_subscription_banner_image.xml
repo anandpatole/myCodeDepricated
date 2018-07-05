@@ -35,10 +35,11 @@
 
             <ImageView
                 android:id="@+id/img_cheep_care_gif"
-                android:layout_width="@dimen/scale_50dp"
-                android:layout_height="@dimen/scale_50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/scale_60dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/scale_8dp"
                 android:layout_marginEnd="@dimen/scale_15dp"
                 android:layout_marginLeft="@dimen/home_screen_general_margin"
                 android:layout_marginRight="@dimen/scale_15dp"

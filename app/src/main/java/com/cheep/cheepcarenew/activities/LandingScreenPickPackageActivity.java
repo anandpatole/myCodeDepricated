@@ -75,7 +75,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private PackageDetailModelDialog packageDetailModelDialog;
     private PackageDetail packageDetailData;
     private ComparisionChartModel comparisionChartModel;
-    private AcknowledgementPopupDialog acknowledgementPopupDialog;
 
     private WebCallClass.CommonResponseListener commonErrorResponse = new WebCallClass.CommonResponseListener() {
         @Override
@@ -127,6 +126,33 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
 
         setCityBannerData();
+    }
+    @Override
+    protected void setListeners() {
+        mBinding.tvCityName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCitySelectionDialog();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCityLandingPageModel != null) {
+            LogUtils.LOGE(TAG, "onResume:cart detail found");
+            getSavedData();
+        } else {
+            LogUtils.LOGE(TAG, "onResume: no city data found");
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CITY_CARE_DETAIL);
+        super.onDestroy();
     }
 
     private void setCityBannerData() {
@@ -318,16 +344,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         }
     }
 
-    @Override
-    protected void setListeners() {
-        mBinding.tvCityName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCitySelectionDialog();
-            }
-        });
-    }
-
     private void openCitySelectionDialog() {
 
         String[] cityArray = new String[bannerCareCityDetailsList.size()];
@@ -379,13 +395,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         @Override
         public void onPackageItemClick(int position, PackageDetail packageModel) {
             packageDetailData = packageModel;
-            callGetPackageFeatureListDetailWS();
-            // Toast.makeText(getApplicationContext(),"majid : "+ packageModel.type,Toast.LENGTH_LONG).show();
-//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-//            String packageList = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-//            PackageCustomizationActivity.newInstance(mContext, mCityLandingPageModel.careCityDetail, packageModel, packageList, mCityLandingPageModel.adminSetting);
-            // AddressCategorySelectionActivity.newInstance(LandingScreenPickPackageActivity.this);
 
+            callGetPackageFeatureListDetailWS();
 
         }
     };
@@ -398,88 +409,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             showComparisionChartFragmentDialog(packageDetailData);
         }
     }
-
-
-  /*  private void callGetCityLandingCareDetailWS() {
-        LogUtils.LOGD(TAG, "callGetCityLandingCareDetailWS() called with: catId = [" + mCity + "]");
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-            return;
-        }
-
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(CARE_CITY_SLUG, mCity.citySlug);
-
-        //noinspection unchecked
-        VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_CITY_CARE_DETAIL
-                , mCallGetCityCareDetailsWSErrorListener
-                , mCallGetCityCareDetailsWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.GET_CITY_CARE_DETAIL);
-    }
-
-
-    private Response.Listener mCallGetCityCareDetailsWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            hideProgressDialog();
-            LogUtils.LOGD(TAG, "onResponse() called with: response = [" + response + "]");
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                LogUtils.LOGI(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        mCityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(DATA), CityLandingPageModel.class);
-                        mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-                        getSavedData();
-                        setData();
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mCallGetCityCareDetailsWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
-    private Response.ErrorListener mCallGetCityCareDetailsWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            hideProgressDialog();
-            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-        }
-    };
-*/
-
     /**
      * Event Bus Callbacks
      */
@@ -492,13 +421,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 break;
         }
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_CITY_CARE_DETAIL);
-        super.onDestroy();
     }
 
     private void getSavedData() {
@@ -535,19 +457,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             LogUtils.LOGE(TAG, "getSavedData: no cart data found");
         }
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mCityLandingPageModel != null) {
-            LogUtils.LOGE(TAG, "onResume:cart detail found");
-            getSavedData();
-        } else {
-            LogUtils.LOGE(TAG, "onResume: no city data found");
-        }
-    }
-
 
     /************************************************************************************************
      **********************************Calling Webservice for old and new price *********************
