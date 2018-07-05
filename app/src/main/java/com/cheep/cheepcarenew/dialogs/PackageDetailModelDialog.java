@@ -5,11 +5,16 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +66,7 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     @Override
     public void onStart() {
         super.onStart();
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     @Override
@@ -96,11 +101,12 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
         Dialog dialog = super.onCreateDialog(savedInstanceState);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         dialog.setCanceledOnTouchOutside(true);
         this.setCancelable(true);
 
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+       dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         dialog.getWindow().getAttributes().windowAnimations = R.style.AlertAnimation;
         return dialog;
 
@@ -210,7 +216,10 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                         JSONArray data = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject obj = data.getJSONObject(i);
-                            tvData.setText(Html.fromHtml(obj.getString(NetworkUtility.TAGS.TEXT)));
+
+                           tvData.setText(Html.fromHtml(obj.getString(NetworkUtility.TAGS.TEXT)));
+
+
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

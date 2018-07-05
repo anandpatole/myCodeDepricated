@@ -10,12 +10,12 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/scale_170dp">
 
             <ImageView
                 android:id="@+id/iv_city_image"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_174dp"
+                android:layout_height="@dimen/scale_170dp"
                 android:contentDescription="@string/city_image"
                 tools:adjustViewBounds="true"
                 tools:scaleType="centerCrop"
@@ -39,11 +39,21 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_home_with_heart_text" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/tv_cheep_care"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_cheep_care_text_landing" />
+                    android:text="@string/cheep_care_value"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/india_largest"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -103,11 +113,11 @@
 
                         <ImageView
                             android:id="@+id/img_cheep_tips"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/scale_67dp"
+                            android:layout_height="@dimen/scale_57dp"
                             android:layout_alignParentBottom="true"
-                            android:src="@drawable/cheep_bird"
-                            android:visibility="gone"
+                            android:src="@drawable/cheep_bird_rate"
+                            android:visibility="visible"
                             tools:ignore="ContentDescription" />
 
                         <com.cheep.custom_view.CFTextViewBold
@@ -121,8 +131,8 @@
                             android:layout_marginTop="@dimen/scale_4dp"
                             android:layout_toEndOf="@+id/img_cheep_tips"
                             android:layout_toRightOf="@+id/img_cheep_tips"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_15sp" />
+                            android:textColor="@color/splash_gradient_end"
+                            android:textSize="@dimen/text_size_13sp" />
 
                         <com.cheep.custom_view.CFTextViewRegular
                             android:id="@+id/tv_landing_screen_tip_subtitle"
@@ -138,7 +148,7 @@
                             android:paddingRight="@dimen/scale_20dp"
                             android:paddingStart="@dimen/scale_8dp"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_13sp" />
+                            android:textSize="@dimen/text_size_10sp" />
 
                         <TextView
                             android:id="@+id/tv_divider"
@@ -151,7 +161,7 @@
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_good_morning_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/scale_29dp"
                         android:layout_marginLeft="@dimen/scale_29dp"

@@ -111,7 +111,7 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
         }
 
         // Set category
-        mActivityTaskCreateBinding.textTitle.setText(mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING);
+    //    mActivityTaskCreateBinding.textTitle.setText(getString(R.string.service_specification)); //mJobCategoryModel.catName != null ? mJobCategoryModel.catName : Utility.EMPTY_STRING
 
         // Change description
         mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
@@ -237,12 +237,14 @@ public class TaskCreationActivity extends BaseAppCompatActivity {
                 mActivityTaskCreateBinding.viewpager.setCurrentItem(0);
                 // Change description
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_1_desc));
+                mActivityTaskCreateBinding.textTitle.setText(getString(R.string.service_selection));
                 break;
             case STAGE_2:
 
                 mActivityTaskCreateBinding.viewpager.setCurrentItem(1);
                 // Change description
                 mActivityTaskCreateBinding.textStepDesc.setText(getString(R.string.step_2_desc));
+                mActivityTaskCreateBinding.textTitle.setText(getString(R.string.service_specification));
                 break;
         }
     }

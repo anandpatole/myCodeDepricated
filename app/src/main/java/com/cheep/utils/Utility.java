@@ -106,10 +106,14 @@ public class Utility {
     public static final String EMPTY_STRING = "";
     public static final String ZERO_STRING = "0";
     public static final String ONE_CHARACTER_SPACE = " ";
+    public static final String TWO_CHARACTER_SPACE = "  ";
     public static final String DEFAULT_LOCATION = "0.0";
     public static final String ACTION_NEW_JOB_CREATE = "action_new_job_create";
     public static final String ACTION_HIRE_PROVIDER = "action_hire_provider";
     public static final String ACTION_HIRE_PROVIDER_WITH_REFRESHING_TASK_DETAILS = "action_hire_provider_with_refreshing_task_details";
+
+    public static final String EARLY_BIRD_OFFER = "Early bird Offer";
+    public static final String VALID_FOR_3_MONTH = "Valid for 3 month";
 
     public static final String ACTION_REGISTER = "action_register";
     public static final String ACTION_LOGIN = "action_login";
@@ -1250,6 +1254,19 @@ public class Utility {
         DecimalFormat format = new DecimalFormat();
         format.setDecimalSeparatorAlwaysShown(false);
         SpannableString spannableString = new SpannableString(context.getString(resId, format.format(Double.valueOf(price))));
+        int start = spannableString.toString().lastIndexOf("T");
+        RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
+
+        spannableString.setSpan(relativeSizeSpan, start, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new CustomCharacterSpan(), start, spannableString.length(),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannableString;
+    }
+    public static SpannableString getCheepCarePackageMonthlyPriceAppendText(Context context, int resId, String price) {
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(false);
+        SpannableString spannableString = new SpannableString(context.getString(resId, format.format(Double.valueOf(price)),"majid"));
         int start = spannableString.toString().lastIndexOf("T");
         RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
 

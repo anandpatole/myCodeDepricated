@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_chart_lower"
-        android:weightSum="3">
+        android:weightSum="3.2">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:text="@string/hotline_message_image_Saved"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_13sp" />
+                android:textSize="@dimen/text_size_11sp" />
 
         </LinearLayout>
 
@@ -44,6 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/light_center"
+            android:elevation="@dimen/scale_5dp"
             android:gravity="center">
 
             <ImageView
@@ -75,7 +76,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8">
+            android:layout_weight="1">
 
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tv_cheep_care_package"
@@ -88,7 +89,7 @@
                 android:gravity="center"
                 android:text="@string/hotline_message_image_Saved"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_14sp" />
+                android:textSize="@dimen/text_size_11sp" />
 
         </LinearLayout>
 

@@ -13,6 +13,7 @@ import com.cheep.cheepcare.model.PackageDetail;
 import com.cheep.databinding.RowCheepCarePackageBinding;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +73,13 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }*/
         switch (model.type){
             case NetworkUtility.PACKAGE_DETAIL_TYPE.premium:
-                holder.mBinding.tvPremiumAndNormal.setText("Early bird Offer");
+                holder.mBinding.tvPremiumAndNormal.setText(Utility.EARLY_BIRD_OFFER);
+                resId = R.drawable.gif_ballon_biz_price;
                 holder.mBinding.tvVip.setVisibility(View.VISIBLE);
                 break;
             case NetworkUtility.PACKAGE_DETAIL_TYPE.normal:
-                holder.mBinding.tvPremiumAndNormal.setText("Valid for 3 month");
+                holder.mBinding.tvPremiumAndNormal.setText(Utility.VALID_FOR_3_MONTH);
+                resId = R.drawable.gif_ballon_home_price;
                 holder.mBinding.tvVip.setVisibility(View.GONE);
                 break;
         }

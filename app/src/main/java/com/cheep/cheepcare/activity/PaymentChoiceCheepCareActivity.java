@@ -12,12 +12,9 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cheep.BootstrapConstant;
-import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.AddMoneyActivity;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.HDFCPaymentGatewayActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
@@ -35,7 +32,6 @@ import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.HDFCPaymentUtility;
 import com.cheep.utils.LogUtils;
 import com.cheep.utils.PaytmUtility;
 import com.cheep.utils.PreferenceUtility;
@@ -57,7 +53,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import static com.cheep.network.NetworkUtility.PAYTM.PARAMETERS.orderId;
@@ -147,22 +142,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
             // get next year date
             SuperCalendar superCalendar = SuperCalendar.getInstance();
-            superCalendar.getCalendar().add(Calendar.DAY_OF_YEAR, 365);
-            String day = CalendarUtility.getDateStringWithSuffic(superCalendar.getCalendar().get(Calendar.DATE));
-            String month = superCalendar.getCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+            superCalendar.getCalendar().add(Calendar.MONTH, +Integer.parseInt(paymentDataModel.packageDuration));
+            String day = String.valueOf(superCalendar.getCalendar().get(Calendar.DATE));
+            String month = String.valueOf(superCalendar.getCalendar().get(Calendar.MONTH));
             String year = String.valueOf(superCalendar.getCalendar().get(Calendar.YEAR));
-            String date = day + " " + month + " " + year;
-
-            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, date));
-        } /*else {
-            subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), SubscribedTaskDetailModel.class);
-            payableAmount = subscribedTaskDetailModel.total;
-<<<<<<< HEAD
+            String date = day + "-" + month + "-" + year;
+            String oneDayMinusFromDate = CalendarUtility.getOneDayMinusDateFromPassingDate(date);
+            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, oneDayMinusFromDate));
         }
-        mBinding.paytmAutoRenewSwitch.setSelected(true);
-        mBinding.cartAutoRenewSwitch.setSelected(true);
-=======
-        }*/
         setupActionbar();
     }
 
@@ -240,137 +227,9 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     }
 
 
-    ///////////////////////////////////////////////////////    Cheep care task payment METHOD [START] ///////////////////////
-    ///////////////////////////////////
-
-    /**
-     * Used for payment
-     */
-    private void generateHashForCheepCarePackagePurchase() {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-            return;
-        }
-
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Add Params
-        // = new HashMap<String, Object>();
-        String startDateTime;
-        if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
-            startDateTime = Utility.EMPTY_STRING;
-        } else {
-            startDateTime = subscribedTaskDetailModel.startDateTime;
-        }
-        mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForCheepCare(
-                PreferenceUtility.getInstance(this).getFCMRegID(),
-                userDetails,
-                String.valueOf(payableAmount),
-                startDateTime);
-
-        new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
-            @Override
-            public void onPostOfEncryption(String encryptedData) {
-                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                //Add Header parameters
-                Map<String, String> mHeaderParams = new HashMap<>();
-                mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-
-                Map<String, Object> mFinalParams = new HashMap<>();
-                mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
-
-//                getPaymentUrl(userDetails, isForAdditionalQuote);
-                String url;
-                // if payment is done using insta feature then
-                // post data will be generated like strategic partner feature
-                // call startegic generate hash for payment
-                url = NetworkUtility.WS.GENERATE_HASH_FOR_CHEEP_CARE;
-                //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
-                        , mCallGenerateHashWSErrorListener
-                        , mCallGenerateHashWSResponseListener
-                        , mHeaderParams
-                        , mFinalParams
-                        , null);
-                Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
-
-
-            }
-        }).execute(new JSONObject(mTransactionParams).toString());
-
-
-    }
-
-    Response.Listener mCallGenerateHashWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                hideProgressDialog();
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        /*
-                         * Changes @Bhavesh : 7thJuly,2017
-                         * In case we have to bypass the payment
-                         */
-                        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
-//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
-//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-                            onSuccessOfPayment(getString(R.string.message_payment_bypassed), Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
-                        } else {
-                            //TODO: Remove this when release and it is saving cc detail in clipboard only
-                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                                //Copy dummy creditcard detail in clipboard
-                                try {
-                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            HDFCPaymentGatewayActivity.newInstance(PaymentChoiceCheepCareActivity.this,
-                                    HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
-                                    Utility.REQUEST_START_PAYMENT_CHEEP_CARE);
-
-
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallGenerateHashWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-        }
-    };
-
     private void onSuccessOfPayment(String paymentLog, String subsId, String isSubscription) {
         if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
             callCreateCheepCarePackageWS(paymentLog, subsId, isSubscription);
-        } else {
-//            callCreateSubscribedTaskWS(paymentLog);
         }
     }
 

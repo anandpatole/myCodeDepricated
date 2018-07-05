@@ -130,6 +130,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
             callPaymentSummaryWS();
             if (startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING) && taskDetailModel.selectedProvider != null) {
+                mBinding.textTitle.setText(R.string.label_payment_summary);
                 String dateTime = "";
                 if (!TextUtils.isEmpty(startDateTime)) {
                     dateTime = CalendarUtility.getDate(Long.parseLong(startDateTime), Utility.DATE_TIME_DD_MMMM_HH_MM);
@@ -147,6 +148,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                 mBinding.txtdesc.setText(spannableStringBuilder);
             } else {
                 // address and time UI
+                mBinding.textTitle.setText(R.string.booking_confirmation);
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
                 spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
                 if (!TextUtils.isEmpty(startDateTime)) {
@@ -313,7 +315,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 taskDetailModel.paymentSummaryModel = paymentSummaryModel;
                 taskDetailModel.taskTotalPendingAmount = paymentSummaryModel.totalAmount;
-                String startDatetime = !startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING)? startDateTime : Utility.ZERO_STRING;
+                String startDatetime = !startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING) ? startDateTime : Utility.ZERO_STRING;
                 PaymentChoiceActivity.newInstance(mContext, taskDetailModel, startDatetime);
             }
         });

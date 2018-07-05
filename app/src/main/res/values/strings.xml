@@ -1,7 +1,7 @@
 <!DOCTYPE resources [<!ENTITY cheep "Cheep">]>
 
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">&cheep;</string>
+    <string name="app_name" translatable="false">Cheep Care</string>
     <!--IDs-->
     <string name="facebook_app_id" translatable="false">1594162450609778</string>
     <string name="label_copywrite">Copyright © 2017 &cheep;</string>
@@ -27,12 +27,17 @@
 
     <!--SIDE MENU ITEM-->
     <string name="label_home">Home</string>
-    <string name="label_favourites">Favourites</string>
+    <string name="label_favourites">Favourite</string>
+    <string name="label_favourites_side_menu">Favourite PRO\'s</string>
     <string name="label_share_with_friend">Refer</string>
     <string name="label_help">Contact Us</string>
     <string name="label_faq">FAQ</string>
     <string name="label_rate_this_app">Rate CHEEP</string>
-    <string name="label_terms">T\'s &amp; C\'s</string>
+
+    <string name="label_terms1">T&amp;C Apply</string>
+
+    <string name="label_terms">T&amp;S</string>
+
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
     <string name="hint_username">Username</string>
@@ -53,7 +58,7 @@
     <string name="tab_my_task">My Services</string>
     <string name="tab_me">Me</string>
     <string name="tab_chat">Chat</string>
-    <string name="tab_alert">Alert</string>
+    <string name="tab_emergency">Emergency</string>
     <string name="label_plumber">Plumber</string>
     <string name="dummy_chat" translatable="false">Lorem Ipsum dollar sit Lorem Ipsum dollar sitLorem Ipsum dollar sit Lorem Ipsum dollar sit amet simply dummy text for printing various values</string>
     <string name="dummy_location">Ahmedabad</string>
@@ -74,8 +79,11 @@
     <string name="label_out_of_office_hours_info">We understand that emergencies can happen anytime and that is why we offer an \'Emergency Service\' during late hours. This will cost you only ₹%3s. Thank you</string>
     <string name="label_upcoming_tasks">Upcoming</string>
     <string name="label_past_tasks">Past</string>
+    <string name="service_specification">Service Specification</string>
     <string name="rate_card_repair">Repairs</string>
+    <string name="booking_confirmation">Booking Confirmation</string>
     <string name="rate_card_electrician">Electrician</string>
+    <string name="service_selection">Service Selection</string>
     <string name="rate_card_painter">Painter</string>
     <string name="rate_card_application_repair">Application Repair</string>
     <string name="rate_card_tech_repair">Tech Repair</string>
@@ -89,6 +97,8 @@
     <string name="rupee_symbol_x">₹%1$s</string>
     <string name="dummy_email">mohankumar@gmail.com</string>
     <string name="label_phone_no">Phone Number</string>
+    <string name="a_cheep_care_pro_now">a Cheep Care PRO now</string>
+    <string name="book_pay"><![CDATA[Book & Pay]]></string>
     <string name="label_phone_no_value">7207002829</string>
     <string name="label_add_contact">Add contact</string>
     <string name="label_emergency_info">Please add upto 3 emergency contacts who we will reach out to when you press the alert button on our app</string>
@@ -214,6 +224,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_pattern_email">Something seems wrong, please enter a valid email address</string>
     <string name="validate_empty_password">Hey! Looks like you forgot to enter the password</string>
     <string name="validate_otp_empty">Please enter the correct OTP or try again for a new OTP.</string>
+    <string name="validate_term">Please Check Term And Condition.</string>
     <string name="validate_password_length">Sorry, your password needs to be atleast 6 characters!</string>
     <string name="label_something_went_wrong">Oops! Seems like something went wrong, why don’t you try again or get in touch!</string>
     <string name="label_playservice_not_available">Google Play Service not available.</string>
@@ -343,7 +354,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="can_only_start_task_after_3_hours">Date Time must be after %1s hour.</string>
     <string name="reschedule_task_must_within_one_month">Reschedule time must be within one month from start time of task.</string>
 
-    <string name="step_1_desc">Please tell us what needs to be done</string>
+    <string name="step_1_desc">Please tell us what needs to be serviced</string>
     <string name="step_2_desc">Please tell us when and where</string>
     <string name="step_3_desc">Please check details below and book</string>
     <string name="hint_task_desc">Please tell us more about your requirement</string>
@@ -439,14 +450,14 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_ended_due_to_assigned_to_another_pro">"  This chat has ended as the task has been assigned to another PRO."</string>
     <string name="label_chat_ended_due_to_task_cancelled">"  This chat has ended as the task has been cancelled."</string>
     <string name="label_chat_ended_due_to_task_completed">"  This chat has ended as the task has been completed."</string>
-    <string name="label_our_services">Our Services</string>
-    <string name="label_book">Book</string>
+    <string name="label_our_services">All Our Services</string>
+    <string name="label_book">Book Now</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
     <!--
         <string name="label_featured">Featured</string>
     -->
-    <string name="label_featured">All Services</string>
+    <string name="label_featured">Featured</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
     <string name="empty_subscribed_list">Now with CHEEP Care, enjoy unbelievable
@@ -639,7 +650,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_pincode">Please enter valid Pincode</string>
     <string name="label_pay_later">Pay Later</string>
     <string name="description_pay_now">Recommended if you are busy or travelling and may not have the time to pay later, or if you want to gift this service to your family or friends and don\'t want them to pay</string>
-    <string name="description_pay_later">Recommended only if you wish to pay after you avail the service. Payment will have to be made immediately to our PRO on completion of the task.</string>
+    <string name="description_pay_later">Recommended only if you wish to pay after you avail the service. Payment will have to be made immediately to our PRO on completion of the Service.</string>
 
     <string name="label_paid">Paid</string>
     <string name="label_not_paid">Not Paid</string>
@@ -700,8 +711,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_not_now">Not Now</string>
     <string name="label_next">Next</string>
 
-    <string name="hint_apply_cheep_promo_code">Apply CHEEP Promo code?</string>
-    <string name="hint_apply_cheep_mate_code">Have a CHEEP Mate Code?</string>
+    <string name="hint_apply_cheep_promo_code">Apply Cheep Promo code?</string>
+    <string name="hint_apply_cheep_mate_code">Have a Cheep Mate Code?</string>
     <string name="label_empty_string" />
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
@@ -710,10 +721,11 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="info_package_payment_summary">Under CHEEP Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_invalid_code">Invalid Code</string>
     <string name="label_applied_promo_code_message_cheep_care">Yay! You saved %1$s %2$s</string>
+    <string name="terms_and_condition" >By signing in, you agree T&amp;C Apply.</string>
 
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
-    <string name="rupee_symbol_x_package_price">₹%1s/MTH</string>
+    <string name="rupee_symbol_x_package_price">₹%1s/MTH </string>
     <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
     <string name="label_starting_price_cc">AVAILABLE AS LOW AS ₹%1s/MTH*</string>
     <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
@@ -777,6 +789,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 
     <string name="label_book_task">Book Task</string>
+    <string name="india_largest">India\'s Largest AMC App</string>
 
     <string name="label_vote">Vote</string>
     <string name="hint_enter_your_mobile_number_to_vote">Enter your mobile number to vote</string>
@@ -840,7 +853,8 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_payment_pending">Payment pending</string>
     <string name="label_free_small">Free</string>
     <string name="label_with_cheep_care">with Cheep Care</string>
-    <string name="label_with_payment_desc_cheep_care">Your current subscription ends on the %1s. Your subscription will be auto renewed the same day, based on the subscription package chosen. </string>
+    <string name="label_with_payment_desc_cheep_care">Your current subscription ends on the %1s.</string>
+    <!--Your subscription will be auto renewed the same day, based on the subscription package chosen. -->
     <string name="msg_rate_desc_home_1st_part">&#160;recently completed a&#160;</string>
     <string name="msg_rate_desc_home_2nd_part">&#160;task for you. Please rate your service experience.</string>
 
@@ -885,7 +899,7 @@ without any hidden charges. Try it now!</string>
         <item>No discount</item>
     </string-array>
     <string name="benefits_features">Benefits/ Features</string>
-    <string name="cheep_care_package">Cheep Care Package</string>
+    <string name="cheep_care_package">Cheep Care\n Package</string>
     <string name="cheep_premium_care_package">Cheep Premium Care Package</string>
     <string name="price">₹499/MTH</string>
     <string name="book_now">Book now</string>

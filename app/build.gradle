@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.29" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.30" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -43,6 +43,7 @@ android {
         buildConfigField("String", "PAYUBIZ_SUCCESS_URL", getProperty("PAYUBIZ_SUCCESS_URL"))
         buildConfigField("String", "PAYUBIZ_FAIL_URL", getProperty("PAYUBIZ_FAIL_URL"))
         buildConfigField("String", "PAYUBIZ_INSTRUMENT_ID", getProperty("PAYUBIZ_INSTRUMENT_ID"))
+        buildConfigField("int", "PAYUBIZ_ENVIRONMENT", getProperty("PAYUBIZ_SANDBOX_ENVIRONMENT"))
 
         //AppsFlyer
         buildConfigField("String", "APPSFLYER_DEV_KEY", getProperty("APPSFLYER_DEV_KEY"))
@@ -59,7 +60,7 @@ android {
         buildConfigField("String", "TASK_ORIGINAL_FOLDER ", getProperty("TASK_ORIGINAL_FOLDER"))
         buildConfigField("String", "TASK_THUMB_FOLDER ", getProperty("TASK_THUMB_FOLDER"))
         buildConfigField("String", "REFER_AND_SHARE_APP_URL", getProperty("REFER_AND_SHARE_APP_URL"))
-        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+        buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
 
         //Paytm
         buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_STAGING_BASE_URL"))
@@ -122,6 +123,7 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_SANDBOX_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_SANDBOX_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "true")
+            buildConfigField("int", "PAYUBIZ_ENVIRONMENT", getProperty("PAYUBIZ_SANDBOX_ENVIRONMENT"))
 
             // Paytm
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_STAGING_BASE_URL"))
@@ -164,6 +166,9 @@ android {
         }
 
         live {
+
+
+
             versionNameSuffix "-LIVE"
             buildConfigField("String", "BASE_URL", getProperty("STAGING_BASE_URL"))
             buildConfigField("String", "BASE_URL_API", getProperty("STAGING_BASE_URL_API"))
@@ -171,6 +176,7 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+            buildConfigField("int", "PAYUBIZ_ENVIRONMENT", getProperty("PAYUBIZ_LIVE_ENVIRONMENT"))
 
             // Paytm
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
@@ -193,6 +199,7 @@ android {
             buildConfigField("String", "PAYUBIZ_HDFC_KEY", getProperty("PAYUBIZ_HDFC_LIVE_KEY"))
             buildConfigField("String", "PAYUBIZ_HDFC_URL", getProperty("PAYUBIZ_HDFC_LIVE_URL"))
             buildConfigField("boolean", "NEED_TO_BYPASS_PAYMENT", "false")
+            buildConfigField("int", "PAYUBIZ_ENVIRONMENT", getProperty("PAYUBIZ_LIVE_ENVIRONMENT"))
 
             // Paytm
             buildConfigField("String", "PAYTM_OAUTH_BASE_URL", getProperty("PAYTM_OAUTH_PRODUCTION_BASE_URL"))
@@ -340,8 +347,8 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
     implementation 'me.relex:circleindicator:1.2.2@aar'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    implementation 'com.payu.india:payu-sdk:4.3.9'
-    implementation 'com.payu.custombrowser:payu-custom-browser:5.3.7'
+    implementation 'com.payu.india:payu-sdk:4.4.4'
+    implementation 'com.payu.custombrowser:payu-custom-browser:7.1.3'
     implementation 'com.payu.magicretry:magicretry:1.0.0'
     //This will be removed after successfully implementation of FreshChat
     implementation 'com.github.freshdesk:hotline-android:1.2.5'
@@ -362,6 +369,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     implementation 'de.greenrobot:eventbus:2.4.0'
     /////////////////////////////
+    implementation 'com.mixpanel.android:mixpanel-android:5.+'
+    implementation project(':sdkui')
 
 }
 

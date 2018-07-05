@@ -556,6 +556,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             jobCategoryModel.catId = model.categoryModel.catId;
                             jobCategoryModel.catName = model.categoryModel.catName;
                             jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
+                            jobCategoryModel.isSubscribed=model.categoryModel.isSubscribed;
                             jobCategoryModel.catSlug=model.categoryModel.catSlug;
                             bannerImageModel = null;
                         }
@@ -782,6 +783,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             jobCategoryModel.catId = model.categoryModel.catId;
                             jobCategoryModel.catName = model.categoryModel.catName;
                             jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
+                            jobCategoryModel.isSubscribed=Utility.BOOLEAN.YES;
                             jobCategoryModel.catSlug=model.categoryModel.catSlug;
                             bannerImageModel = null;
                         }

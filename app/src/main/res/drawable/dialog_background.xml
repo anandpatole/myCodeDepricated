@@ -4,8 +4,10 @@
 <inset
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@drawable/round_dialog_bg"
-    android:insetBottom="10dp"
-    android:insetRight="@dimen/scale_10dp"
-    android:insetLeft="@dimen/scale_10dp"
-    android:insetTop="@dimen/scale_10dp">
+
+    android:insetBottom="@dimen/scale_25dp"
+    android:insetRight="@dimen/scale_25dp"
+    android:insetLeft="@dimen/scale_25dp"
+    android:insetTop="@dimen/scale_25dp">
+
 </inset>

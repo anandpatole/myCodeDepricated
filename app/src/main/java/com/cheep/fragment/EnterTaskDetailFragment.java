@@ -364,8 +364,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             mFragmentEnterTaskDetailBinding.textWhere.setTextColor(ContextCompat.getColor(mContext, R.color.splash_gradient_end));
             mFragmentEnterTaskDetailBinding.cvAddress.setVisibility(View.VISIBLE);
         } else {
-            mFragmentEnterTaskDetailBinding.textWhere.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icon_task_where_inactive, 0, 0, 0);
-            mFragmentEnterTaskDetailBinding.textWhere.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_11));
+           // mFragmentEnterTaskDetailBinding.textWhere.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_icon_task_where_inactive, 0, 0, 0);
+           // mFragmentEnterTaskDetailBinding.textWhere.setTextColor(ContextCompat.getColor(mContext, R.color.grey_varient_11));
             mFragmentEnterTaskDetailBinding.cvAddress.setVisibility(View.GONE);
         }
     }

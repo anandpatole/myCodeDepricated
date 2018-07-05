@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -215,6 +217,7 @@ public class HomeTabFragment extends BaseFragment {
         callAddressSizeListWS();
     }
 
+
     private void callAddressSizeListWS() {
         WebCallClass.getAddressAssetSizeWS(mContext, mCommonResponseListenerAdminSetting);
     }
@@ -325,7 +328,17 @@ public class HomeTabFragment extends BaseFragment {
 
         callGetAdminSettings();
     }
-
+private void hideCityBannerLayout()
+{
+    for(CareCityDetail detail: careBannerModelArrayList)
+    {
+        if(detail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+        {
+            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerLayout.setVisibility(View.GONE);
+            break;
+        }
+    }
+}
     private void callGetAdminSettings() {
         if (!Utility.isConnected(mContext)) {
             Log.d(TAG, "callGetAdminSettings: unable to call and get admin settings" + Math.ceil(3.4));
@@ -459,6 +472,7 @@ public class HomeTabFragment extends BaseFragment {
         if (isPreviousLocationPresent()) {
             toggleErrorScreen(false);
             mFragmentTabHomeBinding.textLocation.setText(userDetails.getDisplayLocationName());
+            //setDownArrowSize();
             errorLoadingHelper.showLoading();
             getBannerImageListFromServer();
             if (getArguments().getParcelable(Utility.Extra.DYNAMIC_LINK_URI) != null) {
@@ -491,6 +505,14 @@ public class HomeTabFragment extends BaseFragment {
              */
             updateLatLongOnServer(null, null);
         }
+    }
+    //
+    private void setDownArrowSize(){
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_arrow_down_white);
+        drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * 20),
+                (int) (drawable.getIntrinsicHeight() * 20));
+        ScaleDrawable sd = new ScaleDrawable(drawable, 0, 40, 40);
+        mFragmentTabHomeBinding.textLocation.setCompoundDrawables(null, null, sd.getDrawable(), null);
     }
 
     private void toggleErrorScreen(boolean showErrorScreen) {
@@ -741,6 +763,8 @@ public class HomeTabFragment extends BaseFragment {
                                 break;
                             }
                         }
+
+                        hideCityBannerLayout();
                         /*SpannableString oldPrice = null,newPrice= null;
                         for(int i=0; i<careBannerModelArrayList.size(); i++){
                             if(!careBannerModelArrayList.get(i).oldPrice.equals("0")){

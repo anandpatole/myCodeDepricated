@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.cheep.R;
 import com.cheep.model.ProviderModel;
@@ -208,5 +209,26 @@ public class CalendarUtility {
             return i + "rd";
         }
         return i + "th";
+    }
+    public static String getOneDayMinusDateFromPassingDate(String comingDate){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = null;
+        try {
+            date = sdf.parse(comingDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        Date yesterday = calendar.getTime();
+
+        Log.i(TAG, "YESTERDAY DATE: "+yesterday);
+        Log.i(TAG, "TODAY DATE: "+date);
+
+        String [] yesterdayDate= String.valueOf(yesterday).split(" ");
+
+        return getDateStringWithSuffic(Integer.parseInt(yesterdayDate[2])) +" " +yesterdayDate[1]+" "+ yesterdayDate[5];
     }
 }

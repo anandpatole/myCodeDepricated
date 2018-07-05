@@ -288,7 +288,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
                 TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
             else
-                TaskSummaryActivity.getInstance(mContext, model.task_id);
+                TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         }
           /*  }
         });*/

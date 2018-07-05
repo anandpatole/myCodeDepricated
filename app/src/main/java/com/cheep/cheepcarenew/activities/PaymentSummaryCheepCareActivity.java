@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -120,7 +123,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         }
 
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
-             packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
             addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
             Log.e(TAG, "initiateUI: -------------" + addressModel.address);
 
@@ -243,11 +246,15 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
-        /*// Start cheep care animations
-        mBinding.ivCheepCareGif.setBackgroundResource(R.drawable.cheep_care_animation);
-        ((AnimationDrawable) mBinding.ivCheepCareGif.getBackground()).start();*/
+
+
 
         mBinding.tvCityName.setText(cityLandingPageModel.careCityDetail.cityName);
+
+        final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.cheep_care_value));
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, 0, 5, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
+        mBinding.tvCheepCare.setText(sb);
 
 
     }
@@ -398,19 +405,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.addressId = addressModel.address_id;
         paymentDataModel.addressAssetTypeId = addressModel.addressSizeModel.id;
 
-    }
-
-    private void checkValidation() {
-        String errorMessage = "";
-        Boolean isErrorOccurred = false;
-
-        if (cheepCode.trim().isEmpty()) {
-            errorMessage = "";
-            isErrorOccurred = true;
-        } else if (cheepMateCode.trim().isEmpty()) {
-            errorMessage = "";
-            isErrorOccurred = true;
-        }
     }
 
     private void calculateDiscountPrice() {

@@ -18,8 +18,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -34,6 +39,9 @@ import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
+import com.cheep.fragment.BaseFragment;
+import com.cheep.fragment.InfoFragment;
+import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -73,7 +81,9 @@ import java.util.Map;
 /**
  * Created by Bhavesh Patadiya on 9/26/16.
  */
-public class LoginActivity extends BaseAppCompatActivity implements FacebookHelper.FacebookCallbacks {
+public class LoginActivity extends BaseAppCompatActivity implements
+        DrawerLayoutInteractionListener,
+        FacebookHelper.FacebookCallbacks {
     private static final String TAG = LoginActivity.class.getSimpleName();
     private ActivityLoginBinding mActivityLoginBinding;
 
@@ -100,25 +110,12 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
 
     // Location Info
     private LocationInfo mSelectedLocationInfo;
+    private boolean isDesclaimerEnabled = false;
 
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
     }
-
-   /* public static void newInstance(Context context, View blurryView) {
-        Intent intent = new Intent(context, LoginActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }*/
-
-    /*public static void newInstance(Context context, boolean isSessionExpire, int action) {
-        Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(Utility.Extra.SESSION_EXPIRE, isSessionExpire);
-        intent.putExtra(Utility.Extra.ACTION, action);
-        context.startActivity(intent);
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,26 +154,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         hideProgressDialog();
     }
 
-    /**
-     * Logout Confirmation Dialog
-     */
-    private void showSessionExpireDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-        builder.setCancelable(false);
-        builder.setTitle(getString(R.string.label_force_logout));
-        if (getIntent().getIntExtra(Utility.Extra.ACTION, NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED) == NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED) {
-            builder.setMessage(getString(R.string.desc_user_deleted));
-        } else {
-            builder.setMessage(getString(R.string.desc_force_logout));
-        }
-        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
-            }
-        });
-        builder.show();
-    }
 
     @Override
     protected void initiateUI() {
@@ -195,6 +172,8 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
                 }
             });
         }
+
+        setTermAndCondition();
 
     }
 
@@ -245,22 +224,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
     };
 
-    /*BottomAlertDialog forgotPasswordDialog;
-
-    private void showForgotPasswordDialog() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_forgot_password, null, false);
-        final EditText editEmailAddress = (EditText) view.findViewById(R.id.edit_email_address);
-        forgotPasswordDialog = new BottomAlertDialog(mContext);
-        view.findViewById(R.id.btn_send_email).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendForgotPasswordMail(editEmailAddress.getText().toString().trim());
-            }
-        });
-        forgotPasswordDialog.setTitle(getString(R.string.label_forgot_password));
-        forgotPasswordDialog.setCustomView(view);
-        forgotPasswordDialog.showDialog();
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,6 +310,94 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             }
         }
     }
+    /**
+     * Logout Confirmation Dialog
+     */
+    private void showSessionExpireDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.label_force_logout));
+        if (getIntent().getIntExtra(Utility.Extra.ACTION, NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED) == NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED) {
+            builder.setMessage(getString(R.string.desc_user_deleted));
+        } else {
+            builder.setMessage(getString(R.string.desc_force_logout));
+        }
+        builder.setPositiveButton(getString(R.string.label_Ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick() called with: dialogInterface = [" + dialogInterface + "], i = [" + i + "]");
+            }
+        });
+        builder.show();
+
+    }
+    public void loadFragment(String tag, BaseFragment baseFragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, baseFragment, tag).addToBackStack(InfoFragment.TAG).commitAllowingStateLoss();
+    }
+
+    private void setTermAndCondition(){
+        SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.terms_and_condition));
+
+        mActivityLoginBinding.tvDesclaimer.setText(mSpannableStringBuilder);
+        mActivityLoginBinding.tvDesclaimer.setMovementMethod(LinkMovementMethod.getInstance());
+
+        mActivityLoginBinding.tvDesclaimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS);
+                if (mFragment == null) {
+                    loadFragment(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS, InfoFragment.newInstance(NetworkUtility.TAGS.PAGEID_TYPE.TERMS));
+                }
+            }
+        });
+
+
+        mActivityLoginBinding.imgCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDesclaimerEnabled = !isDesclaimerEnabled;
+                enableDesclaimerCheckMark(isDesclaimerEnabled);
+            }
+        });
+    }
+    private void enableDesclaimerCheckMark(boolean flag) {
+        if (flag) {
+            mActivityLoginBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_checked);
+            mActivityLoginBinding.imgCheckbox.setSelected(flag);
+        } else {
+            mActivityLoginBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_unchecked);
+            mActivityLoginBinding.imgCheckbox.setSelected(flag);
+        }
+    }
+
+
+    //DrawerLayoutInteractionListener,
+    @Override
+    public void setUpDrawerLayoutWithToolBar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                        getSupportFragmentManager().popBackStack();
+                    }else {
+                        onBackPressed();
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void profileUpdated() {
+
+    }
+
+
 
     /**************************************************************************************************************
      * *****************************************Facebook SignIn[Start]*******************************************************
@@ -683,6 +734,11 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
             return false;
         }
 
+        if(!isDesclaimerEnabled){
+            Utility.showSnackBar(getString(R.string.validate_term), mActivityLoginBinding.getRoot());
+            return false;
+        }
+
         return true;
     }
 
@@ -920,112 +976,6 @@ public class LoginActivity extends BaseAppCompatActivity implements FacebookHelp
         }
     };
 
-
-    /*
-      Forgot password webservice integration
-     *//*
-    private void sendForgotPasswordMail(String emailAddress) {
-        if (TextUtils.isEmpty(emailAddress)) {
-//            Utility.showSnackBar(getString(R.string.validate_empty_email), mActivityLoginBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.validate_empty_email));
-            return;
-        }
-
-        if (!Utility.isValidEmail(emailAddress)) {
-//            Utility.showSnackBar(getString(R.string.validate_pattern_email), mActivityLoginBinding.getRoot());
-            Utility.showToast(mContext, getString(R.string.validate_pattern_email));
-            return;
-        }
-
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(getString(R.string.no_internet), mActivityLoginBinding.getRoot());
-            return;
-        }
-
-        //Show Progress
-        showProgressDialog();
-
-        //Add Header parameters
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, BuildConfig.X_API_KEY);
-
-        //Add Params
-        Map<String, String> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.EMAIL_ADDRESS, emailAddress);
-
-        VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.FORG0T_PASSWORD
-                , mCallForgotPasswordWSErrorListener
-                , mCallForgotPasswordWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(this).addToRequestQueue(mVolleyNetworkRequest);
-    }
-
-    Response.Listener mCallForgotPasswordWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityLoginBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityLoginBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mActivityLoginBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SIGNUP_REQUIRED:
-                        String message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-
-                        if (!TEMP_LOGIN_WITH.equals(NetworkUtility.TAGS.LOGINWITHTYPE.EMAIL))
-                            redirectUserToSignUp(TEMP_EMAIL, TEMP_NAME, TEMP_LOGIN_WITH);
-                        else
-                            Utility.showSnackBar(message, mActivityLoginBinding.getRoot());
-
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallForgotPasswordWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-            hideProgressDialog();
-
-            //Dismiss ForgotpasswordDialog
-            forgotPasswordDialog.dismiss();
-
-        }
-    };
-
-    Response.ErrorListener mCallForgotPasswordWSErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-
-            //Dismiss ForgotpasswordDialog
-            forgotPasswordDialog.dismiss();
-
-            // Close Progressbar
-            hideProgressDialog();
-
-            // Show Toast
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityLoginBinding.getRoot());
-        }
-    };*/
 
 
     /**
