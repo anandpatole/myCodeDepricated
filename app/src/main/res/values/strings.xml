@@ -450,7 +450,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_chat_ended_due_to_assigned_to_another_pro">"  This chat has ended as the task has been assigned to another PRO."</string>
     <string name="label_chat_ended_due_to_task_cancelled">"  This chat has ended as the task has been cancelled."</string>
     <string name="label_chat_ended_due_to_task_completed">"  This chat has ended as the task has been completed."</string>
-    <string name="label_our_services">All Our Services</string>
+    <string name="label_our_services">All Services</string>
     <string name="label_book">Book Now</string>
     <string name="label_pros_available">PROs\nAvailable</string>
     <string name="label_popular">Popular</string>
@@ -471,7 +471,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_2_desc_for_strategic_partner">Please share some more information</string>
     <string name="step_3_desc_for_strategic_partner">Please check details below and book</string>
     <string name="continue_">Continue</string>
+    <string name="your_subscription">Your Subscriptions</string>
+    <string name="all_your_fav">All Your Favourites</string>
 
+    <string name="all_popular">All Our Popular</string>
     <string name="label_select_an_address">Select an Address</string>
     <string name="label_select_the_date">Select the Date</string>
     <string name="label_select_the_time">Pick the Time</string>
@@ -480,7 +483,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="alert_time_must_be_after_3_hour">Date Time must be after 3 hour</string>
     <string name="alert_please_answer_all_the_questions">Please answer all the questions</string>
     <string name="alert_select_an_address">Please select an address</string>
-
+    <string name="all_services">All Our Services</string>
     <string name="alert_select_date_and_time">Please select date and time</string>
     <string name="disclaimer_task_completion_strategic_partner">When you pay, your funds are held securely by us. You will only be charged, once work is completed to your satisfaction</string>
     <string name="label_partner">Partner</string>

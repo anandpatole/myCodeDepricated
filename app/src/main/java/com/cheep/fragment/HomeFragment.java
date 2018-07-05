@@ -399,6 +399,7 @@ public class HomeFragment extends BaseFragment {
 //                mBinding.stripMyMe.setVisibility(View.GONE);
                 mBinding.stripMyChat.setVisibility(View.GONE);
 
+
                 break;
             case TAB_MY_TASK:
                 setSelected(mBinding.textTabMyTask, true);

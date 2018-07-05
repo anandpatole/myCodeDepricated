@@ -212,10 +212,12 @@ public class HomeActivity extends BaseAppCompatActivity
             {
 
                 Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
-                if (mFragment == null) {
+                if (mFragment == null)
+                {
                     getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
                     //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
-                } else {
+                } else
+                {
                     //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 }
             }
@@ -369,7 +371,7 @@ public class HomeActivity extends BaseAppCompatActivity
         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, false));
-         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
 
         return list;
     }
@@ -878,7 +880,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                     if (mFragment == null) {
 
-                       loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
 
 
                     } else {

@@ -90,6 +90,7 @@
             android:paddingRight="@dimen/home_screen_our_service_section_left_right_margin">
 
             <com.cheep.custom_view.CFTextViewSemiBold
+                android:id="@+id/sort_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

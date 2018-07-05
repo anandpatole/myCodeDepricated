@@ -1489,7 +1489,7 @@ private void hideCityBannerLayout()
     private void updateFilterText() {
         mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setSelected(true);
         if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
-            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_featured));
+            mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_our_services));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_popular));
@@ -1542,6 +1542,7 @@ private void hideCityBannerLayout()
         mLayoutFilterHomePopupBinding.textFeatured.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_services));
                 if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
                     mPopupWindow.dismiss();
                     return;
@@ -1557,6 +1558,7 @@ private void hideCityBannerLayout()
         mLayoutFilterHomePopupBinding.textPopular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_popular));
                 if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
                     mPopupWindow.dismiss();
                     return;
@@ -1572,6 +1574,7 @@ private void hideCityBannerLayout()
         mLayoutFilterHomePopupBinding.textFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_your_fav));
                 if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
                     mPopupWindow.dismiss();
                     return;
@@ -1587,6 +1590,7 @@ private void hideCityBannerLayout()
         mLayoutFilterHomePopupBinding.textSubscribed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.your_subscription));
                 if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
                     mPopupWindow.dismiss();
                     return;
