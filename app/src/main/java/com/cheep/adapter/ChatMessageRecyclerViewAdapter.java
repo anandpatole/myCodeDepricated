@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
-import com.cheep.activity.TaskSummaryActivity;
+import com.cheep.activity.TaskSummaryForMultiCatActivity;
 import com.cheep.activity.ZoomImageActivity;
 import com.cheep.databinding.RowChatHeaderBinding;
 import com.cheep.databinding.RowChatReceiverMediaBinding;
@@ -432,7 +432,7 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     providerModel.providerId = FirebaseUtils.removePrefixSpId(model.senderId);
 
                     JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-                    TaskSummaryActivity.getInstance(mContext, FirebaseUtils.removePrefixTaskId(model.taskId));
+                    TaskSummaryForMultiCatActivity.getInstance(mContext, FirebaseUtils.removePrefixTaskId(model.taskId));
                 }
             });
             viewHolder.mRowChatReceiverMoneyBinding.textMoney.setText(mContext.getString(R.string.label_formatted_quote_amount,String.valueOf(model.quoteAmount)));

@@ -149,7 +149,7 @@ public class Utility {
 //    public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_TIME = SuperFormatter.HOUR_12_HOUR_2_DIGIT + ":" + SuperFormatter.MINUTE + "" + SuperFormatter.AM_PM;
 
     public static final String DATE_FORMAT_HH_MM_AM = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + " ";
-    public static final String DATE_FORMAT_HH= SuperFormatter.HOUR_24_HOUR;
+    public static final String DATE_FORMAT_HH = SuperFormatter.HOUR_24_HOUR;
     public static final String DATE_FORMAT_HH_MM_SS = SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + ":" + SuperFormatter.SECONDS;
     public static final String DATE_FORMAT_DD_MMM_HH_MM_AM = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN + " " + SuperFormatter.HOUR_24_HOUR + ":" + SuperFormatter.MINUTE + "";
     public static final String DATE_FORMAT_TASK_HAS_BEEN_PAID_DATE = SuperFormatter.DATE + " " + SuperFormatter.MONTH_JAN;
@@ -749,12 +749,13 @@ public class Utility {
         String NO = "no";
         String NA = "na";
     }
-public interface BOOLEAN_NEW
-{
-    boolean YES = true;
-    boolean NO = false;
 
-}
+    public interface BOOLEAN_NEW {
+        boolean YES = true;
+        boolean NO = false;
+
+    }
+
     public interface ADDRESS_SUBSCRIPTION_TYPE {
         String PREMIUM = "premium";
         String NONE = "none";
@@ -821,7 +822,7 @@ public interface BOOLEAN_NEW
         // different limits
         int OTHER_SUBSCRIBED_ADDRESS_SELECTED = 24;
         int ADDRESS_SELECTED_POP_UP = 25;
-        int PAYTM_RESPONSE_FOR_RESCHEDULE= 26;
+        int PAYTM_RESPONSE_FOR_RESCHEDULE = 26;
     }
 
     public interface REQUEST_TYPE {
@@ -1271,10 +1272,11 @@ public interface BOOLEAN_NEW
 
         return spannableString;
     }
+
     public static SpannableString getCheepCarePackageMonthlyPriceAppendText(Context context, int resId, String price) {
         DecimalFormat format = new DecimalFormat();
         format.setDecimalSeparatorAlwaysShown(false);
-        SpannableString spannableString = new SpannableString(context.getString(resId, format.format(Double.valueOf(price)),"majid"));
+        SpannableString spannableString = new SpannableString(context.getString(resId, format.format(Double.valueOf(price)), "majid"));
         int start = spannableString.toString().lastIndexOf("T");
         RelativeSizeSpan relativeSizeSpan = new RelativeSizeSpan(0.5f);
 
@@ -1324,11 +1326,12 @@ public interface BOOLEAN_NEW
 
         return (int) elapsedDays;
     }
+
     // like 23th jun 2018
-    public static String getDate(String dateFromServer){
+    public static String getDate(String dateFromServer) {
         Date stringToDate = new Date();
-        String [] date=null;
-        String readableDate=null;
+        String[] date = null;
+        String readableDate = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
         try {
             stringToDate = simpleDateFormat.parse(dateFromServer);
@@ -1342,7 +1345,7 @@ public interface BOOLEAN_NEW
             e.printStackTrace();
         }
 
-        return date[0]+readableDate+" "+date[1]+" "+date[2];
+        return date[0] + readableDate + " " + date[1] + " " + date[2];
     }
 
     private static String getDayNumberSuffix(int day) {

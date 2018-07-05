@@ -221,6 +221,12 @@ public class TaskFragment extends BaseFragment {
                 if (taskRecyclerViewAdapter != null)
                     taskRecyclerViewAdapter.updateOnDetailRequestRejected(event);
                 break;
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                Log.e(TAG, "onMessageEvent: Reload dATA");
+                nextPageId = null;
+                taskRecyclerViewAdapter.enableLoadMore();
+                reloadTaskListFromServer();
+                break;
         }
     }
 

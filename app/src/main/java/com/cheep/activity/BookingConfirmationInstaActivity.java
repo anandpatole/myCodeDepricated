@@ -2,7 +2,6 @@ package com.cheep.activity;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -190,7 +188,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.tvGotcha.setVisibility(View.VISIBLE);
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge = 0;
-                   // mBinding.viewLine2.setVisibility(View.GONE);
+                    // mBinding.viewLine2.setVisibility(View.GONE);
                     mBinding.viewLine1.setVisibility(View.GONE);
                 } else {
                     mBinding.tvPaynow.setVisibility(View.VISIBLE);
@@ -215,12 +213,12 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                     mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                     mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                     mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-                   // mBinding.viewLine1.setVisibility(View.VISIBLE);
+                    // mBinding.viewLine1.setVisibility(View.VISIBLE);
                     mBinding.categoryTick.setVisibility(View.GONE);
                 } else {
                     mBinding.categoryTick.setVisibility(View.VISIBLE);
                     mBinding.recyclerViewPaid.setVisibility(View.GONE);
-                   // mBinding.viewLine1.setVisibility(View.GONE);
+                    // mBinding.viewLine1.setVisibility(View.GONE);
                 }
 
             } else {
@@ -261,22 +259,22 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                 mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-               // mBinding.viewLine1.setVisibility(View.VISIBLE);
+                // mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.categoryTick.setVisibility(View.GONE);
             } else {
                 mBinding.categoryTick.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setVisibility(View.GONE);
-               // mBinding.viewLine1.setVisibility(View.GONE);
+                // mBinding.viewLine1.setVisibility(View.GONE);
             }
 
         } else {
             if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                 mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                 additionalCharge = 0;
-               //mBinding.viewLine2.setVisibility(View.GONE);
+                //mBinding.viewLine2.setVisibility(View.GONE);
                 mBinding.viewLine1.setVisibility(View.GONE);
             } else {
-               // mBinding.viewLine2.setVisibility(View.VISIBLE);
+                // mBinding.viewLine2.setVisibility(View.VISIBLE);
                 mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.rlAdditionalCharges.setVisibility(View.VISIBLE);
                 // mBinding.tvLabelAdditionalCharge.setText(taskDetailModel.additionalChargeReason);
@@ -299,12 +297,12 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 mBinding.recyclerViewPaid.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setLayoutManager(new LinearLayoutManager(this));
                 mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
-               // mBinding.viewLine1.setVisibility(View.VISIBLE);
+                // mBinding.viewLine1.setVisibility(View.VISIBLE);
                 mBinding.categoryTick.setVisibility(View.GONE);
             } else {
                 mBinding.categoryTick.setVisibility(View.VISIBLE);
                 mBinding.recyclerViewPaid.setVisibility(View.GONE);
-               // mBinding.viewLine1.setVisibility(View.GONE);
+                // mBinding.viewLine1.setVisibility(View.GONE);
             }
         }
         mBinding.ivTermsTick.setSelected(true);
@@ -835,65 +833,67 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
         // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
-                new TimePickerDialog.OnTimeSetListener() {
-
+        com.wdullaer.materialdatetimepicker.time.TimePickerDialog timePickerDialog = new com.wdullaer.materialdatetimepicker.time.TimePickerDialog();
+        timePickerDialog.initialize(
+                new com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if (view.isShown()) {
-                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+                    public void onTimeSet(com.wdullaer.materialdatetimepicker.time.TimePickerDialog view, int hourOfDay, int minute, int second) {
+                        Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
-                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+                        startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
 
-                            superCalendar = SuperCalendar.getInstance();
-                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
-                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                        superCalendar = SuperCalendar.getInstance();
+                        superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+                        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
+                        // Get date-time for next 3 hours
+                        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
-                            AdminSettingModel model = null;
-                            model = PreferenceUtility.getInstance(mContext).getAdminSettings();
+                        AdminSettingModel model = null;
+                        model = PreferenceUtility.getInstance(mContext).getAdminSettings();
 
 
-                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
-                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                            + getString(R.string.label_between)
-                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
-                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                    callRescheduleTaskWS(taskId);
+                        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                            if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_between)
+                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                                callRescheduleTaskWS(taskId);
 
-                                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showUrgentBookingDialog(model, taskId);
-                                    } else {
-                                        Log.e(TAG, "onTimeSet:call direct reschedule web service");
-                                        callRescheduleTaskWS(taskId);
-                                    }
-                                } else if (startDateTimeSuperCalendar.isNonWorkingHour(model.starttime, model.endtime)) {
-                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showOutOfOfficeHours(model, taskId);
-                                    } else {
-                                        callRescheduleTaskWS(taskId);
-                                    }
+                            } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                    showUrgentBookingDialog(model, taskId);
                                 } else {
-                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                            + getString(R.string.label_between)
-                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                    Log.e(TAG, "onTimeSet:call direct reschedule web service");
+                                    callRescheduleTaskWS(taskId);
+                                }
+                            } else if (startDateTimeSuperCalendar.isNonWorkingHour(model.starttime, model.endtime)) {
+                                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                    showOutOfOfficeHours(model, taskId);
+                                } else {
+                                    callRescheduleTaskWS(taskId);
                                 }
                             } else {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_between)
+                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
                                 additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                                Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
                             }
+                        } else {
+                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                            Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
                         }
                     }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
-        timePickerDialog.show();
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND), Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.setThemeDark(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.enableMinutes(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.dismissOnPause(Utility.BOOLEAN_NEW.YES);
+        timePickerDialog.enableSeconds(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.show(getFragmentManager(), "Timepickerdialog");
     }
 
     private void showOutOfOfficeHours(AdminSettingModel model, final String taskId) {
