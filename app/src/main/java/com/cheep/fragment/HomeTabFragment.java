@@ -1537,27 +1537,32 @@ private void hideCityBannerLayout()
     private void updateFilterSelectionInPopup(LayoutFilterHomePopupBinding mLayoutFilterHomePopupBinding) {
         // Click events logic
         if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_services));
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
             mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_popular));
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(true);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
             mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_your_fav));
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(true);
             mLayoutFilterHomePopupBinding.textSubscribed.setSelected(false);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.your_subscription));
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(false);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
             mLayoutFilterHomePopupBinding.textSubscribed.setSelected(true);
         } else {
             // By Deafult make featured as selected
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getString(R.string.all_services));
             mLayoutFilterHomePopupBinding.textFeatured.setSelected(true);
             mLayoutFilterHomePopupBinding.textPopular.setSelected(false);
             mLayoutFilterHomePopupBinding.textFavourites.setSelected(false);
