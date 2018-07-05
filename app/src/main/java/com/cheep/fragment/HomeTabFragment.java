@@ -124,18 +124,6 @@ public class HomeTabFragment extends BaseFragment {
         return fragment;
     }
 
-//    private static HomeTabFragment fragment;
-//
-//    public static HomeTabFragment singleInstance(DrawerLayoutInteractionListener mListener) {
-//        Bundle args = new Bundle();
-//        if (fragment == null) {
-//            fragment = new HomeTabFragment();
-//            fragment.setArguments(args);
-//            fragment.setmListener(mListener);
-//        }
-//        return fragment;
-//    }
-
     public void setmListener(DrawerLayoutInteractionListener mListener) {
         this.mListener = mListener;
     }
@@ -278,15 +266,6 @@ public class HomeTabFragment extends BaseFragment {
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
 
-        // Set Height of Viewpager according to 16:9 resolution to make the things work
-       /* mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.getLayoutParams();
-                params.height = Utility.getHeightFromWidthForSixteenNineRatio(params.width);
-                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages.setLayoutParams(params);
-            }
-        });*/
 
         // Setup Cover Image Adapter as Empty
         setupCoverViewPager(null);
@@ -328,6 +307,7 @@ public class HomeTabFragment extends BaseFragment {
 
         callGetAdminSettings();
     }
+    // hide city banner if user address is subscribe
 private void hideCityBannerLayout()
 {
     for(CareCityDetail detail: careBannerModelArrayList)
@@ -506,15 +486,6 @@ private void hideCityBannerLayout()
             updateLatLongOnServer(null, null);
         }
     }
-    //
-    private void setDownArrowSize(){
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_arrow_down_white);
-        drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * 20),
-                (int) (drawable.getIntrinsicHeight() * 20));
-        ScaleDrawable sd = new ScaleDrawable(drawable, 0, 40, 40);
-        mFragmentTabHomeBinding.textLocation.setCompoundDrawables(null, null, sd.getDrawable(), null);
-    }
-
     private void toggleErrorScreen(boolean showErrorScreen) {
         if (showErrorScreen) {
             //Show Error Screen
@@ -765,49 +736,8 @@ private void hideCityBannerLayout()
                         }
 
                         hideCityBannerLayout();
-                        /*SpannableString oldPrice = null,newPrice= null;
-                        for(int i=0; i<careBannerModelArrayList.size(); i++){
-                            if(!careBannerModelArrayList.get(i).oldPrice.equals("0")){
-                                oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                                        , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
-                            }else {
-                                oldPrice= SpannableString.valueOf("");
-                            }
-                        }
-*/
-                      /*  private String addingSubtitleWithOldAndNewPrice(String subTitle){
-
-                        if(!bannerImageModel.oldPrice.equals("0")){
-                            oldPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                                    , R.string.rupee_symbol_x_package_price, bannerImageModel.oldPrice);
-                        }else {
-                            oldPrice= SpannableString.valueOf("");
-                        }
-
-                        newPrice = Utility.getCheepCarePackageMonthlyPrice(binding.tvSubTitle.getContext()
-                                , R.string.rupee_symbol_x_package_price, bannerImageModel.newPrice);
-
-                        return subTitle+" "+oldPrice+" "+newPrice;
-
-                    }*/
-
 
                         getCategoryListFromServer();
-
-                        /*ArrayList<JobCategoryModel> list;
-                        list = Utility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), JobCategoryModel[].class);
-
-                        //Setting RecyclerView Adapter
-                        homeTabRecyclerViewAdapter = new HomeTabRecyclerViewAdapter(list, mCategoryRowInteractionListener);
-                        ViewCompat.setNestedScrollingEnabled(mFragmentTabHomeBinding.commonRecyclerView.recyclerView, false);
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.setAdapter(homeTabRecyclerViewAdapter);
-                        mFragmentTabHomeBinding.commonRecyclerView.recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_white, (int) getResources().getDimension(R.dimen.scale_0dp)));
-                        toggleErrorScreen(false);
-
-                        if (list != null && list.size() <= 0) {
-                            errorLoadingHelper.failed(null, R.drawable.img_empty_category, onRetryBtnClickListener);
-                        }*/
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

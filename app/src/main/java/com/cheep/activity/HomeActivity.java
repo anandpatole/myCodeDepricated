@@ -211,7 +211,8 @@ public class HomeActivity extends BaseAppCompatActivity
 
                 Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
                 if (mFragment == null) {
-                    loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
+                    getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
+                    //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
                 } else {
                     //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 }
