@@ -11,6 +11,7 @@
         android:layout_marginLeft="@dimen/scale_12dp"
         android:layout_marginRight="@dimen/scale_12dp"
         android:layout_marginStart="@dimen/scale_12dp"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/scale_8dp">
 
         <LinearLayout
@@ -54,7 +55,7 @@
                             android:maxLines="2"
                             android:text="@string/label_plumber"
                             android:textAllCaps="false"
-                            android:textColor="@color/white"
+                            android:textColor="@color/white_opacity"
                             android:textSize="@dimen/text_size_18sp" />
                     </LinearLayout>
                 </LinearLayout>

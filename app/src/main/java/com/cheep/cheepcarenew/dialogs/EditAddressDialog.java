@@ -62,9 +62,9 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     private String addressId;
     private String lat;
     private String lng;
-    private String country;
-    private String sate;
-    private String city;
+    private String country="";
+    private String sate ="";
+    private String city="";
     int addressPosition = 0;
 
     public EditAddressDialog() {
@@ -141,9 +141,22 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                     addressId = listOfAddress.get(i).address_id;
                     lat = listOfAddress.get(i).lat;
                     lng = listOfAddress.get(i).lng;
-                    country = listOfAddress.get(i).countryName;
-                    sate = listOfAddress.get(i).stateName;
-                    city = listOfAddress.get(i).cityName;
+
+                    if(listOfAddress.get(i).countryName !=null){
+                        country = listOfAddress.get(i).countryName;
+                    }else {
+                        country="";
+                    }
+                    if(listOfAddress.get(i).stateName !=null){
+                        sate = listOfAddress.get(i).stateName;
+                    }else {
+                        sate="";
+                    }
+                    if(listOfAddress.get(i).cityName !=null){
+                        city = listOfAddress.get(i).cityName;
+                    }else {
+                        city="";
+                    }
                 }
                 position++;
             }

@@ -143,6 +143,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onAttach(Context context) {

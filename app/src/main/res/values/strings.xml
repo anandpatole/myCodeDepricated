@@ -32,11 +32,11 @@
     <string name="label_share_with_friend">Refer</string>
     <string name="label_help">Contact Us</string>
     <string name="label_faq">FAQ</string>
-    <string name="label_rate_this_app">Rate CHEEP</string>
+    <string name="label_rate_this_app">Rate Cheep Care</string>
 
     <string name="label_terms1">T&amp;C Apply</string>
 
-    <string name="label_terms">T&amp;S</string>
+    <string name="label_terms">T&amp;C</string>
 
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
@@ -90,7 +90,7 @@
     <string name="label_reschedule">Reschedule</string>
     <string name="text_cheep_rate_card_categories"> Rate Card for Service Categories</string>
     <string name="rate_card_plumber">Plumber</string>
-    <string name="cheep_rate_card_info">Wondering how much a service can cost you</string>
+    <string name="cheep_rate_card_info">Wondering how much a service can cost you?</string>
     <string name="rate_card_pest_control">Pest Control</string>
     <string name="cheep_rate_card_info1">Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below</string>
     <string name="rupee_symbol_x_space">₹ %1$s</string>
@@ -961,6 +961,7 @@ without any hidden charges. Try it now!</string>
     <string name="wowieee_all_done">Wowieee. All done!</string>
     <string name="acknowledgement_details">Congrats on taking the first step towards making your home healthy &amp; happy. Your Cheep Care AMC package is now activated and we are available 24x7 to help you maintain your home. Thank you </string>
     <string name="thanks">Thanks</string>
+    <string name="only">only.</string>
     <string name="cheep_care_value">Cheep Care</string>
     <string name="label_add_new_address">Add new address</string>
     <string name="label_get_current_location">Get current location</string>

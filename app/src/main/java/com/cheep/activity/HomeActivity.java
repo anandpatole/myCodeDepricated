@@ -345,24 +345,27 @@ public class HomeActivity extends BaseAppCompatActivity
         ArrayList<SlideMenuListModel> list = new ArrayList<>();
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_home), R.drawable.icon_side_home_blue, true, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_favourites_side_menu), R.drawable.icon_fav_off, false, false));
-
-        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.Label_cheep_care_rate_card), R.drawable.icon_rate, false, false));
-        // TODO: Icon change Refer And Earn
-//        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null)
-//            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
-       // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
-       // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
-        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, true));
+
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
+            list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
+        }
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, true));
+        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_rate_this_app), R.drawable.icon_rate, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_help), R.drawable.icon_help, false, false));
         list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_terms), R.drawable.icon_privacy, false, true));
-//        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
         if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, false));
         } else {
             list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_login), R.drawable.icon_logout, false, false));
         }
-//        list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
+        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_payment_history), R.drawable.icon_history, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_me), R.drawable.icon_logout, false, false));
+        //list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_refer_and_earn), R.drawable.icon_help, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_faq), R.drawable.icon_faq, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_privacy_policy), R.drawable.icon_privacy, false, false));
+        // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.label_logout), R.drawable.icon_logout, false, false));
+         // list.add(new SlideMenuListModel(mContext.getResources().getString(R.string.tab_alert), R.drawable.icon_logout, false, true));
 
         return list;
     }
@@ -381,7 +384,7 @@ public class HomeActivity extends BaseAppCompatActivity
                 HomeFragment homeFragment = (HomeFragment) mFragment;
                 homeFragment.setCurrentTab(HomeFragment.TAB_HOME);
             }
-        } else if (slideMenuListModel.title.equals(getString(R.string.label_favourites))) {
+        } else if (slideMenuListModel.title.equals(getString(R.string.label_favourites_side_menu))) {
             Fragment mFragment = getSupportFragmentManager().findFragmentByTag(FavouriteFragment.TAG);
             if (mFragment == null) {
                 loadFragment(FavouriteFragment.TAG, FavouriteFragment.newInstance());
@@ -805,8 +808,7 @@ public class HomeActivity extends BaseAppCompatActivity
         if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && !model.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();
-        } else
-            {
+        } else {
             TaskCreationActivity.getInstance(mContext, model);
         }
 

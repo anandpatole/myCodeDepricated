@@ -139,7 +139,7 @@
                     android:textSize="@dimen/text_size_11sp"
                     android:visibility="gone"
                     tools:text="@string/thanks" />
-                <com.cheep.custom_view.CFTextViewRegular
+                <com.cheep.custom_view.CFTextViewBold
                     android:id="@+id/tv_new_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,6 +150,16 @@
                     android:textSize="@dimen/text_size_11sp"
                     android:visibility="visible"
                     tools:text="@string/thanks" />
+                <com.cheep.custom_view.CFTextViewRegular
+                    android:id="@+id/tv_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/scale_2dp"
+                    android:layout_marginStart="@dimen/scale_2dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_11sp"
+                    tools:text="@string/only" />
             </LinearLayout>
         </RelativeLayout>
 
