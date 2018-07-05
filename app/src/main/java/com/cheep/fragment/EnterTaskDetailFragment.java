@@ -69,7 +69,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     private OutOfOfficeHoursDialog out_of_office_dialog;
     public String additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
     private AdminSettingModel model;
-    private com.wdullaer.materialdatetimepicker.time.TimePickerDialog tpd;
+    private TimePickerDialog tpd;
 
     private WebCallClass.CommonResponseListener commonErrorListener = new WebCallClass.CommonResponseListener() {
         @Override

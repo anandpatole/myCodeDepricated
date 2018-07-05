@@ -35,14 +35,13 @@
             <FrameLayout
                 android:id="@+id/frame_reschedule_task"
                 android:layout_width="@dimen/scale_120dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:background="@color/yellow"
                 android:visibility="visible">
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/text_reschedule"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawablePadding="@dimen/scale_10dp"

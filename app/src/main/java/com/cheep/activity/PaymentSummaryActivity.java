@@ -16,6 +16,7 @@ import com.cheep.R;
 import com.cheep.adapter.SelectedSubServiceAdapter;
 import com.cheep.cheepcare.model.AdminSettingModel;
 import com.cheep.databinding.ActivityPaymentSummaryBinding;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.PaymentSummaryModel;
 import com.cheep.model.TaskDetailModel;
 import com.cheep.network.NetworkUtility;
@@ -26,6 +27,9 @@ import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +45,8 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
     private ActivityPaymentSummaryBinding mBinding;
     private TaskDetailModel taskDetailModel;
     private PaymentSummaryModel paymentSummaryModel;
-    private boolean isForReschedule = false;
+    private String startDateTime = Utility.EMPTY_STRING;
+    private String rescheduleReason = Utility.EMPTY_STRING;
 
     /**
      * view summary
@@ -49,10 +54,11 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
      * @param context         context
      * @param taskDetailModel task detail for summary
      */
-    public static void newInstance(Context context, TaskDetailModel taskDetailModel, boolean isForReschedule) {
+    public static void newInstance(Context context, TaskDetailModel taskDetailModel, String startDateTime, String rescheduleReason) {
         Intent intent = new Intent(context, PaymentSummaryActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
-        intent.putExtra(Utility.Extra.DATA_2, isForReschedule);
+        intent.putExtra(Utility.Extra.DATA_2, startDateTime);
+        intent.putExtra(Utility.Extra.DATA_3, rescheduleReason);
         context.startActivity(intent);
     }
 
@@ -63,7 +69,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
           when the device runing out of memory we dont want the user to restart the payment. rather we close it and redirect them to previous activity.
          */
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_summary);
-
+        EventBus.getDefault().register(this);
         initiateUI();
         setListeners();
     }
@@ -110,7 +116,11 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
         }
         if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
             //This is only when provider profile view for specific task (provider gives quote to specific task)
-            isForReschedule = getIntent().getBooleanExtra(Utility.Extra.DATA_2, false);
+            startDateTime = getIntent().getStringExtra(Utility.Extra.DATA_2);
+        }
+        if (getIntent().hasExtra(Utility.Extra.DATA_3)) {
+            //This is only when provider profile view for specific task (provider gives quote to specific task)
+            rescheduleReason = getIntent().getStringExtra(Utility.Extra.DATA_3);
         }
 
 
@@ -119,10 +129,11 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             mBinding.recyclerViewPaid.setAdapter(new SelectedSubServiceAdapter(taskDetailModel.subCatList));
 
             callPaymentSummaryWS();
-            if (!isForReschedule && taskDetailModel.selectedProvider != null) {
+            if (startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING) && taskDetailModel.selectedProvider != null) {
+                mBinding.textTitle.setText(R.string.label_payment_summary);
                 String dateTime = "";
-                if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
-                    dateTime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_TIME_DD_MMMM_HH_MM);
+                if (!TextUtils.isEmpty(startDateTime)) {
+                    dateTime = CalendarUtility.getDate(Long.parseLong(startDateTime), Utility.DATE_TIME_DD_MMMM_HH_MM);
                     dateTime = dateTime.replace(getString(R.string.label_am_caps), getString(R.string.label_am_small)).replace(getString(R.string.label_pm_caps), getString(R.string.label_pm_small));
                 }
 
@@ -137,11 +148,12 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                 mBinding.txtdesc.setText(spannableStringBuilder);
             } else {
                 // address and time UI
+                mBinding.textTitle.setText(R.string.booking_confirmation);
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
                 spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
-                if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
+                if (!TextUtils.isEmpty(startDateTime)) {
                     spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
-                    String datetime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);
+                    String datetime = CalendarUtility.getDate(Long.parseLong(startDateTime), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(startDateTime);
                     spannableStringBuilder.append(getSpannableString(datetime, ContextCompat.getColor(this, R.color.splash_gradient_end), true));
                 }
                 spannableStringBuilder.append(getSpannableString(getString(R.string.label_at), ContextCompat.getColor(this, R.color.grey_varient_8), false));
@@ -170,17 +182,17 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
         double subTotal = 0;
         double total = 0;
         if (paymentSummaryModel != null) {
-            if (isForReschedule) {
+            if (!startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING)) {
 
 
                 try {
-                    catPrice = Double.valueOf(taskDetailModel.categoryModel.catPrice);
+                    catPrice = Double.valueOf(taskDetailModel.categoryModel.catNewPrice);
 
                     mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
                     mBinding.textLabelTotalPaid.setText(getString(R.string.label_total_pay));
-                    mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catPrice));
+                    mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catNewPrice));
 
-                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
+                    if (rescheduleReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS)) {
                         mBinding.rladditionalOutOfOffice.setVisibility(View.VISIBLE);
                         mBinding.viewOutOfOffice.setVisibility(View.VISIBLE);
                         mBinding.rladditionalUrgentBooking.setVisibility(View.GONE);
@@ -216,7 +228,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                 }
 
             } else {
-                mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catPrice));
+                mBinding.txtprofee.setText(getRuppeAmount(taskDetailModel.categoryModel.catNewPrice));
                 mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
 
                 nonWorkingHourCharges = Double.parseDouble(paymentSummaryModel.nonOfficeHoursCharge);
@@ -303,7 +315,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 taskDetailModel.paymentSummaryModel = paymentSummaryModel;
                 taskDetailModel.taskTotalPendingAmount = paymentSummaryModel.totalAmount;
-                String startDatetime = isForReschedule ? taskDetailModel.taskStartdate : Utility.ZERO_STRING;
+                String startDatetime = !startDateTime.equalsIgnoreCase(Utility.EMPTY_STRING) ? startDateTime : Utility.ZERO_STRING;
                 PaymentChoiceActivity.newInstance(mContext, taskDetailModel, startDatetime);
             }
         });
@@ -407,7 +419,21 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.GET_PAYMENT_SUMMARY);
         super.onDestroy();
+    }
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                finish();
+                break;
+        }
     }
 }

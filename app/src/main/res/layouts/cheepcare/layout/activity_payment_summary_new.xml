@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/white">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -88,9 +89,9 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:fillViewport="true"
+                       android:fillViewport="true"
             android:focusableInTouchMode="true">
 
             <RelativeLayout
@@ -611,21 +612,22 @@
 
                 </RelativeLayout>
 
-                <com.cheep.custom_view.CFTextViewBold
-                    android:id="@+id/tv_pay_now"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_50dp"
-                    android:layout_below="@+id/reltiveInfo"
-                    android:layout_marginTop="@dimen/scale_20dp"
-                    android:background="@color/splash_gradient_end"
-                    android:gravity="center"
-                    android:text="@string/label_pay_now"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16sp" />
+
 
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>
-
+        <com.cheep.custom_view.CFTextViewBold
+            android:id="@+id/tv_pay_now"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scale_50dp"
+            android:layout_below="@+id/reltiveInfo"
+            android:layout_marginTop="@dimen/scale_20dp"
+            android:background="@color/splash_gradient_end"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:text="@string/label_pay_now"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16sp" />
     </LinearLayout>
 </layout>

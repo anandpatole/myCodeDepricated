@@ -13,16 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
-import com.cheep.BootstrapConstant;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcare.model.AdminSettingModel;
-import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -48,6 +47,12 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+import com.payu.india.Model.PaymentParams;
+import com.payu.india.Model.PayuConfig;
+import com.payu.india.Model.PayuHashes;
+import com.payu.india.Payu.Payu;
+import com.payu.india.Payu.PayuConstants;
+import com.payu.payuui.Activity.PayUBaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,14 +90,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     double paytmWalletBalance;
     private double payableAmountForPaytm = 0;
     private double payableAmountForTask = 0;
-    private SubscribedTaskDetailModel subscribedTaskDetailModel;
-    boolean isSubscribedTask = false;
+    //    private SubscribedTaskDetailModel subscribedTaskDetailModel;
+//    boolean isSubscribedTask = false;
     private SuperCalendar startDateTimeSuperCalendar = SuperCalendar.getInstance();
     private SuperCalendar superCalendar;
     private String additionalChargeReason = Utility.EMPTY_STRING;
     private UrgentBookingDialog ugent_dialog;
     private OutOfOfficeHoursDialog out_of_office_dialog;
-    private String startDatetime = Utility.ZERO_STRING;
+    private String startDatetime = Utility.EMPTY_STRING;
+    private int broadCastTypeForPaytm = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
 
     /**
      * this is for payment for pending amount or pay later task
@@ -105,18 +111,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(taskDetailModel));
         intent.putExtra(Utility.Extra.START_DATETIME, startDatetime);
         intent.putExtra(Utility.Extra.IS_PAY_NOW, false);
-        context.startActivity(intent);
-    }
-
-    /**
-     * this is for payment for subscribed cheep care task
-     *
-     * @param context                   context of activity
-     * @param subscribedTaskDetailModel task detail model class
-     */
-    public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
-        Intent intent = new Intent(context, PaymentChoiceActivity.class);
-        intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(subscribedTaskDetailModel));
         context.startActivity(intent);
     }
 
@@ -158,6 +152,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_choice);
+        Payu.setInstance(this);
         initiateUI();
         setListeners();
 
@@ -169,8 +164,8 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     protected void initiateUI() {
         // TODO: Changes are per new flow pay now/later: 16/11/17
 
+
         if (getIntent().hasExtra(Utility.Extra.DATA)) {
-            isSubscribedTask = false;
             taskDetailModel = (TaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), TaskDetailModel.class);
             if (getIntent().hasExtra(Utility.Extra.DATA_2)) {
                 providerModel = (ProviderModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), ProviderModel.class);
@@ -186,31 +181,32 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 quoteAmount = Double.parseDouble(getIntent().getStringExtra(Utility.Extra.QUOTE_AMOUNT));
             }
             isPayNow = getIntent().getBooleanExtra(Utility.Extra.IS_PAY_NOW, false);
-            startDatetime = getIntent().getStringExtra(Utility.Extra.START_DATETIME);
+            if (getIntent().hasExtra(Utility.Extra.START_DATETIME)) {
+                startDatetime = getIntent().getStringExtra(Utility.Extra.START_DATETIME);
+            }
+            broadCastTypeForPaytm = startDatetime.equalsIgnoreCase(Utility.EMPTY_STRING) ? Utility.BROADCAST_TYPE.PAYTM_RESPONSE : Utility.BROADCAST_TYPE.PAYTM_RESPONSE_FOR_RESCHEDULE;
 
-            if (taskDetailModel != null && taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING))
+
+            if (taskDetailModel != null && (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.PENDING) ||
+                    taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.RESCHEDULE_REQUESTED)))
                 mBinding.llCashPayment.setVisibility(View.GONE);
             else
                 mBinding.llCashPayment.setVisibility(View.VISIBLE);
 
             mBinding.tvPaytmLinkAccount.setText(getString(R.string.label_link_x, getString(R.string.label_account)));
-        } else {
+        }/* else {
             isSubscribedTask = true;
             subscribedTaskDetailModel = (SubscribedTaskDetailModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), SubscribedTaskDetailModel.class);
             mBinding.llCashPayment.setVisibility(View.GONE);
 //            payableAmount = subscribedTaskDetailModel.total;
-        }
+        }*/
         setupActionbar();
 
     }
 
     private void setupActionbar() {
 
-        // set final payment amount which user going to pay
-
-        if (isSubscribedTask) {
-            amount = String.valueOf(subscribedTaskDetailModel.total);
-        } else if (isPayNow) {
+        if (isPayNow) {
             if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                 amount = Utility.getQuotePriceFormatter(taskDetailModel.taskPaidAmount);
             } /*else if (isAdditional != 0) {
@@ -222,7 +218,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             amount = Utility.getQuotePriceFormatter(taskDetailModel.taskTotalPendingAmount);
         }
         mBinding.textTitle.setText(getString(R.string.label_please_pay_x, amount));
-
 
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -244,9 +239,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             case R.id.rl_card:
             case R.id.rl_netbanking:
                 paymentMethod = NetworkUtility.PAYMENT_METHOD_TYPE.PAYU;
-                if (isSubscribedTask) {
-                    generateHashForCheepCarePackagePurchase();
-                } else if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+                if (taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                     // Go for HDFC/payu payment gateway strategic partner
                     generateHashForStrategicPartner();
                 } else {
@@ -262,15 +255,15 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                 switch (PAYTM_STEP) {
                     case PAYTM_SEND_OTP:
-                        SendOtpActivity.newInstance(mContext, true, amount, false);
+                        SendOtpActivity.newInstance(mContext, true, amount, false, broadCastTypeForPaytm);
                         break;
                     case PAYTM_ADD_MONEY:
                         AddMoneyActivity.newInstance(mContext, amount, payableAmountForPaytm, paytmUserDetail.paytmAccessToken,
-                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance);
+                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, broadCastTypeForPaytm);
                         break;
                     case PAYTM_WITHDRAW:
                         WithdrawMoneyActivity.newInstance(mContext, amount, payableAmountForPaytm, paytmUserDetail.paytmAccessToken,
-                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true);
+                                paytmUserDetail.paytmphoneNumber, paytmUserDetail.paytmCustId, paytmWalletBalance, true, broadCastTypeForPaytm);
                         break;
                 }
 
@@ -293,135 +286,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
     }
 
     private void onSuccessOfAnyPaymentMode(String paymentLog) {
-        if (isSubscribedTask) {
-            Log.e(TAG, "onSuccessOfAnyPaymentMode: isSubscribed true");
-//            callCreateSubscribedTaskWS(paymentLog);
-        } else if (isPayNow) {
-            callCreateInstaTaskBooking(paymentLog);
-        } else {
-            callPayTaskPaymentWS(paymentLog);
-            Log.e(TAG, "onSuccessOfAnyPaymentMode: is pay now false -- call pay task payment");
-        }
+        callCreateInstaTaskBooking(paymentLog);
     }
 
 
-    /**
-     * Used for payment
-     */
-    private void generateHashForCheepCarePackagePurchase() {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-            return;
-        }
-
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
-        //Add Params
-        // = new HashMap<String, Object>();
-        mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForCheepCare(
-                PreferenceUtility.getInstance(this).getFCMRegID(),
-                userDetails,
-                String.valueOf(subscribedTaskDetailModel.total),
-                subscribedTaskDetailModel.startDateTime);
-
-        new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
-            @Override
-            public void onPostOfEncryption(String encryptedData) {
-                UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                //Add Header parameters
-                Map<String, String> mHeaderParams = new HashMap<>();
-                mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-
-                Map<String, Object> mFinalParams = new HashMap<>();
-                mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
-
-//                getPaymentUrl(userDetails, isForAdditionalQuote);
-                String url;
-                // if payment is done using insta feature then
-                // post data will be generated like strategic partner feature
-                // call startegic generate hash for payment
-                url = NetworkUtility.WS.GENERATE_HASH_FOR_CHEEP_CARE;
-                //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
-                        , mCallGenerateHashWSErrorListener
-                        , mCallGenerateHashForCCWSResponseListener
-                        , mHeaderParams
-                        , mFinalParams
-                        , null);
-                Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
-
-
-            }
-        }).execute(new JSONObject(mTransactionParams).toString());
-
-
-    }
-
-    Response.Listener mCallGenerateHashForCCWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                hideProgressDialog();
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        /*
-                         * Changes @Bhavesh : 7thJuly,2017
-                         * In case we have to bypass the payment
-                         */
-                        if (BuildConfig.NEED_TO_BYPASS_PAYMENT) {
-//                            PLEASE NOTE: THIS IS JUST TO BYPPASS THE PAYMENT GATEWAY. THIS IS NOT
-//                            GOING TO RUN IN LIVE ENVIRONMENT BUILDS
-                            onSuccessOfAnyPaymentMode(getString(R.string.message_payment_bypassed));
-                        } else {
-                            //TODO: Remove this when release and it is saving cc detail in clipboard only
-                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                                //Copy dummy creditcard detail in clipboard
-                                try {
-                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            HDFCPaymentGatewayActivity.newInstance(PaymentChoiceActivity.this,
-                                    HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
-                                    Utility.REQUEST_START_PAYMENT_CHEEP_CARE);
-
-
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallGenerateHashWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-        }
-    };
-///////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////    NORMAL TASK PAYMENT METHOD [START] ///////////////////////////////////////////////////////
 
     /**
      * Used for payment
@@ -436,33 +305,21 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
         UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
 
-        //Add Params
-        // = new HashMap<String, Object>();
-
         mTransactionParams = HDFCPaymentUtility.getPaymentTransactionFieldsForNormalTask(
                 PreferenceUtility.getInstance(this).getFCMRegID(), userDetails, taskDetailModel, String.valueOf(payableAmountForTask), providerModel, isPayNow);
 
-        new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
+        new HDFCPaymentUtility.AsyncFetchEncryptedString(mContext, new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
-            public void onPostOfEncryption(String encryptedData) {
+            public void onPostOfEncryption(Map<String, Object> encryptedData) {
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
                 mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
                 mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
-                Map<String, Object> mFinalParams = new HashMap<>();
-                mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
+                Map<String, Object> mFinalParams = encryptedData;
 
-//                getPaymentUrl(userDetails, isForAdditionalQuote);
-                String url;
-                // if payment is done using insta feature then
-                // post data will be generated like strategic partner feature
-                // call startegic generate hash for payment
-                //url = taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.NORMAL) ? NetworkUtility.WS.GET_PAYMENT_HASH : NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER;
-                url = NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER;
-                //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(url
+                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH
                         , mCallGenerateHashWSErrorListener
                         , mCallGenerateHashWSResponseListener
                         , mHeaderParams
@@ -474,6 +331,21 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             }
         }).execute(new JSONObject(mTransactionParams).toString());
 
+
+    }
+
+    /**
+     * This method adds the Payuhashes and other required params to intent and launches the PayuBaseActivity.java
+     *
+     * @param payuHashes it contains all the hashes generated from merchant server
+     */
+    public void launchSdkUI(PayuConfig payuConfig, PaymentParams paymentParams, PayuHashes payuHashes) {
+
+        Intent intent = new Intent(this, PayUBaseActivity.class);
+        intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
+        intent.putExtra(PayuConstants.PAYMENT_PARAMS, paymentParams);
+        intent.putExtra(PayuConstants.PAYU_HASHES, payuHashes);
+        startActivityForResult(intent, PayuConstants.PAYU_REQUEST_CODE);
 
     }
 
@@ -489,7 +361,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 hideProgressDialog();
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
                         /*
                          * Changes @Bhavesh : 7thJuly,2017
                          * In case we have to bypass the payment
@@ -501,20 +372,35 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 //                            updatePaymentStatus(true, getString(R.string.message_payment_bypassed), false);
                             onSuccessOfAnyPaymentMode(getString(R.string.message_payment_bypassed));
                         } else {
-                            //TODO: Remove this when release and it is saving cc detail in clipboard only
-                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
-                                //Copy dummy creditcard detail in clipboard
-                                try {
-                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
+//                            //TODO: Remove this when release and it is saving cc detail in clipboard only
+//                            if ("debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE)) {
+//                                //Copy dummy creditcard detail in clipboard
+//                                try {
+//                                    Utility.setClipboard(mContext, BootstrapConstant.CC_DETAILS);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
 
-                            HDFCPaymentGatewayActivity.newInstance(
-                                    PaymentChoiceActivity.this,
-                                    HDFCPaymentUtility.getPaymentUrl(mTransactionParams, jsonObject.optString(NetworkUtility.TAGS.HASH_STRING)),
-                                    Utility.REQUEST_START_PAYMENT);
+                            JSONObject hashStringJsonObject = jsonObject.optJSONObject(NetworkUtility.TAGS.HASH_STRING);
+                            PaymentParams mPaymentParams = HDFCPaymentUtility.getPayUPaymentParams(mTransactionParams, hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_1));
+                            PayuConfig payuConfig = HDFCPaymentUtility.getPayUConfig();
+
+//                            PayuHashes payuHashes1 = HDFCPaymentUtility.getPayuHashFromSDK(mPaymentParams);
+
+
+                            PayuHashes payuHashes = new PayuHashes();
+                            payuHashes.setPaymentHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_0));
+                            payuHashes.setPaymentRelatedDetailsForMobileSdkHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_1));
+                            payuHashes.setVasForMobileSdkHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_2));
+                            payuHashes.setMerchantIbiboCodesHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_3));
+                            payuHashes.setStoredCardsHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_4));
+                            payuHashes.setSaveCardHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_5));
+                            payuHashes.setDeleteCardHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_6));
+                            payuHashes.setEditCardHash(hashStringJsonObject.optString(NetworkUtility.TAGS.HASH_7));
+
+
+                            launchSdkUI(payuConfig, mPaymentParams, payuHashes);
 
 
                         }
@@ -563,8 +449,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     //success
                     if (data != null) {
                         LogUtils.LOGE(TAG, "onActivityResult() called with success: result= [" + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "]");
-                        callCreateInstaTaskBooking(Utility.Extra.PAYU_RESPONSE);
-                        // onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
+                        onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE));
                     }
                 }
                 if (resultCode == RESULT_CANCELED) {
@@ -575,6 +460,34 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     }
                 }
                 break;
+
+            case PayuConstants.PAYU_REQUEST_CODE:
+                if (data != null) {
+
+                    /**
+                     * Here, data.getStringExtra("payu_response") ---> Implicit response sent by PayU
+                     * data.getStringExtra("result") ---> Response received from merchant's Surl/Furl
+                     *
+                     * PayU sends the same response to merchant server and in app. In response check the value of key "status"
+                     * for identifying status of transaction. There are two possible status like, success or failure
+                     * */
+
+//                    new AlertDialog.Builder(this)
+//                            .setCancelable(false)
+//                            .setMessage("Payu's Data : " + data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"))
+//                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int whichButton) {
+//                                    dialog.dismiss();
+//                                }
+//                            }).show();
+                    Log.e(TAG, "onActivityResult: " + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
+                    onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
+
+                    //Log.e("Payu's Data : ", data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
+
+                } else {
+                    Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
+                }
         }
     }
 
@@ -590,7 +503,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             txnId = Utility.getUniqueTransactionId();
         else
             txnId = mTransactionParams.get(HDFCPaymentUtility.TXN_ID);
-        WebCallClass.payPendingTaskPaymentWS(this, txnId, paymentLog, paymentMethod, taskDetailModel, errorListener, new WebCallClass.PayPendingTaskPaymentListener() {
+        WebCallClass.payPendingTaskPaymentWS(this, txnId, paymentLog, paymentMethod, taskDetailModel, startDatetime, errorListener, new WebCallClass.PayPendingTaskPaymentListener() {
             @Override
             public void onSuccessOfPendingTaskPaid(String taskStatus) {
                 // Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
@@ -599,7 +512,12 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 */
                 //Refresh UI for Paid status
                 // Notify the Home Screen to check for ongoing task counter.
-                if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
+                hideProgressDialog();
+                if (!startDatetime.equalsIgnoreCase(Utility.EMPTY_STRING)) {
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
+                    EventBus.getDefault().post(messageEvent);
+                } else if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
                     callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
                 } else {
                     MessageEvent messageEvent = new MessageEvent();
@@ -610,98 +528,9 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 }
             }
         });
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        //Add Header parameters
-
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        if (mTransactionParams == null)
-            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
-        else
-            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, taskDetailModel.taskTotalPendingAmount);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-        mParams.put(NetworkUtility.TAGS.START_DATETIME, startDatetime);
-        mParams.put(NetworkUtility.TAGS.URGENT_BOOKING_CHARGE, taskDetailModel.paymentSummaryModel.urgentBookingCharge);
-        mParams.put(NetworkUtility.TAGS.NON_OFFICE_HOURS_CHARGE, taskDetailModel.paymentSummaryModel.nonOfficeHoursCharge);
-
-
-        mParams.put(NetworkUtility.TAGS.PRO_PAYMENT_STATUS, taskDetailModel.paymentSummaryModel.proPaymentStatus);
-        mParams.put(NetworkUtility.TAGS.ADDITIONAL_PENDING_AMOUNT,
-                TextUtils.isEmpty(taskDetailModel.paymentSummaryModel.additionalPendingAmount)
-                        ? Utility.ZERO_STRING :
-                        taskDetailModel.paymentSummaryModel.additionalPendingAmount);
-
-        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.PAY_TASK_PAYMENT
-                , mCallCompleteTaskWSErrorListener
-                , mCallPayTaskPaymentWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
     }
 
 
-    Response.Listener mCallPayTaskPaymentWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-            hideProgressDialog();
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                Log.i(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        //                        Utility.showSnackBar(getString(R.string.msg_thanks_for_confirmation), mBinding.getRoot());
-
-                                 /*
-                        Update the UI Accordingly.
-                                 */
-
-                        //Refresh UI for Paid status
-
-                        // Notify the Home Screen to check for ongoing task counter.
-                        if (taskDetailModel.taskStatus.equalsIgnoreCase(Utility.TASK_STATUS.COMPLETION_REQUEST)) {
-                            callCompleteTaskWS(Utility.TASK_STATUS.COMPLETION_CONFIRM);
-                        } else {
-                            MessageEvent messageEvent = new MessageEvent();
-                            messageEvent.taskStatus = (jsonObject.optJSONObject(NetworkUtility.TAGS.DATA)).optString(NetworkUtility.TAGS.TASK_STATUS);
-                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_SUCCESSFULLY;
-                            EventBus.getDefault().post(messageEvent);
-                            finish();
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallCompleteTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-        }
-    };
     Response.ErrorListener mCallCompleteTaskWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -752,31 +581,26 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             mTransactionParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
         }
 
-        new HDFCPaymentUtility.AsyncFetchEncryptedString(new HDFCPaymentUtility.EncryptTransactionParamsListener() {
+        new HDFCPaymentUtility.AsyncFetchEncryptedString(mContext, new HDFCPaymentUtility.EncryptTransactionParamsListener() {
             @Override
-            public void onPostOfEncryption(String encryptedData) {
+            public void onPostOfEncryption(Map<String, Object> encryptedData) {
                 UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-
                 //Add Header parameters
                 Map<String, String> mHeaderParams = new HashMap<>();
                 mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
                 mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
-                Map<String, Object> mFinalParams = new HashMap<>();
-                mFinalParams.put(NetworkUtility.TAGS.DATA, encryptedData);
+                Map<String, Object> mFinalParams = encryptedData;
 
-                //calling this to create post data
-                //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                @SuppressWarnings("unchecked")
-                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER
+                VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PAYMENT_HASH
                         , mCallGenerateHashWSErrorListener
                         , mCallGenerateHashWSResponseListener
                         , mHeaderParams
                         , mFinalParams
                         , null);
-                Volley.getInstance(mContext).
+                Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
 
-                        addToRequestQueue(mVolleyNetworkRequestForSPList);
+
             }
         }).execute(new JSONObject(mTransactionParams).toString());
     }
@@ -798,8 +622,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         // Unregister the listerners you register in OnCreate method
         try {
             Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.PAY_TASK_PAYMENT);
-            Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER);
-            Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.GENERATE_HASH_FOR_CHEEP_CARE);
             Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.GET_PAYMENT_HASH);
             Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.CHANGE_TASK_STATUS);
             Volley.getInstance(PaymentChoiceActivity.this).getRequestQueue().cancelAll(NetworkUtility.WS.CREATE_TASK);
@@ -862,8 +684,20 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                     Utility.showToast(mContext, getString(R.string.msg_payment_failed));
                 }
                 break;
+
+            case Utility.BROADCAST_TYPE.PAYTM_RESPONSE_FOR_RESCHEDULE:
+                // Check the response <code></code>
+                if (event.paytmResponse.isSuccess) {
+                    callPayTaskPaymentWS(event.paytmResponse.ResponseCode);
+                } else {
+                    Utility.showToast(mContext, getString(R.string.msg_payment_failed));
+                }
+                break;
             case Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN:
 
+                break;
+            case Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING:
+                finish();
                 break;
         }
 
@@ -963,231 +797,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         }
     };
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////           Book and pay ws         [start]                               /////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private void callBookProAndPayForNormalTaskWS(String paymentLog) {
-        if (!Utility.isConnected(mContext)) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-            return;
-        }
-        showProgressDialog();
-
-        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-        //Add Header parameters
-
-        Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
-
-        //Add Params
-        Map<String, Object> mParams = new HashMap<>();
-        mParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-        mParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, payableAmountForTask);
-        mParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS:payableAmount" + payableAmountForTask);
-        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + quoteAmount);
-        mParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, quoteAmount);
-
-        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
-            mParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
-            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
-        } else {
-            mParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-        }
-
-
-        // TODO: Changes are per new flow pay now/later: 16/11/17
-        // as per new flow if user selects pay now then book and pay will be done together
-        // so setting task book pro params and payment params
-
-        if (mTransactionParams == null)
-            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, Utility.getUniqueTransactionId());
-        else
-            mParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mTransactionParams.get(HDFCPaymentUtility.TXN_ID));
-        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-
-
-        //Add Params
-        mTaskCreationParams = new HashMap<>();
-        mTaskCreationParams.put(NetworkUtility.TAGS.SP_USER_ID, providerModel.providerId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-        mTaskCreationParams.put(NetworkUtility.TAGS.IS_REFER_CODE, taskDetailModel.isReferCode);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, providerModel.quotePrice);
-        mTaskCreationParams.put(NetworkUtility.TAGS.USED_WALLET_BALANCE, taskDetailModel.usedWalletAmount);
-        LogUtils.LOGE(TAG, "callBookProForNormalTaskWS: quote amount" + providerModel.spWithoutGstQuotePrice);
-        mTaskCreationParams.put(NetworkUtility.TAGS.QUOTE_AMOUNT, providerModel.spWithoutGstQuotePrice);
-
-        if (!TextUtils.isEmpty(taskDetailModel.cheepCode)) {
-            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, taskDetailModel.cheepCode);
-            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, taskDetailModel.taskDiscountAmount);
-        } else {
-            mTaskCreationParams.put(NetworkUtility.TAGS.CHEEPCODE, Utility.EMPTY_STRING);
-            mTaskCreationParams.put(NetworkUtility.TAGS.PROMOCODE_PRICE, Utility.ZERO_STRING);
-        }
-
-
-        // TODO: Changes are per new flow pay now/later: 16/11/17
-        // as per new flow if user selects pay now then book and pay will be done together
-        // so setting task book pro params and payment params
-        mTaskCreationParams.put(NetworkUtility.TAGS.TRANSACTION_ID, mParams.get(NetworkUtility.TAGS.TRANSACTION_ID));
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_STATUS, Utility.PAYMENT_STATUS.COMPLETED);
-        mTaskCreationParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
-        mTaskCreationParams.put(NetworkUtility.TAGS.TASK_ID, taskDetailModel.taskId);
-
-
-        LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);
-
-        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.BOOK_PRO_FOR_NORMAL_TASK
-                , mCallBookProForNormalTaskWSErrorListener
-                , mCallBookProForNormalTaskWSResponseListener
-                , mHeaderParams
-                , mParams
-                , null);
-        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
-    }
-
-
-    Response.Listener mCallBookProForNormalTaskWSResponseListener = new Response.Listener() {
-        @Override
-        public void onResponse(Object response) {
-
-            String strResponse = (String) response;
-            try {
-                JSONObject jsonObject = new JSONObject(strResponse);
-                LogUtils.LOGE(TAG, "onResponse: " + jsonObject.toString());
-                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
-                String error_message;
-                hideProgressDialog();
-                switch (statusCode) {
-                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        String taskStatus = jsonData.optString(NetworkUtility.TAGS.TASK_STATUS);
-                        if (!TextUtils.isEmpty(taskDetailModel.cheepCode) && taskDetailModel.cheepCode.startsWith(Utility.COUPON_DUNIA_CODE_PREFIX))
-                            if (!BuildConfig.BUILD_TYPE.equalsIgnoreCase("release"))
-                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_DEBUG, mTaskCreationParams);
-                            else
-                                AppsFlyerLib.getInstance().trackEvent(mContext, NetworkUtility.TAGS.APPSFLYER_CUSTOM_TRACK_EVENTS.COUPON_DUNIA_TASK_LIVE, mTaskCreationParams);
-
-
-                        // AS PER new flow pay later task status will be pending
-                        if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(taskStatus)) {
-                            //We are commenting it because from here we are intiating a payment flow and
-                            // after that we need to call update payment status on server
-                            String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
-                            if (taskDetailModel != null) {
-                                taskDetailModel.taskStatus = taskStatus;
-                                if (!TextUtils.isEmpty(taskPaidAmount))
-                                    taskDetailModel.taskPaidAmount = taskPaidAmount;
-                                /*
-                                 * Update selected sp on firebase
-                                 * @Sanjay 20 Feb 2016
-                                 * */
-                                if (providerModel != null) {
-                                    Utility.updateSelectedSpOnFirebase(mContext, taskDetailModel, providerModel, taskDetailModel.taskType.equalsIgnoreCase(Utility.TASK_TYPE.INSTA_BOOK));
-                                }
-                            }
-
-                            //  Refresh UI for Paid status
-                            //  FillProviderDetails(providerModel);
-
-                            MessageEvent messageEvent = new MessageEvent();
-                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PRO_BOOKED;
-                            messageEvent.id = taskDetailModel.taskId;
-                            EventBus.getDefault().post(messageEvent);
-
-                            /*
-                             *  @Changes : 7th July, 2017 :- Bhavesh Patadiya
-                             *  Need to show Model Dialog once Payment has been made successful. Once
-                             *  User clicks on OK. we will finish of the activity.
-                             */
-//                            String title = mContext.getString(R.string.label_great_choice_x, PreferenceUtility.getInstance(mContext).getUserDetails().userName);
-                            String title = mContext.getString(R.string.label_brilliant) + "!";
-                            final SuperCalendar superStartDateTimeCalendar = SuperCalendar.getInstance();
-                            superStartDateTimeCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
-                            superStartDateTimeCalendar.setTimeInMillis(Long.parseLong(taskDetailModel.taskStartdate));
-                            superStartDateTimeCalendar.setLocaleTimeZone();
-
-                            int onlydate = Integer.parseInt(superStartDateTimeCalendar.format("dd"));
-                            String message = CalendarUtility.fetchMessageFromDateOfMonth(mContext, onlydate, superStartDateTimeCalendar, providerModel);
-
-//                            final UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
-                            int badgeResId = Utility.getProLevelBadge(providerModel.pro_level);
-                            AcknowledgementDialogWithProfilePic mAcknowledgementDialogWithProfilePic = AcknowledgementDialogWithProfilePic.newInstance(
-                                    mContext,
-                                    R.drawable.ic_acknowledgement_dialog_header_background,
-                                    title,
-                                    message,
-                                    providerModel != null ? providerModel.profileUrl : null,
-                                    new AcknowledgementInteractionListener() {
-
-                                        @Override
-                                        public void onAcknowledgementAccepted() {
-                                            // Finish the activity
-                                            finish();
-
-                                            // Payment is been done now, so broadcast this specific case to relavent activities
-                                            MessageEvent messageEvent = new MessageEvent();
-                                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYMENT_COMPLETED_NEED_TO_REDIRECT_TO_MY_TASK_SCREEN;
-                                            EventBus.getDefault().post(messageEvent);
-                                        }
-                                    }, badgeResId);
-                            mAcknowledgementDialogWithProfilePic.setCancelable(false);
-                            mAcknowledgementDialogWithProfilePic.show(getSupportFragmentManager(), AcknowledgementDialogWithProfilePic.TAG);
-
-                        } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(taskStatus)) {
-                            //We are commenting it because from here we are intiating a payment flow and after that we need to call update payment status on server
-                            String taskPaidAmount = jsonData.optString(NetworkUtility.TAGS.TASK_PAID_AMOUNT);
-                            if (taskDetailModel != null) {
-                                taskDetailModel.taskStatus = taskStatus;
-                                if (!TextUtils.isEmpty(taskPaidAmount))
-                                    taskDetailModel.taskPaidAmount = taskPaidAmount;
-                            }
-                            //  Refresh UI for Paid status
-                            //  FillProviderDetails(providerModel);
-                            MessageEvent messageEvent = new MessageEvent();
-                            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PROCESSING;
-                            messageEvent.id = taskDetailModel.taskId;
-                            EventBus.getDefault().post(messageEvent);
-
-                            // Finish the activity
-                            finish();
-                        }
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
-                        // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
-                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
-                        // Show message
-                        Utility.showSnackBar(error_message, mBinding.getRoot());
-                        break;
-                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
-                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
-                        //Logout and finish the current activity
-                        Utility.logout(mContext, true, statusCode);
-                        finish();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                mCallBookProForNormalTaskWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
-            }
-
-        }
-    };
 
     Response.ErrorListener mCallBookProForNormalTaskWSErrorListener = new Response.ErrorListener() {
         @Override
@@ -1198,11 +807,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////              Book and pay ws        [end]                               /////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1243,7 +847,7 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 
                     @Override
                     public void rescheduleTask(String taskId) {
-//                        showDateTimePickerDialog(taskId);
+                        showDateTimePickerDialog(taskId);
                     }
                 });
     }
@@ -1308,14 +912,14 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                                     additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
                                 } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showUrgentBookingDialog(model,taskId);
+                                        showUrgentBookingDialog(model, taskId);
                                     } else {
                                         Log.e(TAG, "onTimeSet:call direct reschedule web service");
                                         callRescheduleTaskWS(taskId);
                                     }
-                                } else if (!startDateTimeSuperCalendar.isWorkingHour(model.starttime, model.endtime)) {
+                                } else if (startDateTimeSuperCalendar.isNonWorkingHour(model.starttime, model.endtime)) {
                                     if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showOutOfOfficeHours(model,taskId);
+                                        showOutOfOfficeHours(model, taskId);
                                     } else {
                                         callRescheduleTaskWS(taskId);
                                     }
@@ -1336,47 +940,36 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         timePickerDialog.show();
     }
 
-    private void showOutOfOfficeHours(AdminSettingModel model,final String taskId) {
-        final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                + getString(R.string.label_between)
-                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+    private void showOutOfOfficeHours(AdminSettingModel model, final String taskId) {
         additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
         out_of_office_dialog = OutOfOfficeHoursDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new OutOfOfficeHoursDialog.OutOfOfficeHoursListener() {
             @Override
             public void onOutofOfficePayNow() {
                 taskDetailModel.taskId = taskId;
-                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
-                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
-                Log.e(TAG, "onOutofOfficePayNow: selectedDateTime:: " + selectedDateTime);
+                String taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, taskStartdate, Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
             }
 
             @Override
             public void onOutofOfficeCanWait() {
-                Log.e(TAG, "onOutofOfficeCanWait: selectedDateTime:: " + selectedDateTime);
-
             }
         });
         out_of_office_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS);
         out_of_office_dialog.setCancelable(false);
     }
 
-    private void showUrgentBookingDialog(AdminSettingModel model,final String taskId) {
-        final String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                + getString(R.string.label_between)
-                + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+    private void showUrgentBookingDialog(AdminSettingModel model, final String taskId) {
         additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING;
         ugent_dialog = UrgentBookingDialog.newInstance(model.additionalChargeForSelectingSpecificTime, new UrgentBookingDialog.UrgentBookingListener() {
             @Override
             public void onUrgentPayNow() {
-                Log.e(TAG, "onUrgentPayNow: selectedDateTime:: " + selectedDateTime);
                 taskDetailModel.taskId = taskId;
-                taskDetailModel.taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
-                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, true);
+                String taskStartdate = String.valueOf(superCalendar.getCalendar().getTimeInMillis());
+                PaymentSummaryActivity.newInstance(mContext, taskDetailModel, taskStartdate, Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
             }
 
             @Override
             public void onUrgentCanWait() {
-                Log.e(TAG, "onUrgentCanWait: selectedDateTime:: " + selectedDateTime);
             }
         });
         ugent_dialog.show(getSupportFragmentManager(), Utility.ADDITION_CHARGES_DIALOG_TYPE.URGENT_BOOKING);
@@ -1401,7 +994,6 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
                 MessageEvent messageEvent = new MessageEvent();
                 messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_PAID_FOR_INSTA_BOOKING;
                 EventBus.getDefault().post(messageEvent);
-                finish();
             }
         }, errorListener);
     }

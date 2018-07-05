@@ -57,13 +57,13 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_80dp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/cheep_rate_img"
                         android:layout_width="@dimen/scale_57dp"
-                        android:layout_height="@dimen/scale_50dp"
+                        android:layout_height="@dimen/scale_40dp"
                         android:layout_alignParentBottom="true"
                         android:scaleType="fitXY"
                         android:src="@drawable/cheep_bird_rate" />
@@ -72,25 +72,27 @@
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/scale_8dp"
+                        android:layout_marginTop="@dimen/scale_5dp"
                         android:layout_toEndOf="@+id/cheep_rate_img"
+                        android:layout_marginLeft="@dimen/scale_5dp"
                         android:layout_toRightOf="@+id/cheep_rate_img"
                         android:text="@string/cheep_rate_card_info"
                         android:textColor="@color/blue_variant_4"
                         android:textSize="@dimen/text_size_13sp"
                         android:layout_marginRight="@dimen/scale_8dp"
-                        android:layout_marginEnd="@dimen/scale_8dp"
                         android:textStyle="bold" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/title1"
-                        android:layout_marginTop="@dimen/scale_6dp"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/title"
                         android:layout_toEndOf="@+id/cheep_rate_img"
                         android:layout_toRightOf="@+id/cheep_rate_img"
                         android:gravity="bottom"
+                        android:padding="@dimen/scale_5dp"
+
                         android:layout_marginRight="@dimen/scale_8dp"
                         android:layout_marginEnd="@dimen/scale_8dp"
                         android:text="@string/cheep_rate_card_info1"

@@ -87,7 +87,8 @@ public class NetworkUtility {
 
         public static final String VALIDATE_CHEEP_CODE = BASE_URL + "customers/payment/check_cheepcode";
         public static final String GET_PAYMENT_HASH = BASE_URL + "customers/payment/generate_hash";
-        public static final String GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/generate_hash_for_stratagic_partner";
+        // no longer used as per new changes in cheep care featuers
+//        public static final String GET_PAYMENT_HASH_FOR_STRATEGIC_PARTNER = BASE_URL + "customers/payment/generate_hash_for_stratagic_partner";
         public static final String PAYMENT = BASE_URL + "customers/payment/pay_money";
         public static final String PAYMENT_HISTORY = BASE_URL + "customers/payment/payment_history";
         public static final String EMERGENCY_ALERT = BASE_URL + "customers/sp_profile/emergency_alert";
@@ -154,7 +155,6 @@ public class NetworkUtility {
         public static final String VERIFY_ADDRESS_CHEEP_CARE = BASE_URL + "customers/profile/verify_address";
         public static final String CHECK_CHEEP_CARE_CODE = BASE_URL + "customers/care/check_cheepcarecode";
         public static final String GET_CARE_PACKAGE_TIP = BASE_URL + "customers/care/getCarePackageTip";
-        public static final String GENERATE_HASH_FOR_CHEEP_CARE = BASE_URL + "customers/payment/generate_hash_for_cheepcare";
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
         public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "customers/care/getUserSubscribedCarePackage";
         public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY = BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
@@ -429,6 +429,16 @@ public class NetworkUtility {
         String TASK_TYPE = "task_type";
         String PROMOCODE_PRICE = "promocode_price";
         String HASH_STRING = "hash_string";
+
+        String HASH_0 = "hash_0";
+        String HASH_1 = "hash_1";
+        String HASH_2 = "hash_2";
+        String HASH_3 = "hash_3";
+        String HASH_4 = "hash_4";
+        String HASH_5 = "hash_5";
+        String HASH_6 = "hash_6";
+        String HASH_7 = "hash_7";
+
         String PAYMENT_METHOD = "payment_method";
         String PAYMENT_METHOD_TYPE_TAG = "payment_method_type";
         String REFER_CODE = "refer_code";
@@ -536,6 +546,18 @@ public class NetworkUtility {
         String NON_OFFICE_HOURS_CHARGE = "non_office_hours_charge";
         String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
         String MSG_TYPE= "msg_type";
+
+
+        String DATA_0 = "data_0";
+        String DATA_1 = "data_1";
+        String DATA_2 = "data_2";
+        String DATA_3 = "data_3";
+        String DATA_4 = "data_4";
+        String DATA_5 = "data_5";
+        String DATA_6 = "data_6";
+        String DATA_7 = "data_7";
+
+
 
         interface VERSION_CHANGE_TYPE {
             int NORMAL = 0;

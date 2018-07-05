@@ -94,6 +94,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     private String mMobileNumber;
     private boolean isLowBalance;
     private double payableAmount;
+    private int broadCastType = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
 
     /**
      * Callbacks (Verify Transaction) for Add Money
@@ -113,7 +114,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
                 if (TextUtils.isEmpty(responseInJson)) {
                     // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                     paytmResponse.isSuccess = false;
                     messageEvent.paytmResponse = paytmResponse;
@@ -140,7 +141,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 //                    TODO : Once withdraw api called, need to remove below code
                    /* // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     messageEvent.paytmResponse = paytmResponse;
 
                     // Send the event
@@ -155,7 +156,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
                     // Create the message event and sent the broadcast to @PaymentChoiceActivity
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                    messageEvent.BROADCAST_ACTION = broadCastType;
                     messageEvent.paytmResponse = paytmResponse;
 
                     // Send the event
@@ -170,7 +171,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -192,7 +193,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
             // Create the message event and sent the broadcast to @PaymentChoiceActivity
             MessageEvent messageEvent = new MessageEvent();
-            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            messageEvent.BROADCAST_ACTION = broadCastType;
             MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
             paytmResponse.isSuccess = false;
             messageEvent.paytmResponse = paytmResponse;
@@ -221,7 +222,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
             if (TextUtils.isEmpty(responseInJsonOrInHTML)) {
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -245,7 +246,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 messageEvent.paytmResponse = paytmResponse;
 
                 // Send the event
@@ -256,7 +257,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
                 // Create the message event and sent the broadcast to @PaymentChoiceActivity
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+                messageEvent.BROADCAST_ACTION = broadCastType;
                 MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
                 paytmResponse.isSuccess = false;
                 messageEvent.paytmResponse = paytmResponse;
@@ -276,7 +277,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
 
             // Create the message event and sent the broadcast to @PaymentChoiceActivity
             MessageEvent messageEvent = new MessageEvent();
-            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PAYTM_RESPONSE;
+            messageEvent.BROADCAST_ACTION = broadCastType;
             MessageEvent.PaytmResponse paytmResponse = new MessageEvent.PaytmResponse();
             paytmResponse.isSuccess = false;
             messageEvent.paytmResponse = paytmResponse;
@@ -351,11 +352,12 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     };
 
 
-    public static void newInstance(Context context, boolean isPaytm, String amount,boolean isSubscription) {
+    public static void newInstance(Context context, boolean isPaytm, String amount, boolean isSubscription, int broadCastType) {
         Intent intent = new Intent(context, SendOtpActivity.class);
         intent.putExtra(Utility.Extra.DATA, isPaytm);
         intent.putExtra(Utility.Extra.AMOUNT, amount);
         intent.putExtra(Utility.Extra.IS_SUBSCRIPTION, isSubscription);
+        intent.putExtra(Utility.Extra.BROADCAST_TYPE, broadCastType);
         context.startActivity(intent);
     }
 
@@ -390,7 +392,10 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
             amount = intent.getExtras().getString(Utility.Extra.AMOUNT);
         }
         if (intent.hasExtra(Utility.Extra.IS_SUBSCRIPTION)) {
-            isSubscription= intent.getExtras().getBoolean(Utility.Extra.AMOUNT,false);
+            isSubscription = intent.getExtras().getBoolean(Utility.Extra.AMOUNT, false);
+        }
+        if (intent.hasExtra(Utility.Extra.BROADCAST_TYPE)) {
+            broadCastType = intent.getExtras().getInt(Utility.Extra.BROADCAST_TYPE);
         }
         mobileNumberTextWatcher = new TextWatcher() {
             public EditText ET = mActivitySendOtpBinding.etMobileNumber;
@@ -481,31 +486,31 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
                 if (isValidated()) {
                     switch (BTN_WHICH) {
                         case BTN_IS_SEND_OTP:
-                        /*
-                         * Hide the Keyboard if it opened
-                         */
+                            /*
+                             * Hide the Keyboard if it opened
+                             */
                             Utility.hideKeyboard(this);
                             sendOTP(false);
                             break;
                         case BTN_IS_PROCEED:
-                        /*
-                         * Hide the Keyboard if it opened
-                         */
+                            /*
+                             * Hide the Keyboard if it opened
+                             */
                             Utility.hideKeyboard(this);
                             verifyOTP();
                             break;
                         case BTN_IS_ADD_AMOUNT:
-                        /*
-                         * Hide the Keyboard if it opened
-                         */
+                            /*
+                             * Hide the Keyboard if it opened
+                             */
                             Utility.hideKeyboard(this);
                             callgetChecksumForAddMoney();
 //                        addMoney();
                             break;
                         case BTN_IS_CONFIRM:
-                        /*
-                         * Hide the Keyboard if it opened
-                         */
+                            /*
+                             * Hide the Keyboard if it opened
+                             */
                             Utility.hideKeyboard(this);
                             callgetChecksumForWithdrawMoney();
 
@@ -731,7 +736,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
             updateUI();
         else
             timer.start();*/
-        VerifyOtpActivity.newInstance(mContext, mMobileNumber, mState, isPaytm, amount,isSubscription);
+        VerifyOtpActivity.newInstance(mContext, mMobileNumber, mState, isPaytm, amount, isSubscription,broadCastType);
         hideProgressDialog();
     }
 
@@ -1109,7 +1114,7 @@ public class SendOtpActivity extends BaseAppCompatActivity implements View.OnCli
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
-        if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PAYTM_RESPONSE) {
+        if (event.BROADCAST_ACTION == broadCastType) {
             // We need to finish this activity regardless of the response is success or failure
             finish();
         }

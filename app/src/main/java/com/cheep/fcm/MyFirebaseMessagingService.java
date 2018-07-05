@@ -42,6 +42,7 @@ import com.cheep.activity.ChatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.NotificationActivity;
 import com.cheep.activity.TaskQuotesActivity;
+import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
 import com.cheep.firebase.model.ChatNotification;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;
@@ -201,6 +202,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             EventBus.getDefault().post(messageEvent);
         }
 
+//        else if(bnd.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
+//        {
+//
+//            messageEvent = new MessageEvent();
+//            messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.TASK_START_ALERT;
+//            messageEvent.id = String.valueOf(notificationId);
+//            messageEvent.total_ongoing_task = bnd.getString(NetworkUtility.TAGS.TOTAL_ONGOING_TASK);
+//            EventBus.getDefault().post(messageEvent);
+//            // HomeActivity.getSupportFragmentManager().beginTransaction().replace(R.id.content, subscription, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
+//        }
+
     }
 
     /**
@@ -284,7 +296,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             notificationManager.notify(0/* Pass 0 to make the WebNotification ID Unique*/, notificationBuilder.build());
-        } else {
+        }
+        else if(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE))) {
+            Intent intent=new Intent(this,HomeActivity.class);
+            intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
+            startActivity(intent);
+
+            //intent.putExtra(Utility.Extra.TASK_ID, notificationId);
+            Log.e(TAG, "notificationId: " + notificationId);
+            //TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+            //taskStackBuilder.addParentStack(HomeActivity.class);
+           // taskStackBuilder.addNextIntent(intent);
+            //PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0/* Pass 0 to make the WebNotification ID Unique*/, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId /* Request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,ANDROID_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification_app_icon)
+                    .setContentTitle(title)
+                    .setColor(ContextCompat.getColor(getApplicationContext(), R.color.splash_gradient_end))
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0/* Pass 0 to make the WebNotification ID Unique*/, notificationBuilder.build());
+        }
+        else {
             //Start landing page screen
             Intent intent = new Intent(this, HomeActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

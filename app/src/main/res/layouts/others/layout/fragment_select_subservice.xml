@@ -8,75 +8,71 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cv_cheep_tip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/scale_0dp"
-            app:cardElevation="@dimen/scale_5dp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="horizontal"
+       android:layout_height="wrap_content">
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+       <ImageView
+           android:id="@+id/img_cheep_tips"
+           android:layout_width="@dimen/scale_57dp"
+           android:layout_height="@dimen/scale_44dp"
+           android:src="@drawable/bird_cheep_tip"
+           android:visibility="visible"
+           android:layout_gravity="bottom"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/tv_landing_screen_tip_title"
+           app:layout_constraintVertical_bias="1"
+           tools:ignore="ContentDescription"/>
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:orientation="vertical"
+           android:layout_height="wrap_content">
+           <com.cheep.custom_view.CFTextViewBold
+               android:id="@+id/tv_landing_screen_tip_title"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginEnd="@dimen/scale_16dp"
+             android:layout_marginLeft="@dimen/scale_8dp"
+               android:layout_marginRight="@dimen/scale_16dp"
 
-                <ImageView
-                    android:id="@+id/img_cheep_tips"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/bird_cheep_tip"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1"
-                    tools:ignore="ContentDescription"/>
+               android:layout_marginTop="@dimen/scale_4dp"
 
-                <com.cheep.custom_view.CFTextViewBold
-                    android:id="@+id/tv_landing_screen_tip_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/scale_16dp"
-                    android:layout_marginLeft="@dimen/scale_8dp"
-                    android:layout_marginRight="@dimen/scale_16dp"
-                    android:layout_marginStart="@dimen/scale_8dp"
-                    android:layout_marginTop="@dimen/scale_4dp"
-                    android:layout_toEndOf="@+id/img_cheep_tips"
-                    android:layout_toRightOf="@+id/img_cheep_tips"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_13sp"
-                    app:layout_constraintStart_toEndOf="@id/img_cheep_tips"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="dsasd"/>
+               android:textColor="@color/blue_variant_4"
+               android:textSize="@dimen/text_size_14sp"
 
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/tv_landing_screen_tip_subtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_landing_screen_tip_title"
-                    android:layout_marginBottom="@dimen/scale_8dp"
-                    android:layout_marginTop="@dimen/scale_4dp"
-                    android:layout_toEndOf="@+id/img_cheep_tips"
-                    android:layout_toRightOf="@+id/img_cheep_tips"
-                    android:paddingEnd="@dimen/scale_20dp"
-                    android:paddingLeft="@dimen/scale_8dp"
-                    android:paddingRight="@dimen/scale_20dp"
-                    android:paddingStart="@dimen/scale_8dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_12sp"
-                    app:layout_constraintStart_toEndOf="@id/img_cheep_tips"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_landing_screen_tip_title"
-                    tools:text="dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd "/>
+               tools:text="dsasd"/>
+           <com.cheep.custom_view.CFTextViewRegular
+               android:id="@+id/tv_landing_screen_tip_subtitle"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_below="@+id/tv_landing_screen_tip_title"
+               android:layout_marginBottom="@dimen/scale_8dp"
 
-                <TextView
-                    android:id="@+id/tv_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_3dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/divider_line"/>
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.CardView>
+
+               android:paddingLeft="@dimen/scale_8dp"
+               android:paddingRight="@dimen/scale_5dp"
+
+               android:textColor="@color/black"
+               android:textSize="@dimen/text_size_12sp"
+
+               tools:text="dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd dasdsadasdasd "/>
+       </LinearLayout>
+       </LinearLayout>
+    <TextView
+        android:id="@+id/tv_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scale_3dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/divider_line"/>
+</LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/ln_root"
