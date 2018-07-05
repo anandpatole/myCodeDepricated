@@ -33,7 +33,7 @@
                         android:gravity="center"
                         android:lines="1"
                         android:maxLines="1"
-                        android:padding="@dimen/scale_10dp"
+                        android:padding="@dimen/scale_5dp"
                         android:singleLine="true"
                         android:text="@string/booking_confirmation"
                         android:textAllCaps="false"
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/scale_15dp"
-                    android:layout_marginTop="@dimen/scale_10dp"
+                    android:layout_marginTop="@dimen/scale_5dp"
                     android:gravity="center"
                     android:paddingLeft="@dimen/scale_15dp"
                     android:paddingRight="@dimen/scale_15dp"
@@ -723,7 +723,7 @@
                             android:layout_marginLeft="@dimen/scale_8dp"
                             android:text="@string/description_pay_now"
                             android:textColor="@color/grey_varient_22"
-                            android:textSize="@dimen/text_size_10sp"/>
+                            android:textSize="@dimen/text_size_12sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -803,7 +803,7 @@
                             android:layout_marginLeft="@dimen/scale_8dp"
                             android:text="@string/description_pay_later"
                             android:textColor="@color/grey_varient_22"
-                            android:textSize="@dimen/text_size_10sp"/>
+                            android:textSize="@dimen/text_size_12sp"/>
                     </LinearLayout>
 
                 </LinearLayout>

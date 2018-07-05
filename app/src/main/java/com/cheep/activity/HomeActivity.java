@@ -49,6 +49,7 @@ import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
 import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
+import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -201,7 +202,18 @@ public class HomeActivity extends BaseAppCompatActivity
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 ProviderProfileActivity.newInstance(mContext, taskID, spUserId);
-            } else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
+            }
+            else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
+            {
+
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
+                if (mFragment == null) {
+                    loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
+                } else {
+                    //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
+                }
+            }
+            else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 // Redirecting the user to Quote Screen
@@ -840,18 +852,16 @@ public class HomeActivity extends BaseAppCompatActivity
         if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             mBinding.drawerLayout.closeDrawer(GravityCompat.START, true);
         } else {
-//<<<<<<< HEAD
-//
-//
+
 //            Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
 //            if (fragment != null) {
 //                if (!((BaseFragment) fragment).onBackPressed()) {
 //                    super.onBackPressed();
 //                }
-//=======
+
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
-//>>>>>>> 03b05bb80fabf64ef2bdde8716c46c6977993068
+
             } else {
                 Fragment fragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                 if (fragment != null) {

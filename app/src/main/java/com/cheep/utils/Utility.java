@@ -748,7 +748,12 @@ public class Utility {
         String NO = "no";
         String NA = "na";
     }
+public interface BOOLEAN_NEW
+{
+    boolean YES = true;
+    boolean NO = false;
 
+}
     public interface ADDRESS_SUBSCRIPTION_TYPE {
         String PREMIUM = "premium";
         String NONE = "none";
@@ -948,6 +953,7 @@ public class Utility {
         String TASK_CREATE = "TASK_CREATE";
         String TASK_START_ALERT = "TASK_START_ALERT";
         String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
+        String PACKAGE_PURCHASE = "PACKAGE_PURCHASE";
     }
 
     public interface GUEST_STATIC_INFO {
