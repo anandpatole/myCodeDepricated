@@ -3,9 +3,7 @@ package com.cheep.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -16,8 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.NotificationRecyclerViewAdapter;
-import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
-import com.cheep.cheepcarenew.fragments.ProfileDetailsFragmentnew;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.ActivityNotificationBinding;
 import com.cheep.model.NotificationModel;
@@ -277,7 +273,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
         } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
             //Redirecting the user to Quote Screen
 //            HireNewJobActivity.newInstance(mContext, model.task_id, String.valueOf(model.sp_user_id));
-            TaskSummaryActivity.getInstance(mContext, model.task_id);
+            TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
             // Do Nothing for this TYPE of Notification.
         }

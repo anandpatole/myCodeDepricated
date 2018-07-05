@@ -1,7 +1,6 @@
 package com.cheep.activity;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -12,8 +11,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -482,11 +479,11 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
 //                            }).show();
                     Log.e(TAG, "onActivityResult: " + data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
                     onSuccessOfAnyPaymentMode(data.getStringExtra(Utility.Extra.PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
-
+                    Utility.showToast(this, "Transaction ID : " + mTransactionParams.get(HDFCPaymentUtility.TXN_ID) + "\n" + "Amount : " + payableAmountForTask);
                     //Log.e("Payu's Data : ", data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"));
 
                 } else {
-                    Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
                 }
         }
     }
@@ -876,68 +873,69 @@ public class PaymentChoiceActivity extends BaseAppCompatActivity implements View
         datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
     }
 
-
     private void showTimePickerDialog(final String taskId) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
         // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(mContext,
-                new TimePickerDialog.OnTimeSetListener() {
-
+        com.wdullaer.materialdatetimepicker.time.TimePickerDialog timePickerDialog = new com.wdullaer.materialdatetimepicker.time.TimePickerDialog();
+        timePickerDialog.initialize(
+                new com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if (view.isShown()) {
-                            Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
+                    public void onTimeSet(com.wdullaer.materialdatetimepicker.time.TimePickerDialog view, int hourOfDay, int minute, int second) {
+                        Log.d(TAG, "onTimeSet() called with: view = [" + view + "], hourOfDay = [" + hourOfDay + "], minute = [" + minute + "]");
 
-                            startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
+                        startDateTimeSuperCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        startDateTimeSuperCalendar.set(Calendar.MINUTE, minute);
 
-                            superCalendar = SuperCalendar.getInstance();
-                            superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
-                            superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
+                        superCalendar = SuperCalendar.getInstance();
+                        superCalendar.setTimeInMillis(startDateTimeSuperCalendar.getTimeInMillis());
+                        superCalendar.setTimeZone(SuperCalendar.SuperTimeZone.GMT.GMT);
 
-                            // Get date-time for next 3 hours
-                            SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
+                        // Get date-time for next 3 hours
+                        SuperCalendar calAfter3Hours = SuperCalendar.getInstance().getNext3HoursTime(false);
 
-                            AdminSettingModel model = null;
-                            model = PreferenceUtility.getInstance(mContext).getAdminSettings();
+                        AdminSettingModel model = null;
+                        model = PreferenceUtility.getInstance(mContext).getAdminSettings();
 
 
-                            if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
-                                if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
-                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                            + getString(R.string.label_between)
-                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
-                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
-                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showUrgentBookingDialog(model, taskId);
-                                    } else {
-                                        Log.e(TAG, "onTimeSet:call direct reschedule web service");
-                                        callRescheduleTaskWS(taskId);
-                                    }
-                                } else if (startDateTimeSuperCalendar.isNonWorkingHour(model.starttime, model.endtime)) {
-                                    if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                                        showOutOfOfficeHours(model, taskId);
-                                    } else {
-                                        callRescheduleTaskWS(taskId);
-                                    }
+                        if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
+                            if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES) && mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_between)
+                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
+                                Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                            } else if (startDateTimeSuperCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
+                                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                    showUrgentBookingDialog(model, taskId);
                                 } else {
-                                    String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
-                                            + getString(R.string.label_between)
-                                            + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
-                                    additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                    Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
+                                    Log.e(TAG, "onTimeSet:call direct reschedule web service");
+                                    callRescheduleTaskWS(taskId);
+                                }
+                            } else if (startDateTimeSuperCalendar.isNonWorkingHour(model.starttime, model.endtime)) {
+                                if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
+                                    showOutOfOfficeHours(model, taskId);
+                                } else {
+                                    callRescheduleTaskWS(taskId);
                                 }
                             } else {
+                                String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
+                                        + getString(R.string.label_between)
+                                        + CalendarUtility.get2HourTimeSlots(Long.toString(startDateTimeSuperCalendar.getTimeInMillis()));
                                 additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
-                                Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
+                                Log.e(TAG, "onTimeSet: selectedDateTime:: " + selectedDateTime);
                             }
+                        } else {
+                            additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE;
+                            Utility.showSnackBar(getString(R.string.validate_future_date), mBinding.getRoot());
                         }
                     }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
-        timePickerDialog.show();
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND), Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.setThemeDark(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.enableMinutes(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.dismissOnPause(Utility.BOOLEAN_NEW.YES);
+        timePickerDialog.enableSeconds(Utility.BOOLEAN_NEW.NO);
+        timePickerDialog.show(getFragmentManager(), "Timepickerdialog");
     }
 
     private void showOutOfOfficeHours(AdminSettingModel model, final String taskId) {

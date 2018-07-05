@@ -199,6 +199,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                         mBinding.viewUrgentBooking.setVisibility(View.GONE);
                         mBinding.txtOutOfOfficeCharges.setText(getRuppeAmount(adminSettingModel.additionalChargeForSelectingSpecificTime));
                         nonWorkingHourCharges = Double.valueOf(adminSettingModel.additionalChargeForSelectingSpecificTime);
+                        paymentSummaryModel.nonOfficeHoursCharge = String.valueOf(nonWorkingHourCharges);
                     } else {
                         mBinding.rladditionalOutOfOffice.setVisibility(View.GONE);
                         mBinding.viewOutOfOffice.setVisibility(View.GONE);
@@ -206,6 +207,7 @@ public class PaymentSummaryActivity extends BaseAppCompatActivity {
                         mBinding.viewUrgentBooking.setVisibility(View.VISIBLE);
                         mBinding.txtUrgentBookingCharges.setText(getRuppeAmount(adminSettingModel.additionalChargeForSelectingSpecificTime));
                         urgentBookingcharges = Double.valueOf(adminSettingModel.additionalChargeForSelectingSpecificTime);
+                        paymentSummaryModel.urgentBookingCharge = String.valueOf(urgentBookingcharges);
                     }
                     mBinding.txtadditionalcharge.setText(getRuppeAmount(paymentSummaryModel.additionalPaidAmount));
 

@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.ProviderProfileActivity;
-import com.cheep.activity.TaskSummaryActivity;
+import com.cheep.activity.TaskSummaryForMultiCatActivity;
 import com.cheep.adapter.NotificationRecyclerViewAdapter;
 import com.cheep.databinding.CommonRecyclerViewBinding;
 import com.cheep.fragment.BaseFragment;
@@ -145,7 +145,7 @@ public class AllNotificationsFragment extends BaseFragment implements Notificati
         } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
             //Redirecting the user to Quote Screen
 //            HireNewJobActivity.newInstance(mContext, model.task_id, String.valueOf(model.sp_user_id));
-            TaskSummaryActivity.getInstance(mContext, model.task_id);
+            TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         } else if (model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.WEB_CUSTOM_NOTIFICATION)) {
             // Do Nothing for this TYPE of Notification.
         } else {
@@ -160,7 +160,7 @@ public class AllNotificationsFragment extends BaseFragment implements Notificati
             if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
                 TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
             else
-                TaskSummaryActivity.getInstance(mContext, model.task_id);
+                TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         }
           /*  }
         });*/
