@@ -90,7 +90,7 @@
     <string name="label_reschedule">Reschedule</string>
     <string name="text_cheep_rate_card_categories"> Rate Card for Service Categories</string>
     <string name="rate_card_plumber">Plumber</string>
-    <string name="cheep_rate_card_info">Wondering how much a service can cost you?</string>
+    <string name="cheep_rate_card_info">Wondering how much a service can cost you ?</string>
     <string name="rate_card_pest_control">Pest Control</string>
     <string name="cheep_rate_card_info1">Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below</string>
     <string name="rupee_symbol_x_space">₹ %1$s</string>
