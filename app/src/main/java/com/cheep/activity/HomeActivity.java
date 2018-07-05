@@ -165,14 +165,16 @@ public class HomeActivity extends BaseAppCompatActivity
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
-        //For managing notification redirect to job summary
-        if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
-            onNewIntent(getIntent());
+
+
         initiateUI();
 
         //Register BroadCast
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
+        //For managing notification redirect to job summary
+        if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
+            onNewIntent(getIntent());
     }
 
     @Override
@@ -869,7 +871,10 @@ public class HomeActivity extends BaseAppCompatActivity
                 } else {
                     Fragment mFragment = getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                     if (mFragment == null) {
-                        loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+
+                       loadFragment(HomeFragment.TAG, HomeFragment.newInstance(Utility.EMPTY_STRING));
+
+
                     } else {
                         super.onBackPressed();
                     }

@@ -285,9 +285,10 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
         {
 
       Intent intent=new Intent(mContext,HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+           // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
             startActivity(intent);
+            finish();
           // HomeActivity.getSupportFragmentManager().beginTransaction().replace(R.id.content, subscription, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
         }
         else {

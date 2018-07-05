@@ -4,7 +4,7 @@
     <string name="app_name" translatable="false">Cheep Care</string>
     <!--IDs-->
     <string name="facebook_app_id" translatable="false">1594162450609778</string>
-    <string name="label_copywrite">Copyright © 2017 &cheep;</string>
+    <string name="label_copywrite">Copyright © 2018 &cheep;</string>
     <string name="hint_email">Email ID (optional)</string>
     <string name="hint_password">Password</string>
     <string name="hint_password_signup">Create Password for CHEEP</string>
