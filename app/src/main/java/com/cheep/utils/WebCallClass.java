@@ -10,7 +10,7 @@ import com.android.volley.VolleyError;
 import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
-import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
+import com.cheep.cheepcarenew.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;

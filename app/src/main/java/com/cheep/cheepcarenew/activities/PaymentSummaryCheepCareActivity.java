@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcare.activity.PaymentChoiceCheepCareActivity;
 import com.cheep.cheepcarenew.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;
 import com.cheep.cheepcarenew.model.PackageDetail;

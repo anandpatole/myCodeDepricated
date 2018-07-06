@@ -24,7 +24,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.ZoomImageActivity;
 import com.cheep.adapter.TaskCreationForStrategicPartnerPagerAdapter;
-import com.cheep.cheepcare.adapter.MediaFullScreenAdapter;
+import com.cheep.cheepcarenew.adapters.MediaFullScreenAdapter;
 import com.cheep.databinding.ActivityTaskCreationForStrategicPartnerBinding;
 import com.cheep.model.AddressModel;
 import com.cheep.model.BannerImageModel;

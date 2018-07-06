@@ -40,7 +40,7 @@ import com.cheep.activity.SearchActivity;
 import com.cheep.activity.SelectLocationActivity;
 import com.cheep.activity.TaskCreationActivity;
 import com.cheep.adapter.HomeTabRecyclerViewAdapter;
-import com.cheep.cheepcare.fragment.SubscriptionBannerFragment;
+import com.cheep.cheepcarenew.fragments.SubscriptionBannerFragment;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;

@@ -35,7 +35,7 @@ import com.cheep.R;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.VerificationActivity;
 import com.cheep.adapter.AddressRecyclerViewAdapter;
-import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
