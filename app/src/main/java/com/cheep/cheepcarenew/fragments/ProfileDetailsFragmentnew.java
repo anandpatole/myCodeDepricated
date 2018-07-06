@@ -115,6 +115,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     private AddressListProfileDialog addressListDialog;
     private UserDetails userDetails;
     private AddressRecyclerViewAdapterProfile adapterAddressRecyclerView;
+    boolean isPlacePickerClicked = false;
 
     //    private String mCurrentPhotoPath;
     private File photoFile;
@@ -347,50 +348,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         }
     };
 
-    private void showChooserDialog() {
-        Log.d(TAG, "showChooserDialog() called");
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Edit")
-                .setItems(R.array.choose_image_options1, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        if (which == 0) {
-                            /* if (!isForBanner) {*/
-                            //dispatchTakePictureIntent(REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
-                         /*   } else {
-                                dispatchTakePictureIntent(Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_COVER, Utility.REQUEST_CODE_WRITE_EXTERNAL_STORAGE_ADD_PROFILE_CAMERA);
-
-                            }*/
-                            showPictureChooserDialog(false);
-                        } else if (which == 1) {
-                            /* if (!isForBanner) {*/
-                            //Select Gallery
-                            // In case Choose File from Gallery
-                            //choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_PROFILE_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_PROFILE_GALLERY);
-                           /* } else {
-                                //Cover
-                                choosePictureFromGallery(Utility.REQUEST_CODE_GET_FILE_ADD_COVER_GALLERY, Utility.REQUEST_CODE_READ_EXTERNAL_STORAGE_ADD_COVER);
-                            }*/
-                            if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                                UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
-                                showChangeUsernameDialog(details.userName);
-                            }
-
-                        } else if (which == 2) {
-                            if (PreferenceUtility.getInstance(mContext).getUserDetails() != null) {
-                                UserDetails details = PreferenceUtility.getInstance(mContext).getUserDetails();
-                                showChangeEmailDialog(details.email);
-                            }
-                        }
-                    }
-                });
-        builder.create();
-
-        //Show the dialog
-        builder.show();
-    }
-
     private void showPictureChooserDialog(final boolean isForBanner) {
         Log.d(TAG, "showPictureChooserDialog() called");
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -489,40 +446,14 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 startActivityForResult(takePictureIntent, requestCode);
             }
         }
-        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(mContext, BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, requestCode);
-            }
-        }*/
+
     }
 
     public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-        /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  *//* prefix *//*
-                ".jpg",         *//* suffix *//*
-                storageDir      *//* directory *//*
-        );*/
 
-        //        mCurrentPhotoPath = photoFile.getAbsolutePath();
-        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = photoFile.getAbsolutePath();
         return new File(new File(getActivity().getFilesDir(), "CheepImages"), imageFileName);
     }
 
@@ -749,25 +680,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             showBottomAddressDialog(null);
         }
     }
-
-
-
-    /**
-     * Loads address in choose address dialog box in recycler view
-     */
-    /*private boolean fillAddressRecyclerView1(RecyclerView recyclerView) {
-        //Setting RecyclerView Adapter
-
-
-        adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener, 0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setAdapter(adapterAddressRecyclerView);
-        recyclerView.addItemDecoration(new DividerItemDecoration(mContext, R.drawable.divider_grey_normal, (int) getResources().getDimension(R.dimen.scale_16dp)));
-
-        //Here we are checking if address is not there then open add address dialog immediatly
-        return addressList == null || addressList.isEmpty();
-    }*/
-
     private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
         //Setting RecyclerView Adapter
         adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener, 1);
@@ -779,8 +691,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         return addressList == null || addressList.isEmpty();
     }
 
-
-    boolean isPlacePickerClicked = false;
 
     public void showPlacePickerDialog(boolean isForceShow) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
@@ -940,10 +850,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 if (dialog != null) {
                     dialog.dismiss();
                 }
-
-//                        String message = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA).getString(NetworkUtility.TAGS.OTP_CODE);
-//                        VerificationActivity.newInstance(mContext, PreferenceUtility.getInstance(mContext).getUserDetails(), TEMP_PHONE_NUMBER, message);
-
             }
         }, new ArrayList<String>(), model);
 
@@ -955,7 +861,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
      take zero position data from list*/
     private void setAddress() {
         if (addressList != null && addressList.size() >0) {
-            mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
             for (int i = 0; i < addressList.size(); i++) {
                 mBinding.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(addressList.get(0).category));
                 mBinding.tvAddressCategory.setText(addressList.get(0).category);
@@ -963,7 +868,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 hideAndShowView(addressList.get(0).is_subscribe);
                 break;
             }
+            mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
+            mBinding.linearManageCheepCareSubscription.setVisibility(View.VISIBLE);
         }else {
+            mBinding.linearManageCheepCareSubscription.setVisibility(View.GONE);
             mBinding.linearAddressLayout.setVisibility(View.GONE);
         }
     }
