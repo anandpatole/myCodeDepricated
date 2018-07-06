@@ -10,20 +10,22 @@
         android:descendantFocusability="blocksDescendants"
         android:orientation="vertical">
 
-
-    <!--    <include
+      <LinearLayout
+          android:id="@+id/linearHeader"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <include
             android:id="@+id/review_of_me_header"
             layout="@layout/row_reviews_of_me_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/scale_5dp"
             android:layout_marginBottom="@dimen/scale_5dp" />
--->
+      </LinearLayout>
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/srl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -36,10 +38,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/scale_100dp"
-            android:layout_marginEnd="@dimen/scale_50dp"
-            android:layout_marginLeft="@dimen/scale_50dp"
-            android:layout_marginRight="@dimen/scale_50dp"
-            android:layout_marginStart="@dimen/scale_50dp"
+            android:layout_marginEnd="@dimen/scale_30dp"
+            android:layout_marginLeft="@dimen/scale_30dp"
+            android:layout_marginRight="@dimen/scale_30dp"
+            android:layout_marginStart="@dimen/scale_30dp"
             android:layout_marginTop="@dimen/scale_120dp"
             android:orientation="vertical">
 
