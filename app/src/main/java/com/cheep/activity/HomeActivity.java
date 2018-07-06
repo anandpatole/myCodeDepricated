@@ -219,6 +219,11 @@ public class HomeActivity extends BaseAppCompatActivity
                     //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 }
             }
+            else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK)))
+            {
+                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
+                TaskSummaryForMultiCatActivity.getInstance(mContext, taskId);
+            }
             else if (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.QUOTE_REQUEST)) {
                 String taskID = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 String spUserId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);

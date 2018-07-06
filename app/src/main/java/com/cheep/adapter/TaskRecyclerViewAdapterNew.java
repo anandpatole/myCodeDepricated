@@ -671,7 +671,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         holder.mRowTaskBinding.textPaymentMode.setText(R.string.label_paid_with_cheep_care);
                     } else {
 
-                        holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice("", "")));
+                        holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, model.taskPaidAmount));
                         holder.mRowTaskBinding.textPaymentMode.setText(model.paymentMethod);
                     }
 

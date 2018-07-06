@@ -91,6 +91,8 @@ public class ProfileDetailsFragment extends BaseFragment {
     private JSONArray jsonEmergencyContacts;
     private ArrayList<AddressModel> addressList;
     private DrawerLayoutInteractionListener mListener;
+    private AddressRecyclerViewAdapter adapterAddressRecyclerView;
+    private BottomAlertDialog changeUsernameOrEmail;
     //    private String mCurrentPhotoPath;
     private File photoFile;
 
@@ -157,14 +159,6 @@ public class ProfileDetailsFragment extends BaseFragment {
         mBinding.textVersion.setText(getString(R.string.label_version_x, Utility.getApplicationVersion(mContext)));
 
         fillFields(userDetails);
-
-        /*//loading banner image
-        Glide
-                .with(mContext)
-                .load("http://stylekart.net/2016/roastkings/admin/images/post/original/1475588386_57f3b1224612d.png")
-                .error(R.mipmap.ic_launcher)
-                .crossFade()
-                .into(mBinding.imgBanner);*/
 
         showGuestProfile(PreferenceUtility.getInstance(mContext).getUserDetails() == null);
 
@@ -344,44 +338,15 @@ public class ProfileDetailsFragment extends BaseFragment {
                 startActivityForResult(takePictureIntent, requestCode);
             }
         }
-        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(mContext, BuildConfig.FILE_PROVIDER_URL,
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, requestCode);
-            }
-        }*/
+
     }
 
     public File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss"/*, Locale.US*/).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-        /*File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  *//* prefix *//*
-                ".jpg",         *//* suffix *//*
-                storageDir      *//* directory *//*
-        );*/
-
-        //        mCurrentPhotoPath = photoFile.getAbsolutePath();
-        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = photoFile.getAbsolutePath();
         return new File(new File(getActivity().getFilesDir(), "CheepImages"), imageFileName);
     }
-
-    private BottomAlertDialog changeUsernameOrEmail;
 
     private void showChangeUsernameDialog(final String username) {
 
@@ -585,8 +550,6 @@ public class ProfileDetailsFragment extends BaseFragment {
         }
     }
 
-    AddressRecyclerViewAdapter adapterAddressRecyclerView;
-
     /**
      * Loads address in choose address dialog box in recycler view
      */
@@ -612,26 +575,6 @@ public class ProfileDetailsFragment extends BaseFragment {
                 homeActivity.mLocationTrackService.requestLocationUpdate();
                 return;
             }
-            /*if (isLocationEnabled() == false) {
-                if (isGPSEnabled() == false) {
-                    showGPSEnableDialog();
-                    return;
-                }
-            }*/
-
-            /*String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (locationProviders == null || locationProviders.equals("")) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }
-
-            LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                //show gps disabled and enable gps dialog here
-                showGPSEnableDialog();
-                return;
-            }*/
         }
 
         try {
@@ -641,19 +584,6 @@ public class ProfileDetailsFragment extends BaseFragment {
             Intent intent = intentBuilder.build(getActivity());
             startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-
-            //TODO: Adding dummy place when playservice is not there
-         /*   if (edtAddress != null) {
-                edtAddress.setText(getString(R.string.label_dummy_address_with) + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                edtAddress.setFocusable(true);
-                edtAddress.setFocusableInTouchMode(true);
-                try {
-                    edtAddress.setTag(new LatLng(Double.parseDouble(Utility.STATIC_LAT), Double.parseDouble(Utility.STATIC_LNG)));
-                } catch (Exception exe) {
-                    exe.printStackTrace();
-                    edtAddress.setTag(new LatLng(0, 0));
-                }
-            }*/
 
             e.printStackTrace();
             Utility.showToast(mContext, getString(R.string.label_playservice_not_available));

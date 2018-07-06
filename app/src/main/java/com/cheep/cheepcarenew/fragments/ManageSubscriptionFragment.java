@@ -186,8 +186,8 @@ mBinding.back.setOnClickListener(this);
                 mBinding.allAddressLayout.setVisibility(View.GONE);
                 break;
             case R.id.back:
-                onBackPressed();
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, ProfileTabFragment.newInstance(), ProfileTabFragment.TAG).commitAllowingStateLoss();
       break;
         }
     }

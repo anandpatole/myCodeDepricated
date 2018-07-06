@@ -731,7 +731,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="rupee_symbol_x_package_price">₹%1s/MTH </string>
     <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
     <string name="label_starting_price_cc">AVAILABLE AS LOW AS ₹%1s/MTH*</string>
-    <string name="msg_become_cc_member">Become a CHEEP Care Member</string>
+    <string name="msg_become_cc_member">Become a CHEEP Care Subscriber</string>
     <string name="label_free_with_cc">Free with Cheep Care</string>
     <string name="label_paid_cheep_services">Paid Cheep Services</string>
     <string name="cheep_tips">CHEEP Tips: %1s</string>
@@ -1007,5 +1007,6 @@ without any hidden charges. Try it now!</string>
     <string name="label_thanks">Thanks</string>
     <string name="label_tooltip_pest_control_title">You are Cheep Premium Care Protected!</string>
     <string name="label_tooltip_pest_control_description">Your existing package gives you %1$s FREE Pest Control Services a year. While you have used %2$s services, you still have %3$s more FREE services left. Book one now?</string>
-
+    <string name="review_of_me">You have not given any review\n to the PRO yet!</string>
+    <string name="review_by_me">You have not received any review\n from the PRO yet!</string>
 </resources>

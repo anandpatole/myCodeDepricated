@@ -821,6 +821,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
     private void fillAddressView(AddressModel model) {
         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+        updateTaskVerificationFlags();
         updateWhereLabelWithIcon(true);
 
         mFragmentEnterTaskDetailBinding.ivHome.setImageDrawable(ContextCompat.getDrawable(mContext

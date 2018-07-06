@@ -957,6 +957,8 @@ public class Utility {
         String TASK_START_ALERT = "TASK_START_ALERT";
         String WEB_CUSTOM_NOTIFICATION = "WEB_CUSTOM_NOTIFICATION";
         String PACKAGE_PURCHASE = "PACKAGE_PURCHASE";
+        String TASK_BOOKING="TASK_BOOKING";
+        String RESCHEDULE_TASK="RESCHEDULE_TASK";
     }
 
     public interface GUEST_STATIC_INFO {

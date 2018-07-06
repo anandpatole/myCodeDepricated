@@ -200,30 +200,36 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/scale_1dp"
-
                     android:background="@color/grey_varient_3" />
 
-                <com.cheep.custom_view.CFTextViewRegular
-                    android:id="@+id/text_manage_cheep_care_subscription"
+                <LinearLayout
+                    android:id="@+id/linear_manage_cheep_care_subscription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/scale_20dp"
-                    android:drawableRight="@drawable/side_arrow"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="@dimen/scale_20dp"
-                    android:paddingLeft="@dimen/scale_40dp"
-                    android:paddingRight="@dimen/scale_40dp"
-                    android:paddingTop="@dimen/scale_20dp"
-                    android:text="@string/label_manage_cheep_care_subscription"
-                    android:textColor="@color/grey_dark_color_2"
-                    android:textSize="@dimen/text_size_13sp" />
+                    android:orientation="vertical">
 
-                <View
-                    android:id="@+id/view_divider_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/scale_1dp"
-                    android:layout_marginBottom="@dimen/scale_18dp"
-                    android:background="@color/grey_varient_3" />
+                    <com.cheep.custom_view.CFTextViewRegular
+                        android:id="@+id/text_manage_cheep_care_subscription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/scale_20dp"
+                        android:drawableRight="@drawable/side_arrow"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/scale_20dp"
+                        android:paddingLeft="@dimen/scale_40dp"
+                        android:paddingRight="@dimen/scale_40dp"
+                        android:paddingTop="@dimen/scale_20dp"
+                        android:text="@string/label_manage_cheep_care_subscription"
+                        android:textColor="@color/grey_dark_color_2"
+                        android:textSize="@dimen/text_size_13sp" />
+
+                    <View
+                        android:id="@+id/view_divider_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_1dp"
+                        android:layout_marginBottom="@dimen/scale_18dp"
+                        android:background="@color/grey_varient_3" />
+                </LinearLayout>
 
                 <com.cheep.custom_view.CFTextViewRegular
                     android:id="@+id/label_emergency_contact"

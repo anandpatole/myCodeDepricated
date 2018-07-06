@@ -136,8 +136,10 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         double subServiceTotal;
         double additionalCharge;
         // address and time UI
+
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-        spannableStringBuilder.append(getSpannableString(getString(R.string.msg_task_description), ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+        spannableStringBuilder.append(getSpannableString("Our PRO for "+taskDetailModel.categoryModel.catName+" will reach", ContextCompat.getColor(this, R.color.splash_gradient_end), true));
+
         if (!TextUtils.isEmpty(taskDetailModel.taskStartdate)) {
             spannableStringBuilder.append(getSpannableString(getString(R.string.label_on), ContextCompat.getColor(this, R.color.grey_varient_8), false));
             String datetime = CalendarUtility.getDate(Long.parseLong(taskDetailModel.taskStartdate), Utility.DATE_FORMAT_DD_MMMM) + ", " + CalendarUtility.get2HourTimeSlots(taskDetailModel.taskStartdate);

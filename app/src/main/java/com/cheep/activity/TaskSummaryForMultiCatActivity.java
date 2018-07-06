@@ -244,7 +244,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             // Manage UnreadBadge count for Task
             manageUnreadBadgeCounterForChat();
 
-//anand
+
             // Name of Provider
             mBinding.textProviderName.setText(mTaskDetailModel.selectedProvider.userName);
 

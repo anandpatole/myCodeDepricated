@@ -119,7 +119,7 @@ public class SelectSubCategoryFragment extends BaseFragment implements WebCallCl
         }
 
 
-        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+        if (mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL) || mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
 showHideToolTip();
             }

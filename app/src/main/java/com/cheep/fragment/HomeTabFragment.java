@@ -306,6 +306,14 @@ public class HomeTabFragment extends BaseFragment {
         }
 
         callGetAdminSettings();
+        if(careBannerModelArrayList!=null) {
+            for (CareCityDetail detail : careBannerModelArrayList) {
+                if (detail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
+                    mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerLayout.setVisibility(View.GONE);
+                    break;
+                }
+            }
+        }
     }
     // hide city banner if user address is subscribe
 private void hideCityBannerLayout()
@@ -1419,15 +1427,19 @@ private void hideCityBannerLayout()
     private void updateFilterText() {
         mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setSelected(true);
         if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_ALL_SERVICES)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getResources().getString(R.string.all_services));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_our_services));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_POPULAR)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getResources().getString(R.string.all_popular));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_popular));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_popular, 0, 0, 0);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_FAVOURITES)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getResources().getString(R.string.all_your_fav));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_favourites));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_favourites, 0, 0, 0);
         } else if (mSelectedFilterType.equalsIgnoreCase(Utility.FILTER_TYPES.FILTER_TYPE_SUBSCRIBED)) {
+            mFragmentTabHomeBinding.layoutBannerHeader.sortTitle.setText(getResources().getString(R.string.your_subscription));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setText(getResources().getString(R.string.label_subscribed));
             mFragmentTabHomeBinding.layoutBannerHeader.textFilter.setCompoundDrawablesWithIntrinsicBounds(R.drawable.selector_drawable_left_filter_home_featured, 0, 0, 0);
         }
