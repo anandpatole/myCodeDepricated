@@ -97,50 +97,6 @@ public class CheepCareRateCardFragment extends BaseFragment {
     public void setListener() {
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-
-              /*  case R.id.text_plumber:
-                    CheepCareRateCardPricingFragment fragment4 = CheepCareRateCardPricingFragment.newInstance("Plumber", "");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment4, CheepCareRateCardPricingFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_repairs:
-                    CheepCareRateCardPricingFragment fragment5 = CheepCareRateCardPricingFragment.newInstance("Repair", "");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment5, CheepCareRateCardPricingFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_electrician:
-                    CheepCareRateCardPricingFragment fragment6 = CheepCareRateCardPricingFragment.newInstance("Electrician", "");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment6, CheepCareRateCardPricingFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_painter:
-                    CheepCareRateCardSelectionFragment fragment = CheepCareRateCardSelectionFragment.newInstance("Painter");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, CheepCareRateCardSelectionFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_application_repair:
-                    CheepCareRateCardSelectionFragment fragment1 = CheepCareRateCardSelectionFragment.newInstance("Application Repair");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment1, CheepCareRateCardSelectionFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_tech_repair:
-                    CheepCareRateCardSelectionFragment fragment2 = CheepCareRateCardSelectionFragment.newInstance("Tech Repair");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment2, CheepCareRateCardSelectionFragment.TAG).commitAllowingStateLoss();
-                    break;
-                case R.id.text_pest_control:
-                    CheepCareRateCardSelectionFragment fragment3 = CheepCareRateCardSelectionFragment.newInstance("Pest Control");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment3, CheepCareRateCardSelectionFragment.TAG).commitAllowingStateLoss();
-                    break;
-                default:
-
-                    // RateCardDialog.newInstance((AppCompatActivity) mContext);
-                    break;*/
-
-
-            }
-        }
-    };
-
     private void setAdapter() {
         mBinding.recyclerView.setHasFixedSize(true);
         mBinding.recyclerView.setNestedScrollingEnabled(false);

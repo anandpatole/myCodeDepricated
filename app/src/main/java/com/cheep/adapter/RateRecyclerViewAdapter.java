@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.cheep.R;
 import com.cheep.databinding.RowRateCardBinding;
 import com.cheep.model.RateCardModel;
+import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
 
@@ -47,15 +48,15 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
     public void onBindViewHolder(final RateRecyclerViewAdapter.ViewHolder holder, int position) {
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.grey_color));
-            //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFFFF"));
         } else {
-            holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-            //  holder.imageView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
+            holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.white_variant_3));
         }
         RateCardModel model = mList1.get(holder.getAdapterPosition());
         holder.rowPastTaskBinding.rateCardProduct.setText(model.description);
-        holder.rowPastTaskBinding.rateCardRates.setText(model.labourRate);
-        holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.addUnit);
+        //holder.rowPastTaskBinding.rateCardRates.setText(model.labourRate);
+        holder.rowPastTaskBinding.rateCardRates.setText(mContext.getString(R.string.rupee_symbol_x, model.labourRate));
+        //holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.addUnit);
+        holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(mContext.getString(R.string.rupee_symbol_x, model.addUnit));
 
 
     }

@@ -15,8 +15,7 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/review_of_me_header">
+            app:layout_constraintStart_toStartOf="parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

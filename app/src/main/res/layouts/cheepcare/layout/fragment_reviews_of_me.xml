@@ -11,14 +11,14 @@
         android:orientation="vertical">
 
 
-        <include
+    <!--    <include
             android:id="@+id/review_of_me_header"
             layout="@layout/row_reviews_of_me_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/scale_5dp"
             android:layout_marginBottom="@dimen/scale_5dp" />
-
+-->
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/srl"
             android:layout_width="match_parent"
