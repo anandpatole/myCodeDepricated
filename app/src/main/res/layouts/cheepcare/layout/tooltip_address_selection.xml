@@ -15,9 +15,6 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
             android:text="@string/label_hey_is_this_your_home_address"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16sp"/>
@@ -27,8 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
-            android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_5dp"
             android:text="@string/label_do_you_want_the_cheep_care_package_for_this_address"
             android:textColor="@color/white"
@@ -40,8 +35,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDescription"
-            android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_15dp"
             android:layout_toLeftOf="@+id/tvNo"
             android:text="@string/label_yes"
@@ -55,11 +48,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/tvDescription"
-            android:textAllCaps="true"
             android:layout_marginLeft="@dimen/scale_15dp"
-            android:layout_marginRight="@dimen/scale_15dp"
             android:layout_marginTop="@dimen/scale_15dp"
             android:text="@string/label_no"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_12sp"/>
 

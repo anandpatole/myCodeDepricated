@@ -292,8 +292,8 @@ public class ViewTooltip {
     public class TooltipView extends FrameLayout {
 
         private static final int MARGIN_SCREEN_BORDER_TOOLTIP = 30;
-        private int arrowHeight = 15;
-        private int arrowWidth = 15;
+        private int arrowHeight = 30;
+        private int arrowWidth = 30;
         protected View childView;
         private int color = ContextCompat.getColor(getContext(), R.color.splash_gradient_end);
         private Path bubblePath;
@@ -312,10 +312,10 @@ public class ViewTooltip {
 
         private int corner = 30;
 
-        private int paddingTop = 20;
-        private int paddingBottom = 30;
-        private int paddingRight = 30;
-        private int paddingLeft = 30;
+        private int paddingTop = 10;
+        private int paddingBottom = 10;
+        private int paddingRight = 10;
+        private int paddingLeft = 10;
 
         int shadowPadding = 4;
         int shadowWidth = 8;
