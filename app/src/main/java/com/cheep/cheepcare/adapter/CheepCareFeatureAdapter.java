@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.cheepcarenew.model.CityLandingPageModel;
 import com.cheep.databinding.RowLeftImageCheepCareFeatureBinding;
 import com.cheep.databinding.RowRightImageCheepCareFeatureBinding;
 import com.cheep.utils.GlideUtility;

@@ -16,7 +16,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcare.adapter.RatingAdapter;
-import com.cheep.cheepcare.model.RatingModel;
+import com.cheep.cheepcarenew.model.RatingModel;
 import com.cheep.databinding.ActivityRateAndReviewBinding;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.ProviderModel;

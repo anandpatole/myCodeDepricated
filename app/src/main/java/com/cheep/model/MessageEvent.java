@@ -2,7 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.utils.Utility;
 
 import java.util.List;

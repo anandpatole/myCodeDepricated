@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.databinding.RowCheepCarePackageBinding;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.LoadMoreRecyclerAdapter;

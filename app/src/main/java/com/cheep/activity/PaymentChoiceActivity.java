@@ -18,7 +18,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
-import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.databinding.ActivityPaymentChoiceBinding;
 import com.cheep.dialogs.AcknowledgementDialogWithProfilePic;
 import com.cheep.dialogs.AcknowledgementInteractionListener;

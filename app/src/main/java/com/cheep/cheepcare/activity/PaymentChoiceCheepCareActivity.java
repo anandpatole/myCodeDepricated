@@ -18,9 +18,8 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
 import com.cheep.cheepcare.dialogs.PaymentFailedDialog;
-import com.cheep.cheepcare.model.CareCityDetail;
-import com.cheep.cheepcare.model.CheepCarePaymentDataModel;
-import com.cheep.cheepcare.model.SubscribedTaskDetailModel;
+import com.cheep.cheepcarenew.model.CareCityDetail;
+import com.cheep.cheepcarenew.model.CheepCarePaymentDataModel;
 import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
@@ -72,7 +71,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private CheepCarePaymentDataModel paymentDataModel;
     private Map<String, Object> mTaskCreationParams;
 
-    private SubscribedTaskDetailModel subscribedTaskDetailModel;
+//    private SubscribedTaskDetailModel subscribedTaskDetailModel;
     private int PAYTM_STEP = -1;
     private String paymentMethod;
     private double paytmPayableAmount;
@@ -103,14 +102,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     /*
     this is for payment of subscribed task with paid service payment or addtional charge of non working hours and excess limit of task bookinf
     also if user selects non-subscribed address then user has to pay for free services as well
-     */
+     *//*
     public static void newInstance(Context context, SubscribedTaskDetailModel subscribedTaskDetailModel) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(subscribedTaskDetailModel));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_TASK_CREATION);
         context.startActivity(intent);
     }
-
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -486,14 +485,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                 e.printStackTrace();
             }
 
-            boolean isLowBalance;
+            boolean isLowBalance = false;
             if (paymentDataModel != null) {
                 isLowBalance = paytmWalletBalance < paymentDataModel.payableAmount;
                 paytmPayableAmount = paymentDataModel.payableAmount - paytmWalletBalance;
-            } else {
+            } /*else {
                 isLowBalance = paytmWalletBalance < subscribedTaskDetailModel.total;
                 paytmPayableAmount = subscribedTaskDetailModel.total - paytmWalletBalance;
-            }
+            }*/
             mBinding.tvPaytmBalance.setVisibility(View.VISIBLE);
 
             mBinding.tvPaytmBalance.setText("(" + getString(R.string.rupee_symbol_x, String.valueOf(paytmWalletBalance)) + ")");

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.RatingModel;
+import com.cheep.cheepcarenew.model.RatingModel;
 import com.cheep.databinding.RowRatingBinding;
 
 import java.util.ArrayList;

@@ -265,6 +265,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
 
+            mBinding.imgProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ProviderProfileActivity.newInstance(mContext, mTaskDetailModel.selectedProvider);
+                }
+            });
+
             // Manage Click events of Call & Chat
             mBinding.lnCall.setOnClickListener(new View.OnClickListener() {
                 @Override

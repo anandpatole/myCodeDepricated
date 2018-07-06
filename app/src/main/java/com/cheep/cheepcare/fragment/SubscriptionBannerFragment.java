@@ -2,15 +2,9 @@ package com.cheep.cheepcare.fragment;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +12,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
-import com.cheep.cheepcare.model.CareCityDetail;
+import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentSubscriptionBannerImageBinding;
 import com.cheep.fragment.BaseFragment;
@@ -26,14 +20,9 @@ import com.cheep.fragment.HomeFragment;
 import com.cheep.fragment.HomeTabFragment;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.LogUtils;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
-
-import static android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE;
 
 public class SubscriptionBannerFragment extends BaseFragment {
 
