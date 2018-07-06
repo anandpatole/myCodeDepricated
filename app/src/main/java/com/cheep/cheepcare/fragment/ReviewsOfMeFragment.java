@@ -118,24 +118,32 @@ public class ReviewsOfMeFragment extends BaseFragment {
     WebCallClass.GetUserReviewListListener mGetUserReviewList = new WebCallClass.GetUserReviewListListener() {
         @Override
         public void getUserReviewList(RateAndReviewModel model, String pageNumber) {
-            mBinding/*.commonRecyclerView*/.srl.setRefreshing(false);
 
-            //Setting RecyclerView Adapter
-            if (TextUtils.isEmpty(nextPageId) || nextPageId.equals("0")) {
-                rateAndReviewAdapter.setItem(model.reviewData);
-                setHeaderData(model.reviewSummary);
-            } else {
-                rateAndReviewAdapter.addItem(model.reviewData);
-            }
-            nextPageId = pageNumber;
-         //   errorLoadingHelper.success();
-            rateAndReviewAdapter.onLoadMoreComplete();
             if (model.reviewData.size() == 0) {
-                rateAndReviewAdapter.disableLoadMore();
-            }
+                mBinding.relativeLayoutNoListOfReview.setVisibility(View.VISIBLE);
+                mBinding.srl.setVisibility(View.GONE);
+            } else {
+                mBinding.relativeLayoutNoListOfReview.setVisibility(View.GONE);
+                mBinding.srl.setVisibility(View.VISIBLE);
+                mBinding/*.commonRecyclerView*/.srl.setRefreshing(false);
 
-            if (rateAndReviewAdapter.getmList().size() <= 0) {
-          //      errorLoadingHelper.failed(null, R.drawable.img_empty_notifications, null);
+                //Setting RecyclerView Adapter
+                if (TextUtils.isEmpty(nextPageId) || nextPageId.equals("0")) {
+                    rateAndReviewAdapter.setItem(model.reviewData);
+                    setHeaderData(model.reviewSummary);
+                } else {
+                    rateAndReviewAdapter.addItem(model.reviewData);
+                }
+                nextPageId = pageNumber;
+                //   errorLoadingHelper.success();
+                rateAndReviewAdapter.onLoadMoreComplete();
+                if (model.reviewData.size() == 0) {
+                    rateAndReviewAdapter.disableLoadMore();
+                }
+
+                if (rateAndReviewAdapter.getmList().size() <= 0) {
+                    //      errorLoadingHelper.failed(null, R.drawable.img_empty_notifications, null);
+                }
             }
         }
     };
