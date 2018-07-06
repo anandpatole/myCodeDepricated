@@ -301,7 +301,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         else if(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE))) {
             Intent intent=new Intent(this,HomeActivity.class);
             intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
-            startActivity(intent);
+           // startActivity(intent);
 
             //intent.putExtra(Utility.Extra.TASK_ID, notificationId);
             Log.e(TAG, "notificationId: " + notificationId);
@@ -328,9 +328,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         else if (Utility.NOTIFICATION_TYPE.TASK_BOOKING.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)) || Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)))
         {
             Intent intent=new Intent(this,HomeActivity.class);
-            intent.putExtra(Utility.Extra.TASK_ID, notificationId);
+            intent.putExtra(NetworkUtility.TAGS.TASK_ID, Integer.toString(notificationId));
             intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.TASK_BOOKING);
-            startActivity(intent);
+            //startActivity(intent);
 
             //intent.putExtra(Utility.Extra.TASK_ID, notificationId);
             Log.e(TAG, "notificationId: " + notificationId);
