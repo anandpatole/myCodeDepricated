@@ -286,6 +286,12 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             startActivity(intent);
             finish();
         }
+        else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) )
+        {
+            TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
+        }
+
+
         else {
             // Need to redirect the user to Task Detail Screen
            /* TaskDetailModel taskDetailModel = new TaskDetailModel();

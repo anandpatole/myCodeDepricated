@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.30" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.31" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
