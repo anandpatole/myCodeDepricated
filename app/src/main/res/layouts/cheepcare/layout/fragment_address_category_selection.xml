@@ -179,7 +179,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/scale_45dp"
                 android:src="@drawable/tool_tip_up_arrow"/>
 
             <RelativeLayout
