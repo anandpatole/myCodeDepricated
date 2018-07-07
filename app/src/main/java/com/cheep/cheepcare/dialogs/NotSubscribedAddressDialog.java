@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,16 +63,21 @@ public class NotSubscribedAddressDialog extends DialogFragment {
                 DataBindingUtil.inflate(inflater, R.layout.dialog_new_address, container, false);
 
         String string = getString(R.string.msg_not_subscribed_address);
+
         SpannableStringBuilder spannableStringBuilder =
                 new SpannableStringBuilder(string);
         ForegroundColorSpan colorSpan =
                 new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.splash_gradient_end));
 
-        ImageSpan imageSpan = new ImageSpan(getContext(), R.drawable.emoji_dollar_money, DynamicDrawableSpan.ALIGN_BASELINE);
+    //    int lineHeight =  mDialogNewAddressBinding.textDescription.getLineHeight();
+     //  getResources().getDrawable(R.drawable.rupees_icon).setBounds(0, 0, lineHeight, lineHeight);
+
+        ImageSpan imageSpan = new ImageSpan(getContext(),R.drawable.rupees_icon , DynamicDrawableSpan.ALIGN_BOTTOM);
         int colonIndex = string.indexOf(Utility.COLON);
 
         spannableStringBuilder.setSpan(imageSpan, colonIndex, colonIndex + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableStringBuilder.setSpan(colorSpan, 0, string.indexOf(Utility.COLON), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         mDialogNewAddressBinding.textDescription.setText(spannableStringBuilder);
 
         mDialogNewAddressBinding.tvSubscribeNow.setOnClickListener(new View.OnClickListener() {

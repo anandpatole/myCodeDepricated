@@ -3,7 +3,9 @@ package com.cheep.cheepcarenew.dialogs;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.util.Log;
@@ -13,11 +15,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.TaskCreationActivity;
+
+import com.cheep.databinding.DialogServiceDetailBinding;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -35,12 +40,12 @@ import java.util.Map;
 public class ServiceDetailModalDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = ServiceDetailModalDialog.class.getSimpleName();
-    private RelativeLayout rootLayout;
+   // private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
     static Context mContexts;
-    private TextView tvData, tvSoundsGood;
+   // private TextView tvData, tvSoundsGood;
     UserDetails userDetails;
-
+    DialogServiceDetailBinding mbindng;
     static JobCategoryModel models;
 
     public ServiceDetailModalDialog() {
@@ -80,11 +85,12 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_service_detail, container, false);
-        initView(view);
-        //callGetPackageDetailModelDataWS();
+         mbindng= DataBindingUtil.inflate(inflater,R.layout.dialog_service_detail,container,false);
+        //View view = inflater.inflate(R.layout.dialog_service_detail, container, false);
+        initView();
+       // callGetPackageDetailModelDataWS();
 
-        return view;
+        return mbindng.getRoot();
     }
 
     @Override
@@ -108,11 +114,12 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
 
     }
 
-    private void initView(View view) {
-        tvData = view.findViewById(R.id.tv_data);
-        rootLayout = view.findViewById(R.id.rootLayout);
-        tvSoundsGood = view.findViewById(R.id.tv_sounds_good);
-        tvSoundsGood.setOnClickListener(this);
+    private void initView() {
+        //tvData = view.findViewById(R.id.tv_data);
+        //rootLayout = view.findViewById(R.id.rootLayout1);
+       // tvSoundsGood = view.findViewById(R.id.tv_sounds_good);
+
+        mbindng.tvSoundsGood.setOnClickListener(this);
         callGetPackageDetailModelDataWS();
     }
 
@@ -174,8 +181,12 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
     }
 
     private void callGetPackageDetailModelDataWS() {
-        if (!Utility.isConnected(getContext())) {
-            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, rootLayout);
+        if (!Utility.isConnected(getContext()))
+        {
+
+            Toast.makeText(mContexts, Utility.NO_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
+
+            //Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION,getView().getRootView());
             return;
         }
 
@@ -214,21 +225,24 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
                         JSONArray data = jsonObject.getJSONArray(NetworkUtility.TAGS.DATA);
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject obj = data.getJSONObject(i);
-                            tvData.setText(Html.fromHtml(obj.getString(NetworkUtility.TAGS.TEXT)));
+                            mbindng.tvData.setText(Html.fromHtml(obj.getString(NetworkUtility.TAGS.TEXT)));
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
-                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), rootLayout);
+                        Toast.makeText(mContexts,getString(R.string.label_something_went_wrong), Toast.LENGTH_SHORT).show();
+                       // Utility.showSnackBar(getString(R.string.label_something_went_wrong), mbindng.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, rootLayout);
+                        Toast.makeText(mContexts, error_message, Toast.LENGTH_SHORT).show();
+                       // Utility.showSnackBar(error_message, mbindng.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
+                        //Toast.makeText(mContexts, Utility.NO_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
                         Utility.logout(getContext(), true, statusCode);
 
                         break;
@@ -245,7 +259,8 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
         public void onErrorResponse(VolleyError error) {
             hideProgressDialog();
             Log.e(TAG, "onErrorResponse() called with: error = [" + error + "]");
-            Utility.showSnackBar(getString(R.string.label_something_went_wrong), rootLayout);
+            Toast.makeText(mContexts,getString(R.string.label_something_went_wrong),Toast.LENGTH_SHORT).show();
+            //Utility.showSnackBar(getString(R.string.label_something_went_wrong), mbindng.getRoot());
         }
     };
 

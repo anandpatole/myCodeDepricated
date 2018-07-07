@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/scale_70dp"
+    android:layout_height="@dimen/scale_60dp"
     android:orientation="vertical">
 
 
@@ -44,16 +44,17 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/light_center"
-            android:elevation="@dimen/scale_5dp"
+            android:elevation="@dimen/scale_10dp"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/imagePremium"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="@dimen/scale_18dp"
+                android:layout_height="@dimen/scale_18dp"
                 android:src="@drawable/ic_tick_icon"
                 tools:ignore="ContentDescription"
-                android:visibility="gone" />
+                android:layout_gravity="center"
+                android:visibility="visible" />
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/tvPremium"
                 android:layout_width="match_parent"
@@ -63,6 +64,7 @@
                 android:layout_marginRight="@dimen/scale_4dp"
                 android:layout_marginStart="@dimen/scale_4dp"
                 android:gravity="center"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_13sp" />
 

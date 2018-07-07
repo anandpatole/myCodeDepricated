@@ -27,7 +27,7 @@
 
     <!--SIDE MENU ITEM-->
     <string name="label_home">Home</string>
-    <string name="label_favourites">Favourite</string>
+    <string name="label_favourites">Favourites</string>
     <string name="label_favourites_side_menu">Favourite PRO\'s</string>
     <string name="label_share_with_friend">Refer</string>
     <string name="label_help">Contact Us</string>
@@ -880,7 +880,7 @@ maintenance problems to our skilled PRO's !</string>
 without any hidden charges. Try it now!</string>
     <string name="cheep_care_landing">Here\'s why lakhs of families use Cheep Care</string>
 
-    <string name="comparision_message">Get MUCH MORE by paying little extra. Check the HUGE benefits of becoming a Premium Member for as little as ₹300 only!</string>
+    <string name="comparision_message">Get MUCH MORE by paying little extra.\n Check the HUGE benefits of becoming a \n Premium Member for as little as ₹300 only!</string>
 
 
     <string-array name="benefits_features_dummy">

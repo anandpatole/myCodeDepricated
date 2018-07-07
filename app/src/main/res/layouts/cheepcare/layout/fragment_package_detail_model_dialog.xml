@@ -21,19 +21,19 @@
 
             <ImageView
                 android:id="@+id/imge1"
-                android:layout_width="@dimen/scale_60dp"
-                android:layout_height="@dimen/scale_70dp"
+                android:layout_width="@dimen/scale_50dp"
+                android:layout_height="@dimen/scale_60dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/scale_12dp"
+                android:layout_marginLeft="@dimen/scale_18dp"
                 android:src="@drawable/tops_final_logo"/>
 
             <ImageView
                 android:id="@+id/imge2"
                 android:layout_toRightOf="@+id/imge1"
                 android:layout_toEndOf="@+id/imge1"
-                android:layout_width="@dimen/scale_60dp"
-                android:layout_marginLeft="@dimen/scale_5dp"
-                android:layout_height="@dimen/scale_70dp"
+                android:layout_width="@dimen/scale_50dp"
+                android:layout_marginLeft="@dimen/scale_10dp"
+                android:layout_height="@dimen/scale_60dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/satisfaction"/>
 
@@ -57,8 +57,8 @@
                     android:text="@string/heading1"
                     android:textColor="@color/heading_color"
                     android:textAllCaps="true"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_size_12sp"/>
+
+                    android:textSize="@dimen/text_size_16sp"/>
 
                 <com.cheep.custom_view.CFTextViewBold
                     android:id="@+id/tv_heading2"
@@ -69,10 +69,10 @@
                     android:layout_marginRight="@dimen/scale_4dp"
                     android:layout_marginStart="@dimen/scale_4dp"
                     android:textAllCaps="true"
-                    android:gravity="center"
+
                     android:text="@string/heading2"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_12sp"/>
+                    android:textSize="@dimen/text_size_16sp"/>
 
             </LinearLayout>
 

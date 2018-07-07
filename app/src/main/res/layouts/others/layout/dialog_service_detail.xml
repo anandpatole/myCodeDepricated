@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:id="@+id/rootLayout"
+        android:id="@+id/rootLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        tools:context="com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog">
+       >
 
         <RelativeLayout
             android:layout_width="match_parent"

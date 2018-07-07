@@ -4,8 +4,8 @@
 <inset
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@color/white"
-    android:insetBottom="@dimen/scale_10dp"
-    android:insetRight="@dimen/scale_0dp"
-    android:insetLeft="@dimen/scale_0dp"
-    android:insetTop="@dimen/scale_10dp">
+    android:insetBottom="@dimen/scale_50dp"
+    android:insetRight="@dimen/scale_10dp"
+    android:insetLeft="@dimen/scale_10dp"
+    android:insetTop="@dimen/scale_50dp">
 </inset>

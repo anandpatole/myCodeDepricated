@@ -54,9 +54,21 @@ public class RateRecyclerViewAdapter extends RecyclerView.Adapter<RateRecyclerVi
         }
         RateCardModel model = mList1.get(holder.getAdapterPosition());
         holder.rowPastTaskBinding.rateCardProduct.setText(model.description);
-        holder.rowPastTaskBinding.rateCardRates.setText(model.labourRate);
-        holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.addUnit);
-
+        if(model.labourRate.equalsIgnoreCase(""))
+        {
+            holder.rowPastTaskBinding.rateCardRates.setText("-");
+        }
+        else
+        {
+            holder.rowPastTaskBinding.rateCardRates.setText(model.labourRate);
+        }
+       if(model.addUnit.equalsIgnoreCase(""))
+       {
+           holder.rowPastTaskBinding.rateCardRatesPerUnit.setText("-");
+       }
+       else {
+           holder.rowPastTaskBinding.rateCardRatesPerUnit.setText(model.addUnit);
+       }
 
     }
 
