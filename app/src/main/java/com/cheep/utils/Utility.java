@@ -959,6 +959,7 @@ public class Utility {
         String PACKAGE_PURCHASE = "PACKAGE_PURCHASE";
         String TASK_BOOKING="TASK_BOOKING";
         String RESCHEDULE_TASK="RESCHEDULE_TASK";
+        String BOOKING_CONFIRMATION="BOOKING_CONFIRMATION";
     }
 
     public interface GUEST_STATIC_INFO {

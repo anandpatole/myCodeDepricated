@@ -219,7 +219,7 @@ public class HomeActivity extends BaseAppCompatActivity
                     //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
                 }
             }
-            else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK)))
+            else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.BOOKING_CONFIRMATION)))
             {
                 String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
                 TaskSummaryForMultiCatActivity.getInstance(mContext, taskId);
@@ -245,13 +245,14 @@ public class HomeActivity extends BaseAppCompatActivity
                 ProviderModel providerModel = new ProviderModel();
                 providerModel.providerId = bundle.getString(NetworkUtility.TAGS.SP_USER_ID);
                 JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-                String taskType = bundle.getString(NetworkUtility.TAGS.TASK_TYPE);
-                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
-                if (taskId != null && taskType != null)
-                    if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
-                        TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
-                    else
-                        TaskSummaryForMultiCatActivity.getInstance(mContext, taskId);
+
+//                String taskType = bundle.getString(NetworkUtility.TAGS.TASK_TYPE);
+//                String taskId = bundle.getString(NetworkUtility.TAGS.TASK_ID);
+//                if (taskId != null && taskType != null)
+//                    if (taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+//                        TaskSummaryStrategicPartnerActivity.getInstance(mContext, taskId);
+//                    else
+//                        TaskSummaryForMultiCatActivity.getInstance(mContext, taskId);
 //                        TaskSummaryActivity.getInstance(mContext, taskId);
             }
             // Changed due to the fact that we should allow user goto detail screen in each of the

@@ -325,7 +325,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             notificationManager.notify(0/* Pass 0 to make the WebNotification ID Unique*/, notificationBuilder.build());
         }
-        else if (Utility.NOTIFICATION_TYPE.TASK_BOOKING.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)) || Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)))
+        else if (Utility.NOTIFICATION_TYPE.TASK_BOOKING.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)) || Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)) || Utility.NOTIFICATION_TYPE.BOOKING_CONFIRMATION.equalsIgnoreCase(bnd.getString(NetworkUtility.TAGS.TYPE)) )
         {
             Intent intent=new Intent(this,HomeActivity.class);
             intent.putExtra(NetworkUtility.TAGS.TASK_ID, Integer.toString(notificationId));

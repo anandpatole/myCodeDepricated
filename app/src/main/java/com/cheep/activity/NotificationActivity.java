@@ -280,13 +280,13 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
         else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
         {
 
-      Intent intent=new Intent(mContext,HomeActivity.class);
-           //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent=new Intent(mContext,HomeActivity.class);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
             startActivity(intent);
             finish();
         }
-        else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) )
+        else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) || model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.BOOKING_CONFIRMATION) )
         {
             TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         }

@@ -1,9 +1,17 @@
 package com.cheep.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +23,8 @@ import com.cheep.utils.GlideUtility;
 import com.cheep.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
@@ -83,18 +93,57 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
         final ProviderModel model = mList.get(holder.getAdapterPosition());
         GlideUtility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowFavouriteBinding.textName.setText(model.userName);
-
-        holder.mRowFavouriteBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));
+        //holder.mRowFavouriteBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));
         holder.mRowFavouriteBinding.textVerified.setText(Utility.BOOLEAN.YES.equalsIgnoreCase(model.isVerified) ? context.getString(R.string.label_verified) : context.getString(R.string.label_pending));
+        final int liveFeedCounter = model.offerList != null ? model.offerList.size() : 0;
 
-        holder.mRowFavouriteBinding.textTotalJobs.setText(Utility.getJobs(context, model.jobsCount));
+       // final int liveFeedCounter= 3;
+        final Map<String, Integer> mOfferIndexMap = new HashMap<>();
+        if (liveFeedCounter > 0) {
+            holder.mRowFavouriteBinding.ivLiveAnimated.setVisibility(View.VISIBLE);
+            holder.mRowFavouriteBinding.tvLiveFeed.setVisibility(View.VISIBLE);
+
+            // Live Icon offset
+            int offset = holder.mView.getResources().getDimensionPixelSize(R.dimen.scale_5dp);
+            final int mLiveIconOffset = holder.mView.getResources().getDimensionPixelSize(R.dimen.icon_live_width) + offset;
+
+            // Start live image animations
+            holder.mRowFavouriteBinding.ivLiveAnimated.setBackgroundResource(R.drawable.ic_live);
+            ((AnimationDrawable) holder.mRowFavouriteBinding.ivLiveAnimated.getBackground()).start();
+
+            AnimatorSet offerAnimation = loadBannerScrollAnimation(holder.mRowFavouriteBinding.tvLiveFeed, 2000, 100, new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    int offerIndex = mOfferIndexMap.containsKey(model.providerId) ? mOfferIndexMap.get(model.providerId) : 0;
+                    SpannableString labelOffer = new SpannableString("22 kdkkskdksd sdsdjdasdadja asdadsjdsja a adjdjdj jsadsdjjdjd addkjsjdajad");
+                    labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    holder.mRowFavouriteBinding.tvLiveFeed.setText(labelOffer);
+                    offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
+                   // mOfferIndexMap.put(model.catId, offerIndex);
+                }
+            });
+            offerAnimation.start();
+
+        }
+        else
+        {
+            holder.mRowFavouriteBinding.ivLiveAnimated.setVisibility(View.GONE);
+            holder.mRowFavouriteBinding.tvLiveFeed.setVisibility(View.GONE);
+        }
+        holder.mRowFavouriteBinding.categoryName.setText("Plumber");
+        // holder.mRowFavouriteBinding.textTotalJobs.setText(Utility.getJobs(context, model.jobsCount));
         holder.mRowFavouriteBinding.textTotalTasks.setText(Utility.getTasks(context, model.taskCount));
 
         if (Utility.BOOLEAN.YES.equalsIgnoreCase(model.isVerified)) {
-            holder.mRowFavouriteBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.black));
+            //holder.mRowFavouriteBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.black));
+            holder.mRowFavouriteBinding.textVerified.setVisibility(View.VISIBLE);
         } else {
-            holder.mRowFavouriteBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.yellow));
+            //holder.mRowFavouriteBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.yellow));
+            holder.mRowFavouriteBinding.textVerified.setVisibility(View.GONE);
         }
+holder.mRowFavouriteBinding.textAddressKmAway.setText(model.sp_locality);
+        holder.mRowFavouriteBinding.textAddressKmAway1.setText(model.distance);
         holder.mRowFavouriteBinding.textMinToArrive.setText(model.distance);
         holder.mRowFavouriteBinding.imgFav.setSelected(Utility.BOOLEAN.YES.equalsIgnoreCase(model.isFavourite));
 
@@ -131,7 +180,25 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     public int getItemCount() {
         return mList.size();
     }
-
+    private AnimatorSet loadBannerScrollAnimation(View view, int offset, int distance, AnimatorListenerAdapter midEndListener) {
+        ObjectAnimator moveOut = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0, (-1 * distance));
+        if (midEndListener != null) {
+            moveOut.addListener(midEndListener);
+        }
+        ObjectAnimator moveIn = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, distance, 0);
+        final AnimatorSet set = new AnimatorSet();
+        set.setDuration(1000);
+        set.setStartDelay(offset);
+        set.playSequentially(moveOut, moveIn);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                set.start();
+            }
+        });
+        return set;
+    }
     public ArrayList<ProviderModel> getmList() {
         return mList;
     }

@@ -245,7 +245,13 @@ public class FavouriteFragment extends BaseFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         ArrayList<ProviderModel> list = GsonUtility.getObjectListFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), ProviderModel[].class);
-
+                        ProviderModel temp=new ProviderModel();
+                        temp.userName="Anand Patole";
+                        temp.isVerified="yes";
+                        temp.distance="2 km away";
+                        temp.isFavourite="yes";
+                        temp.sp_locality="Juhu";
+                        list.add(temp);
                         favouriteRecyclerViewAdapter.setItem(list);
                         errorLoadingHelper.success();
                         if (favouriteRecyclerViewAdapter.getmList().size() <= 0) {

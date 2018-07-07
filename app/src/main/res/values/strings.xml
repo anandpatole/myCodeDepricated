@@ -162,7 +162,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_x_jobs">%1$s Jobs</string>
     <string name="label_x_task">%1$s Task</string>
     <string name="label_x_tasks">%1$s Tasks</string>
-    <string name="label_verified">Verified</string>
+    <string name="label_verified">verified</string>
     <string name="label_pending">Pending</string>
     <string name="label_x_reviews">%1$s reviews</string>
     <string name="label_x_review">%1$s review</string>
