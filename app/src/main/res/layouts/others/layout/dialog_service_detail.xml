@@ -51,7 +51,7 @@
                         android:textColor="@color/heading_color"
                         android:textAllCaps="true"
                         android:gravity="center_horizontal"
-                        android:textSize="@dimen/text_size_14sp"/>
+                        android:textSize="@dimen/text_size_15sp"/>
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_heading2"
@@ -65,7 +65,7 @@
                         android:text="@string/heading2"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_14sp"/>
+                        android:textSize="@dimen/text_size_15sp"/>
 
                 </LinearLayout>
 
