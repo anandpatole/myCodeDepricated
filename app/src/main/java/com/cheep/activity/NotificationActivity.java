@@ -302,10 +302,10 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
             providerModel.providerId = String.valueOf(model.sp_user_id);
 
             JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
-            if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
-                TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
-            else
-                TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
+//            if (model.task_type.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC))
+//                TaskSummaryStrategicPartnerActivity.getInstance(mContext, model.task_id);
+//            else
+//                TaskSummaryForMultiCatActivity.getInstance(mContext, model.task_id);
         }
           /*  }
         });*/
@@ -328,5 +328,9 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
         ProviderModel providerModel = new ProviderModel();
         providerModel.providerId = "<copy id from NotificationModel>";
         JobSummaryActivity.newInstance(mContext, taskDetailModel, providerModel);*/
+        Intent intent=new Intent(mContext,HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
+        startActivity(intent);
     }
 }

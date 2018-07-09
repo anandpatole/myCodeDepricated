@@ -99,7 +99,7 @@ public class InfoFragment extends BaseFragment {
 
         if (getArguments().getString(Utility.Extra.INFO_TYPE, NetworkUtility.TAGS.PAGEID_TYPE.TERMS).equals(NetworkUtility.TAGS.PAGEID_TYPE.TERMS)) {
             pageIDType = NetworkUtility.TAGS.PAGEID_TYPE.TERMS;
-            mFragmentInfoBinding.textTitle.setText(getString(R.string.label_terms));
+            mFragmentInfoBinding.textTitle.setText(getString(R.string.label_terms_title));
         } else {
             pageIDType = NetworkUtility.TAGS.PAGEID_TYPE.PRIVACY;
             mFragmentInfoBinding.textTitle.setText(getString(R.string.label_privacy_policy));

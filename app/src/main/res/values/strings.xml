@@ -37,6 +37,8 @@
     <string name="label_terms1">T&amp;C Apply</string>
 
     <string name="label_terms">T&amp;C</string>
+    <string name="hyphen">-</string>
+    <string name="label_terms_title"><![CDATA[T\'S & C\'S]]></string>
 
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_logout">Logout</string>
@@ -190,7 +192,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_cheepest">Cheepest</string>
     <string name="label_distance">Distance</string>
     <string name="label_rating">Rating</string>
-    <string name="label_rating_value">4.0</string>
+    <string name="label_rating_value">0</string>
     <string name="label_show_results">Show Results</string>
     <string name="label_reset">Reset</string>
     <string name="label_filter">Filter</string>
@@ -359,7 +361,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="step_3_desc">Please check details below and book</string>
     <string name="hint_task_desc">Please tell us more about your requirement</string>
     <string name="format_date_time">%1$s at %2$s</string>
-<string name="format_service_book_date">Service booked for\n%s</string>
+    <string name="format_service_book_date">Service booked for\n%s</string>
     <string name="format_task_book_date">Task booked for\n%s</string>
     <string name="format_service_start_time">Service starts %s</string>
     <string name="format_task_start_time">Task starts %s</string>

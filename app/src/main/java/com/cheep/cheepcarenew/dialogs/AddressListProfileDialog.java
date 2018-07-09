@@ -24,6 +24,7 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.addresspopupsfortask.AddressListDialog;
+import com.cheep.cheepcarenew.fragments.ProfileDetailsFragmentnew;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogAddressListProfileBinding;
 import com.cheep.model.AddressModel;
@@ -49,15 +50,20 @@ public class AddressListProfileDialog extends DialogFragment {
     private AddressListAdapter adapter;
     private ProgressDialog mProgressDialog;
     int position;
-
+    static DismissDialog listners;
     public AddressListProfileDialog() {
         // Required empty public constructor
     }
-
-    public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList) {
+public interface DismissDialog
+    {
+        public void dismiss_Dialog();
+    }
+    public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList,DismissDialog listner) {
         AddressListProfileDialog fragment = new AddressListProfileDialog();
         Bundle args = new Bundle();
+listners=listner;
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,6 +107,7 @@ public class AddressListProfileDialog extends DialogFragment {
 
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.AlertAnimation;
+
         return dialog;
 
     }
@@ -292,6 +299,10 @@ public class AddressListProfileDialog extends DialogFragment {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                            listOfAddress.remove(position);
                            adapter.notifyDataSetChanged();
+                           if(listOfAddress.size()==0)
+                           {
+                               dismiss();
+                           }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -326,9 +337,14 @@ public class AddressListProfileDialog extends DialogFragment {
 
             // Close Progressbar
             hideProgressDialog();
-
-            // Show Toast
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
+
+    @Override
+    public void dismiss() {
+        listners.dismiss_Dialog();
+        super.dismiss();
+
+    }
 }

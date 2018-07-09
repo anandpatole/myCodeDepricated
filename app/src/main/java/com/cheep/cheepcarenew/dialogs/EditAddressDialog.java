@@ -128,7 +128,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
         if (listOfAddress != null) {
             for (int i = 0; i < listOfAddress.size(); i++) {
                 if (addressPosition == position) {
-                    mBinding.tvAddress.setText(listOfAddress.get(i).getAddressWithInitials());
+                    mBinding.tvAddress.setText(listOfAddress.get(i).address);
                     mBinding.editAddressInitials.setText(listOfAddress.get(i).address_initials);
                     mBinding.editAddressLandmark.setText(listOfAddress.get(i).landmark);
                     mBinding.editAddressPincode.setText(listOfAddress.get(i).pincode);
@@ -163,6 +163,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
 
     private void setListener() {
         mBinding.tvAddress.setOnClickListener(this);
+        mBinding.imgBack.setOnClickListener(this);
     }
 
     @Override
@@ -174,7 +175,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     @SuppressLint("ResourceType")
     private void continueTextEnableWhenFillAllField() {
         if (mBinding.editAddressInitials.getText().toString().isEmpty() ||
-                mBinding.editAddressLandmark.getText().toString().isEmpty() ||
+
                 mBinding.editAddressPincode.getText().toString().isEmpty()) {
 
             mBinding.tvContinue.setOnClickListener(null);
@@ -316,6 +317,9 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                 break;
             case R.id.tv_address:
                 showPlacePickerDialog();
+                break;
+            case R.id.img_back:
+                dismiss();
                 break;
         }
     }

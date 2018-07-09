@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/dummy_name"
+
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_16sp" />
 
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:numStars="5"
-                        android:rating="4" />
+                        android:rating="0" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_rating"
@@ -146,7 +146,7 @@
                     android:gravity="center_vertical"
                     android:paddingBottom="@dimen/scale_10dp"
                     android:paddingLeft="@dimen/scale_40dp"
-                    android:text="@string/label_phone_no_value"
+
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14sp" />
 
@@ -180,7 +180,7 @@
                         android:gravity="center_vertical"
                         android:paddingBottom="@dimen/scale_10dp"
                         android:paddingLeft="@dimen/scale_40dp"
-                        android:text="@string/dummy_email"
+
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_14sp" />
 

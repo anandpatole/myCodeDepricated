@@ -25,6 +25,7 @@
             android:layout_width="@dimen/home_screen_filter_text_width"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <View
@@ -63,7 +64,7 @@
             android:layout_width="@dimen/home_screen_filter_text_width"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="horizontal">
 
             <View

@@ -121,7 +121,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
-                    android:lineSpacingExtra="10dp"
                     android:padding="@dimen/scale_14dp"
                     android:textColor="@color/splash_gradient_end"
                     android:textSize="@dimen/text_size_14sp"

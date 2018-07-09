@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -97,7 +98,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,
         WebCallClass.UpdateEmergencyContactResponseListener,
         WebCallClass.CommonResponseListener,
-        View.OnClickListener {
+        View.OnClickListener,AddressListProfileDialog.DismissDialog {
 
 
     public static final String TAG = "ProfileDetailsFragmentnew";
@@ -255,7 +256,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     showChangePhoneNumberDialog();
                     break;*/
                 case R.id.text_manage_cheep_care_subscription:
-                   // manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
+                    // manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
                     ManageSubscription.newInstance(getContext());
                     //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
                     break;
@@ -292,7 +293,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     mBinding.textViewMore.setVisibility(View.VISIBLE);*/
                     break;
                 case R.id.text_view_more:
-                    showAddressListDialog();
+                    if(addressList.size()>0)
+                    {
+                        showAddressListDialog();
+                    }
 
                    /* fillAddressRecyclerView(mBinding.textAddressRecyclerNew);
                     mBinding.textViewMore.setVisibility(View.GONE);
@@ -305,6 +309,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                         @Override
                         public void onAddressSelection(AddressModel addressModel) {
                             addressList.add(addressModel);
+                            callGetProfileWS();
                         }
                     });
                     addressCategorySelectionDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressCategorySelectionDialog.TAG);
@@ -312,10 +317,10 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 case R.id.text_emergency_contact:
                     showChangeEmergencyContactDialog();
                     break;
-                case R.id.text_manage_address:
-                    showAddressDialog();
-
-                    break;
+//                case R.id.text_manage_address:
+//                    showAddressDialog();
+//
+//                    break;
                 /*case R.id.text_change_password:
                     showChangePasswordDialog();
                     break;*/
@@ -903,8 +908,16 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             addressListDialog.dismissAllowingStateLoss();
             addressListDialog = null;
         }
-        addressListDialog = AddressListProfileDialog.newInstance(addressList);
-        addressListDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(), AddressListProfileDialog.TAG);
+        FragmentManager fr=((AppCompatActivity) mContext).getSupportFragmentManager();
+        addressListDialog = AddressListProfileDialog.newInstance(addressList,ProfileDetailsFragmentnew.this);
+        addressListDialog.show(fr, AddressListProfileDialog.TAG);
+//        fr.executePendingTransactions();
+//        addressListDialog.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialogInterface) {
+//                callGetProfileWS();
+//            }
+//        });
     }
 
     // show dialog for select home and office address
@@ -957,7 +970,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
 
 
-     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////// PageContent[START]/////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1916,4 +1929,9 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     }
 
 
+    @Override
+    public void dismiss_Dialog()
+    {
+        callGetProfileWS();
+    }
 }
