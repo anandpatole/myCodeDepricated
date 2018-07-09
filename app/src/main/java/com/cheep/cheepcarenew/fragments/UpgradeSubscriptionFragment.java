@@ -2,7 +2,6 @@ package com.cheep.cheepcarenew.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,15 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cheep.R;
-import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.databinding.FragmentUpgradeSubscriptionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.utils.Utility;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 public class UpgradeSubscriptionFragment extends BaseFragment
 {

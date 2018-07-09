@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.RelationShipRecyclerViewAdapter;
-import com.cheep.cheepcare.fragment.ProfileTabFragment;
 import com.cheep.databinding.FragmnetRelationshipScreenBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.network.NetworkUtility;

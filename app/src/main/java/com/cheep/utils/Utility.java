@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.activity.HomeActivity;
-import com.cheep.cheepcare.dialogs.TaskConfirmedCCInstaBookDialog;
+import com.cheep.cheepcarenew.dialogs.TaskConfirmedCCInstaBookDialog;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatTaskModel;

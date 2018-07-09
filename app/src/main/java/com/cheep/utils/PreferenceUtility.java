@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.cheep.cheepcare.model.AdminSettingModel;
-import com.cheep.cheepcare.model.CityLandingPageModel;
+import com.cheep.cheepcarenew.model.AdminSettingModel;
+import com.cheep.cheepcarenew.model.CityLandingPageModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;

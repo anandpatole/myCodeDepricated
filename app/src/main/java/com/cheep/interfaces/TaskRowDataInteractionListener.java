@@ -16,6 +16,8 @@ public interface TaskRowDataInteractionListener {
 
     void onFavClicked(TaskDetailModel providerModel, boolean isAddToFav, int position);
 
+    void onProfileImageClicked(TaskDetailModel providerModel, int position);
+
     void onMigrateTaskFromPendingToPast(TaskDetailModel model);
 
     void onCallClicked(TaskDetailModel providerModel);

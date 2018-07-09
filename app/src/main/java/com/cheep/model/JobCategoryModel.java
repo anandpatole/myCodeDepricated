@@ -2,7 +2,7 @@ package com.cheep.model;
 
 import android.support.annotation.Keep;
 
-import com.cheep.cheepcare.model.CareCityDetail;
+import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -21,8 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cheep.R;
-import com.cheep.cheepcare.model.CareCityDetail;
-import com.cheep.cheepcare.model.PackageDetail;
+import com.cheep.cheepcarenew.model.CareCityDetail;
+import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.databinding.FragmentComparsionChartFragmentDialogBinding;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.ComparisionChart.FeatureList;

@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -41,7 +40,7 @@ import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
-import com.cheep.cheepcare.dialogs.BottomAddAddressDialog;
+import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;

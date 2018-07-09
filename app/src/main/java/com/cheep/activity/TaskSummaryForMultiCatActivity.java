@@ -32,11 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.adapter.SubServiceSummaryAdapter;
-import com.cheep.cheepcare.activity.RateAndReviewActivity;
-import com.cheep.cheepcare.dialogs.CancelRescheduleTaskDialog;
-import com.cheep.cheepcare.dialogs.SomeoneElseWillAttendDialog;
-import com.cheep.cheepcare.dialogs.UserAvailabilityDialog;
-import com.cheep.cheepcare.dialogs.UserAvailableDialog;
+import com.cheep.cheepcarenew.activities.RateAndReviewActivity;
+import com.cheep.cheepcarenew.dialogs.CancelRescheduleTaskDialog;
+import com.cheep.cheepcarenew.dialogs.SomeoneElseWillAttendDialog;
+import com.cheep.cheepcarenew.dialogs.UserAvailabilityDialog;
+import com.cheep.cheepcarenew.dialogs.UserAvailableDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityTaskSummaryForMultiCatBinding;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -264,6 +264,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             // Profile Pic
             GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfile, mTaskDetailModel.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, true);
 
+
+            mBinding.imgProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ProviderProfileActivity.newInstance(mContext, mTaskDetailModel.selectedProvider);
+                }
+            });
 
             // Manage Click events of Call & Chat
             mBinding.lnCall.setOnClickListener(new View.OnClickListener() {

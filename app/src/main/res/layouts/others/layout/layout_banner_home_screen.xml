@@ -55,7 +55,7 @@
             android:layout_marginRight="@dimen/scale_10dp"
             android:layout_marginEnd="@dimen/scale_10dp">
 
-            <com.cheep.cheepcare.customview.VerticalViewPager
+            <com.cheep.custom_view.VerticalViewPager
                 android:id="@+id/view_pager_subscription_banner_images"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_cheep_care_banner"/>

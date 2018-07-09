@@ -23,7 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.TaskQuotesActivity;
-import com.cheep.cheepcare.activity.RateAndReviewActivity;
+import com.cheep.cheepcarenew.activities.RateAndReviewActivity;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.FragmentHomeBinding;
 import com.cheep.firebase.FirebaseHelper;

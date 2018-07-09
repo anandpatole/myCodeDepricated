@@ -43,9 +43,9 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcare.adapter.PaymentHistoryCCAdapter;
-import com.cheep.cheepcare.fragment.ProfileTabFragment;
-import com.cheep.cheepcare.model.AdminSettingModel;
+import com.cheep.cheepcarenew.adapters.PaymentHistoryCCAdapter;
+import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
+import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
 import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
@@ -549,6 +549,10 @@ public class HomeActivity extends BaseAppCompatActivity
     @Override
     public void onFavClicked(TaskDetailModel providerModel, boolean isAddToFav, int position) {
         callAddToFavWS(providerModel.selectedProvider.providerId, isAddToFav);
+    }
+    @Override
+    public void onProfileImageClicked(TaskDetailModel taskDetailModel, int position) {
+        ProviderProfileActivity.newInstance(mContext, taskDetailModel.selectedProvider);
     }
 
     @Override
