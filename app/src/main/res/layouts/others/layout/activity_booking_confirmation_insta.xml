@@ -905,7 +905,7 @@
     android:textSize="@dimen/text_size_17sp"
     android:gravity="center_horizontal|center_vertical"
     android:layout_alignParentBottom="true"
-    android:background="@color/blue_variant_4"
+    android:background="@drawable/selector_bg_button"
     android:text="@string/gotcha"/>
         <com.cheep.custom_view.CFTextViewSemiBold
             android:id="@+id/tv_paynow"
@@ -914,9 +914,10 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_17sp"
+
             android:gravity="center_horizontal|center_vertical"
             android:layout_alignParentBottom="true"
-            android:background="@color/blue_variant_4"
+            android:background="@drawable/selector_bg_button"
             android:text="@string/book_pay"/>
 <!--
         <LinearLayout
