@@ -40,6 +40,7 @@ import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
+import com.cheep.cheepcarenew.activities.ManageSubscription;
 import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
 import com.cheep.custom_view.BottomAlertDialog;
@@ -107,7 +108,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     private DrawerLayoutInteractionListener mListener;
     String rating;
     private RelationShipScreenFragment relationShipScreenFragment;
-    private ManageSubscriptionFragment manageSubscriptionFragment;
+    //private ManageSubscriptionFragment manageSubscriptionFragment;
 
     // dialog
     private AddressCategorySelectionDialog addressCategorySelectionDialog;
@@ -254,8 +255,9 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     showChangePhoneNumberDialog();
                     break;*/
                 case R.id.text_manage_cheep_care_subscription:
-                    manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
+                   // manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
+                    ManageSubscription.newInstance(getContext());
+                    //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
                     break;
                 case R.id.main_profile_edit:
                     mBinding.mainProfileEdit.setVisibility(View.GONE);

@@ -42,8 +42,7 @@ import com.cheep.activity.ChatActivity;
 import com.cheep.activity.HomeActivity;
 import com.cheep.activity.NotificationActivity;
 import com.cheep.activity.TaskQuotesActivity;
-import com.cheep.activity.TaskSummaryForMultiCatActivity;
-import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
+
 import com.cheep.firebase.model.ChatNotification;
 import com.cheep.firebase.model.TaskChatModel;
 import com.cheep.model.MessageEvent;

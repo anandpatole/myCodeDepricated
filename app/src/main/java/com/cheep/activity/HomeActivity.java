@@ -43,12 +43,13 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
+import com.cheep.cheepcarenew.activities.ManageSubscription;
 import com.cheep.cheepcarenew.adapters.PaymentHistoryCCAdapter;
 import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.dialogs.ServiceDetailModalDialog;
 import com.cheep.cheepcarenew.fragments.CheepCareRateCardFragment;
-import com.cheep.cheepcarenew.fragments.ManageSubscriptionFragment;
+
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityHomeBinding;
 import com.cheep.databinding.NavHeaderHomeBinding;
@@ -209,15 +210,12 @@ public class HomeActivity extends BaseAppCompatActivity
             else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
             {
 
-                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
-                if (mFragment == null)
-                {
-                    getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
+               // Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
+
+                    ManageSubscription.newInstance(mContext);
+                    //getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
                     //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
-                } else
-                {
-                    //Log.i(TAG, "onSlideMenuListItemClicked: " + slideMenuListModel.title + " is there");
-                }
+
             }
             else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.BOOKING_CONFIRMATION)))
             {
