@@ -911,13 +911,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         FragmentManager fr=((AppCompatActivity) mContext).getSupportFragmentManager();
         addressListDialog = AddressListProfileDialog.newInstance(addressList,ProfileDetailsFragmentnew.this);
         addressListDialog.show(fr, AddressListProfileDialog.TAG);
-//        fr.executePendingTransactions();
-//        addressListDialog.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialogInterface) {
-//                callGetProfileWS();
-//            }
-//        });
+
     }
 
     // show dialog for select home and office address

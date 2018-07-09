@@ -817,6 +817,10 @@ public class HomeActivity extends BaseAppCompatActivity
     public void onCategoryRowClicked(JobCategoryModel model, int position) {
         // Changes on 27thApril,2017
 //        HireNewJobActivity.newInstance(mContext, model);
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
         if (model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.NO) && !model.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PAINTER)) {
             ServiceDetailModalDialog.newInstance(mContext, model).show(this.getSupportFragmentManager(), ServiceDetailModalDialog.TAG);
             //new ServiceDetailModalDialog().show();

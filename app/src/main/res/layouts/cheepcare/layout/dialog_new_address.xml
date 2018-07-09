@@ -41,8 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
-                    android:paddingLeft="@dimen/scale_50dp"
-                    android:paddingRight="@dimen/scale_50dp"
+                    android:paddingLeft="@dimen/scale_40dp"
+                    android:paddingRight="@dimen/scale_40dp"
                     android:text="@string/label_new_address"
                     android:textColor="@color/grey_variant_20"
                     android:textSize="@dimen/text_size_18sp" />
@@ -118,7 +118,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/bird_cc_guaranteed_services" />
+                    android:src="@drawable/cheep_bird_non_subscribed" />
 
             </FrameLayout>
         </RelativeLayout>

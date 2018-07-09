@@ -154,6 +154,10 @@ public class SubscriptionBannerFragment extends BaseFragment {
 
                     if (!processingClick) {
                         processingClick = true;
+                        if (!Utility.isConnected(mContext)) {
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, binding.getRoot());
+                            return;
+                        }
                         HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG);
                         if (homeFragment == null)
                             return;

@@ -104,14 +104,14 @@ public class AddressCategorySelectionDialog extends DialogFragment {
             mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
             if (listOfAddress != null) {
                 for (int i = 0; i < listOfAddress.size(); i++) {
-                    if (addressPosition == position) {
+                    if (i == addressPosition) {
                         if (listOfAddress.get(i).category.equalsIgnoreCase(NetworkUtility.TAGS.HOME)) {
                             mBinding.cvHome.setSelected(true);
                             mBinding.cvOffice.setSelected(false);
 
                         } else if (listOfAddress.get(i).category.equalsIgnoreCase(NetworkUtility.TAGS.OFFICE)) {
-                            mBinding.cvOffice.setSelected(false);
-                            mBinding.cvHome.setSelected(true);
+                            mBinding.cvOffice.setSelected(true);
+                            mBinding.cvHome.setSelected(false);
                         }
                     }
                 }

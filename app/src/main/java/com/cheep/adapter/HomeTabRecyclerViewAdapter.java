@@ -175,8 +175,19 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             holder.mRowTabHomeBinding.ivLiveAnimated.setVisibility(View.GONE);
             holder.mRowTabHomeBinding.tvLiveFeed.setVisibility(View.GONE);
         }
-        holder.mRowTabHomeBinding.tvOldPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catOldPrice)));
-        holder.mRowTabHomeBinding.tvNewPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catNewPrice))+" "+Utility.ONLY);
+        if(model.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+        {
+            holder.mRowTabHomeBinding.tvOldPrice.setVisibility(View.GONE);
+            holder.mRowTabHomeBinding.tvNewPrice.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.mRowTabHomeBinding.tvOldPrice.setVisibility(View.VISIBLE);
+            holder.mRowTabHomeBinding.tvNewPrice.setVisibility(View.VISIBLE);
+            holder.mRowTabHomeBinding.tvOldPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catOldPrice)));
+            holder.mRowTabHomeBinding.tvNewPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catNewPrice))+" "+Utility.ONLY);
+        }
+
 
         // LIVE Pro stacks
         updateLIVEProStackImages(holder.mRowTabHomeBinding, (ArrayList<String>) model.proImagesPerCategory);

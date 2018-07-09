@@ -54,14 +54,14 @@ public class AddressListProfileDialog extends DialogFragment {
     public AddressListProfileDialog() {
         // Required empty public constructor
     }
-public interface DismissDialog
+    public interface DismissDialog
     {
         public void dismiss_Dialog();
     }
     public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList,DismissDialog listner) {
         AddressListProfileDialog fragment = new AddressListProfileDialog();
         Bundle args = new Bundle();
-listners=listner;
+        listners=listner;
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressList));
 
         fragment.setArguments(args);
@@ -297,12 +297,12 @@ listners=listner;
 //                }
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                           listOfAddress.remove(position);
-                           adapter.notifyDataSetChanged();
-                           if(listOfAddress.size()==0)
-                           {
-                               dismiss();
-                           }
+                        listOfAddress.remove(position);
+                        adapter.notifyDataSetChanged();
+                        if(listOfAddress.size()==0)
+                        {
+                            dismiss();
+                        }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -343,7 +343,10 @@ listners=listner;
 
     @Override
     public void dismiss() {
-        listners.dismiss_Dialog();
+        if(listners!=null)
+        {
+            listners.dismiss_Dialog();
+        }
         super.dismiss();
 
     }

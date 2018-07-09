@@ -92,7 +92,7 @@
     <string name="label_reschedule">Reschedule</string>
     <string name="text_cheep_rate_card_categories"> Rate Card for Service Categories</string>
     <string name="rate_card_plumber">Plumber</string>
-    <string name="cheep_rate_card_info">Wondering how much a service can cost you ?</string>
+    <string name="cheep_rate_card_info">Wondering how much a service can cost you?</string>
     <string name="rate_card_pest_control">Pest Control</string>
     <string name="cheep_rate_card_info1">Our aim is to provide the best services at the most nominal rates.Depending on the services at hand,we might have some additional charges.You can easily aceess the rate card by tapping  on the services listed below</string>
     <string name="rupee_symbol_x_space">₹ %1$s</string>
@@ -710,7 +710,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
         after working hours, simply pay an additional charge of ₹%1s and get the PRO to come when you want!</string>
     <string name="msg_not_subscribed_address"><pre>Money Saving Tip    : Why don\'t you add this address under the CHEEP Care
         Subscription package for as low as ₹199/MTH* and get unlimited repairs and maintenance all year-long?</pre></string>
-    <string name="label_new_address">Hey we\'ve noticed this is\na new address!</string>
+    <string name="label_new_address">Hey! We\'ve noticed this is\na new address!</string>
     <string name="label_select_time">Select Time</string>
     <string name="label_no_thanks">No, Thanks</string>
     <string name="label_not_now">Not Now</string>

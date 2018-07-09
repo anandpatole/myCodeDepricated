@@ -3,12 +3,16 @@ package com.cheep.cheepcarenew.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -415,11 +419,16 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         dismiss();
                         android.support.v4.app.Fragment mFragment = getFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
+
                         if (mFragment instanceof ProfileTabFragment) {
                             mFragment = ((ProfileTabFragment) mFragment).getObject();
-                            if (mFragment instanceof ProfileDetailsFragmentnew) {
+                            if (mFragment instanceof ProfileDetailsFragmentnew)
+                            {
                                 ((ProfileDetailsFragmentnew) mFragment).getDataFromEditAddressDialog();
                             }
+
+
+
                         }
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
