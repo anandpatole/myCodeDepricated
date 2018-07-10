@@ -314,17 +314,17 @@ public class HomeTabFragment extends BaseFragment {
         }
     }
     // hide city banner if user address is subscribe
-private void hideCityBannerLayout()
-{
-    for(CareCityDetail detail: careBannerModelArrayList)
+    private void hideCityBannerLayout()
     {
-        if(detail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+        for(CareCityDetail detail: careBannerModelArrayList)
         {
-            mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerLayout.setVisibility(View.GONE);
-            break;
+            if(detail.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES))
+            {
+                mFragmentTabHomeBinding.layoutBannerHeader.viewPagerSubscriptionBannerLayout.setVisibility(View.GONE);
+                break;
+            }
         }
     }
-}
     private void callGetAdminSettings() {
         if (!Utility.isConnected(mContext)) {
             Log.d(TAG, "callGetAdminSettings: unable to call and get admin settings" + Math.ceil(3.4));
@@ -349,11 +349,14 @@ private void hideCityBannerLayout()
         }
         if (event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY) {
             for (CareCityDetail careCityDetail : cheepCareBannerViewPagerAdapter.getLists()) {
-                if (careCityDetail.id.equalsIgnoreCase(event.id))
+                if (careCityDetail.id.equalsIgnoreCase(event.id)) {
                     careCityDetail.isSubscribed = Utility.BOOLEAN.YES;
+
+                }
             }
             cheepCareBannerViewPagerAdapter.notifyDataSetChanged();
             getCategoryListFromServer();
+            getBannerImageListFromServer();
         }
     }
 

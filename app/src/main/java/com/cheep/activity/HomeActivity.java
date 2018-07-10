@@ -177,6 +177,8 @@ public class HomeActivity extends BaseAppCompatActivity
         //For managing notification redirect to job summary
         if (!getIntent().hasExtra(Utility.Extra.DYNAMIC_LINK_URI))
             onNewIntent(getIntent());
+
+
     }
 
     @Override

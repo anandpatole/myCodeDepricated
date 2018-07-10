@@ -50,6 +50,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -307,8 +308,13 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     private void updatePrice(int howManyMonth) {
         profit = oldPrice - newPrice;
-        mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(newPrice * howManyMonth));
-        totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        formatter.format(Double.valueOf(newPrice * howManyMonth));
+        mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + formatter.format(Double.valueOf(newPrice* howManyMonth)) );
+       // mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(newPrice * howManyMonth));
+        totalPackageAmount=newPrice * howManyMonth;
+       // totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
         Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
     }
 
@@ -429,7 +435,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         paymentDataModel.taxAmount = String.valueOf(taxtAmount);
         paymentDataModel.packageDuration = selectedMonth;
         paymentDataModel.dsaCode = cheepMateCode;
-        paymentDataModel.paidAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+        paymentDataModel.paidAmount = totalPackageAmount ;//Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
         paymentDataModel.packageId = packageId;
         paymentDataModel.packageTitle = packageDetail.title;
         paymentDataModel.addressId = addressModel.address_id;

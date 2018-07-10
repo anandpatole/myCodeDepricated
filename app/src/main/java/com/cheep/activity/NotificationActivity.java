@@ -280,9 +280,7 @@ public class NotificationActivity extends BaseAppCompatActivity implements Notif
         else if(model.notificationType.equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
         {
 
-
-            Intent intent=new Intent(mContext,HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent=new Intent(NotificationActivity.this,HomeActivity.class);
             intent.putExtra(NetworkUtility.TAGS.TYPE,Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE);
             startActivity(intent);
             //finish();
