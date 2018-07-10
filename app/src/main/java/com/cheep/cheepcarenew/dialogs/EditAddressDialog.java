@@ -417,6 +417,8 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                        JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                        AddressModel addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonData.toString(), AddressModel.class);
                         dismiss();
                         android.support.v4.app.Fragment mFragment = getFragmentManager().findFragmentByTag(ProfileTabFragment.TAG);
 
@@ -427,7 +429,15 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                                 ((ProfileDetailsFragmentnew) mFragment).getDataFromEditAddressDialog();
                             }
 
+                            DialogFragment  mFragment1 = (DialogFragment) getFragmentManager().findFragmentByTag(AddressListProfileDialog.TAG);
 
+                            if (mFragment1 instanceof AddressListProfileDialog) {
+
+                                listOfAddress.set(addressPosition,addressModel);
+
+                                ((AddressListProfileDialog) mFragment1).getDataFromEditAddressDialog(listOfAddress);
+
+                            }
 
                         }
                         break;

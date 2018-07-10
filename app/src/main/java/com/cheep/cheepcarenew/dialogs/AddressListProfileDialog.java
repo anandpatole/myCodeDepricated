@@ -58,6 +58,11 @@ public class AddressListProfileDialog extends DialogFragment {
     {
         public void dismiss_Dialog();
     }
+    public void   getDataFromEditAddressDialog(ArrayList<AddressModel> listOfAddress)
+    {
+        this.listOfAddress=listOfAddress;
+        setAdapter();
+    }
     public static AddressListProfileDialog newInstance(ArrayList<AddressModel> addressList,DismissDialog listner) {
         AddressListProfileDialog fragment = new AddressListProfileDialog();
         Bundle args = new Bundle();

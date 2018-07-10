@@ -775,35 +775,36 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mRowTaskBinding.tvSubscribed.setVisibility(View.GONE);
                     //discount
                 }
-                holder.mRowTaskBinding.tvRebookTask.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        @Nullable BannerImageModel bannerImageModel;
-                        @Nullable JobCategoryModel jobCategoryModel;
-                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                            jobCategoryModel = null;
-
-                            bannerImageModel = new BannerImageModel();
-                            bannerImageModel.imgCatImageUrl = model.categoryModel.catImageExtras.medium;
-                            bannerImageModel.bannerImage = model.bannerImage;
-                            bannerImageModel.cat_id = model.categoryModel.catId;
-                            bannerImageModel.name = model.categoryModel.catName;
-                            bannerImageModel.minimum_selection = model.minimumSelection;
-
-                        } else {
-
-                            jobCategoryModel = new JobCategoryModel();
-                            jobCategoryModel.catId = model.categoryModel.catId;
-                            jobCategoryModel.catName = model.categoryModel.catName;
-                            jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
-                            jobCategoryModel.isSubscribed=Utility.BOOLEAN.YES;
-                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
-                            bannerImageModel = null;
-                        }
-                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
-
-                    }
-                });
+//                holder.mRowTaskBinding.tvRebookTask.setOnClickListener(new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View view) {
+//                        @Nullable BannerImageModel bannerImageModel;
+//                        @Nullable JobCategoryModel jobCategoryModel;
+//                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+//                            jobCategoryModel = null;
+//
+//                            bannerImageModel = new BannerImageModel();
+//                            bannerImageModel.imgCatImageUrl = model.categoryModel.catImageExtras.medium;
+//                            bannerImageModel.bannerImage = model.bannerImage;
+//                            bannerImageModel.cat_id = model.categoryModel.catId;
+//                            bannerImageModel.name = model.categoryModel.catName;
+//                            bannerImageModel.minimum_selection = model.minimumSelection;
+//
+//                        } else {
+//
+//                            jobCategoryModel = new JobCategoryModel();
+//                            jobCategoryModel.catId = model.categoryModel.catId;
+//                            jobCategoryModel.catName = model.categoryModel.catName;
+//                            jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
+//                            jobCategoryModel.isSubscribed=model.categoryModel.isSubscribed;
+//                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
+//                            bannerImageModel = null;
+//                        }
+//                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
+//
+//                    }
+//                });
                 holder.mRowTaskBinding.swipeLayout.setSwipeEnabled(false);
                 mItemManger.bindView(holder.itemView, position);
                 break;
