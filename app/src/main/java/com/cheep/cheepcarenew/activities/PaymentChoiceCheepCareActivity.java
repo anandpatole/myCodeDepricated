@@ -17,10 +17,10 @@ import com.cheep.activity.AddMoneyActivity;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.activity.SendOtpActivity;
 import com.cheep.activity.WithdrawMoneyActivity;
+import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.cheepcarenew.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CheepCarePaymentDataModel;
-import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
@@ -71,12 +71,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private CheepCarePaymentDataModel paymentDataModel;
     private Map<String, Object> mTaskCreationParams;
 
-//    private SubscribedTaskDetailModel subscribedTaskDetailModel;
+    //    private SubscribedTaskDetailModel subscribedTaskDetailModel;
     private int PAYTM_STEP = -1;
     private String paymentMethod;
     private double paytmPayableAmount;
     private double payableAmount;
     private CareCityDetail careCityDetail;
+    private AddressModel addressModel;
     private String paymentFor;
 
     public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
@@ -89,11 +90,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
          payment data model - payment info
          city detail - selected city data for which user is purchasing subscription
      */
-    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CareCityDetail mCareCityDetail) {
+    public static void newInstance(Context context, String cartDetails, CheepCarePaymentDataModel paymentDataModel, CareCityDetail mCareCityDetail, AddressModel addressModel) {
         Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, cartDetails);
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(paymentDataModel));
         intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCareCityDetail));
+        intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(addressModel));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -136,6 +138,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             paymentDataModel = (CheepCarePaymentDataModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2),
                     CheepCarePaymentDataModel.class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
+            addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.SELECTED_ADDRESS_MODEL), AddressModel.class);
             payableAmount = paymentDataModel.paidAmount;
             LogUtils.LOGE(TAG, "initiateUI: paymentDataModel \n============\n" + paymentDataModel);
 
@@ -274,7 +277,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
 
         //Add Params
-        Map<String, String> mParams = new HashMap<>();
+        Map<String, Object> mParams = new HashMap<>();
         mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(paymentDataModel.totalAmount));
         mParams.put(NetworkUtility.TAGS.PROMOCODE, paymentDataModel.promocode);
         mParams.put(NetworkUtility.TAGS.DISCOUNT_AMOUNT, String.valueOf(paymentDataModel.discountAmount));
@@ -286,7 +289,18 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, String.valueOf(careCityDetail.id));
         mParams.put(NetworkUtility.TAGS.PACKAGE_ID, String.valueOf(paymentDataModel.packageId));
         mParams.put(NetworkUtility.TAGS.PACKAGE_TITLE, String.valueOf(paymentDataModel.packageTitle));
-        mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(paymentDataModel.addressId));
+        int addressId = 0;
+        try {
+            addressId = Integer.parseInt(addressModel.address_id);
+        } catch (Exception e) {
+            addressId = 0;
+        }
+        if (addressId <= 0) {
+            NetworkUtility.addGuestAddressParams(mParams, addressModel);
+
+        } else {
+            mParams.put(NetworkUtility.TAGS.ADDRESS_ID, String.valueOf(addressId));
+        }
         mParams.put(NetworkUtility.TAGS.ASSET_TYPE_ID, String.valueOf(paymentDataModel.addressAssetTypeId));
         //mParams.put(NetworkUtility.TAGS.PAYABLE_AMOUNT, String.valueOf(paymentDataModel.payableAmount));
         //mParams.put(NetworkUtility.TAGS.IS_ANNUALLY, String.valueOf(paymentDataModel.isAnnually));
