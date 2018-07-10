@@ -743,6 +743,11 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.rlPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
         mBinding.tvPayNow.setSelected(mBinding.ivTermsTick.isSelected());
         mBinding.tvPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.tvGotcha.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.tvGotcha.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPayNow.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
+
     }
 
     View.OnClickListener onPayLaterClickListener = new View.OnClickListener() {
