@@ -300,7 +300,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         mBinding.tvLandingScreenTitle2.setText(mCityLandingPageModel.careCityDetail.landingScreenTitle2);
         mBinding.imgCheepTips.setVisibility(View.VISIBLE);
 
-        mBinding.tvInfoText.setText(getString(R.string.landing_page_info_text));
+        mBinding.tvInfoText.setText(mCityLandingPageModel.careCityDetail.description);
 
         mBinding.recyclerViewCheepCareFeature.setNestedScrollingEnabled(false);
         mFeatureAdapter = new CheepCareFeatureAdapter();

@@ -177,15 +177,15 @@
                         android:id="@+id/tv_landing_screen_title_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_24dp"
-                        android:layout_marginTop="@dimen/scale_20dp"
+                        android:layout_marginBottom="@dimen/scale_21dp"
+                        android:layout_marginTop="@dimen/scale_18dp"
                         android:paddingEnd="@dimen/scale_20dp"
                         android:paddingLeft="@dimen/scale_20dp"
                         android:paddingRight="@dimen/scale_20dp"
                         android:paddingStart="@dimen/scale_20dp"
                         android:text="@string/packages_for_needs"
                         android:textColor="@color/black_varient_1"
-                        android:textSize="@dimen/text_size_14sp" />
+                        android:textSize="@dimen/text_size_15sp" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_cheep_care_packages"
@@ -197,7 +197,7 @@
                         android:id="@+id/tv_landing_screen_title_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/scale_24dp"
+                        android:layout_marginBottom="@dimen/scale_18dp"
                         android:layout_marginTop="@dimen/scale_4dp"
                         android:paddingEnd="@dimen/scale_20dp"
                         android:paddingLeft="@dimen/scale_20dp"
@@ -212,7 +212,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/scale_4dp"
-                        android:gravity="center"
+                        android:gravity="left"
                         android:paddingEnd="@dimen/scale_20dp"
                         android:paddingLeft="@dimen/scale_20dp"
                         android:paddingRight="@dimen/scale_20dp"
