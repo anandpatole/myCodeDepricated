@@ -22,6 +22,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RatingBar;
@@ -1207,6 +1208,24 @@ public class Utility {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
+
+        if (taskDetailModel != null) {
+            /* * Add new task detail on firebase
+             * @Sanjay 20 Feb 2016
+             */
+            Log.e("Utility", "onSuccessfulInstaBookingTaskCompletion: updating firebasechatttttttt" );
+            ChatTaskModel chatTaskModel = new ChatTaskModel();
+            chatTaskModel.taskId = FirebaseUtils.getPrefixTaskId(taskDetailModel.taskId);
+            chatTaskModel.taskDesc = taskDetailModel.taskDesc;
+            chatTaskModel.categoryId = taskDetailModel.categoryModel.catId;
+            chatTaskModel.categoryName = taskDetailModel.categoryModel.catName;
+            chatTaskModel.selectedSPId = "";
+            UserDetails userDetails = PreferenceUtility.getInstance(context).getUserDetails();
+            chatTaskModel.userId = FirebaseUtils.getPrefixUserId(userDetails.userID);
+            FirebaseHelper.getTaskRef(chatTaskModel.taskId).setValue(chatTaskModel);
+        }
+
+
         TaskConfirmedCCInstaBookDialog taskConfirmedCCInstaBookDialog = TaskConfirmedCCInstaBookDialog.newInstance(listener, true, dateTime, taskDetailModel.taskId);
         taskConfirmedCCInstaBookDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), TaskConfirmedCCInstaBookDialog.TAG);
         // TODO : commented code for nor this chat module will be added when pro will accepts from market place
