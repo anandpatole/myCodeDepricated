@@ -508,7 +508,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 break;
             case R.id.tv_pay_now:
                 storeAllDataForPayment();
-                PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, cityLandingPageModel.careCityDetail);
+                PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, cityLandingPageModel.careCityDetail,addressModel
+                );
                 break;
 
         }
