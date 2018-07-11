@@ -6,24 +6,17 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.activity.BookingConfirmationInstaActivity;
 import com.cheep.cheepcarenew.adapters.ManageSubscriptionAddressAdapter;
-import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.cheepcarenew.model.ManageSubscriptionModel;
 import com.cheep.databinding.FragmentManageSubscriptionBinding;
-import com.cheep.fragment.BaseFragment;
-import com.cheep.model.AddressModel;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -31,8 +24,6 @@ import com.cheep.tags.MyLinearLayoutManager;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
-
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -67,12 +58,6 @@ public class ManageSubscription extends BaseAppCompatActivity implements
         callManageSubscriptionWS();
     }
     @Nullable
-
-
-
-
-
-
     @Override
     public void initiateUI() {
 
@@ -151,7 +136,6 @@ public class ManageSubscription extends BaseAppCompatActivity implements
     // ManageSubscriptionAddressAdapter.AddressItemClickListener
     @Override
     public void onClickItem(ManageSubscriptionModel model)
-
     {
         setOnlyOneAddressOnView(model);
 
