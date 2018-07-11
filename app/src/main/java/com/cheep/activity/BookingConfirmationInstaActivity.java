@@ -154,9 +154,10 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
         mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
         if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-
+boolean check_pest=Utility.BOOLEAN_NEW.NO;
             if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM) || mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                 if (taskDetailModel.categoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
+
                     if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                         mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.categoryModel.catNewPrice)));
                         subServiceTotal = Double.valueOf(taskDetailModel.categoryModel.catNewPrice);
@@ -164,7 +165,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                         int remainingCount = 0;
                         int totalCount=0;
                         String end_Date="";
-                        boolean service_status=false;
+                        boolean service_status=Utility.BOOLEAN_NEW.NO;
+
                         for (SubServiceDetailModel.PackageData packageData : taskDetailModel.packageData) {
                             if (packageData != null && packageData.address_id.equalsIgnoreCase(taskDetailModel.taskAddress.address_id)) {
                                 try {
@@ -182,6 +184,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                             }
                         }
                         if (remainingCount <= 0 || service_status==Utility.BOOLEAN_NEW.NO) {
+                            check_pest=Utility.BOOLEAN_NEW.YES;
                             mBinding.tvLabelCategoryPrices.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(taskDetailModel.categoryModel.catNewPrice)));
                             subServiceTotal = Double.valueOf(taskDetailModel.categoryModel.catNewPrice);
                         } else {
@@ -195,9 +198,19 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
                 }
 
                 if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-                    mBinding.tvPaynow.setVisibility(View.GONE);
-                    mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-                    mBinding.tvGotcha.setVisibility(View.VISIBLE);
+              if(check_pest==Utility.BOOLEAN_NEW.NO)
+              {
+                  mBinding.tvPaynow.setVisibility(View.GONE);
+                  mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                  mBinding.tvGotcha.setVisibility(View.VISIBLE);
+              }
+              else
+              {
+                  mBinding.tvPaynow.setVisibility(View.VISIBLE);
+                  mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                  mBinding.tvGotcha.setVisibility(View.GONE);
+              }
+
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge = 0;
                     // mBinding.viewLine2.setVisibility(View.GONE);
@@ -751,8 +764,8 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.rlPayNow.setSelected(mBinding.ivTermsTick.isSelected());
         mBinding.rlPayLater.setEnabled(mBinding.ivTermsTick.isSelected());
         mBinding.rlPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
-        mBinding.tvPayNow.setSelected(mBinding.ivTermsTick.isSelected());
-        mBinding.tvPayNow.setEnabled(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPaynow.setSelected(mBinding.ivTermsTick.isSelected());
+        mBinding.tvPaynow.setEnabled(mBinding.ivTermsTick.isSelected());
         mBinding.tvGotcha.setSelected(mBinding.ivTermsTick.isSelected());
         mBinding.tvGotcha.setEnabled(mBinding.ivTermsTick.isSelected());
 
