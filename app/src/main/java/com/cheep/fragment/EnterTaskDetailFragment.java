@@ -1153,7 +1153,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     end_Date=packageData.pestcontrol_next_date;
                                     Calendar cal = Calendar.getInstance();
                                    // cal.add(Calendar.DATE, 1);
-                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                    SimpleDateFormat format1 = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
                                     String today_date = format1.format(cal.getTime());
                                     service_status= checkDate(today_date,end_Date);
                                 } catch (Exception e) {
@@ -1355,12 +1355,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public boolean checkDate(String todaydate,String nextdate )
     {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            SimpleDateFormat sdf = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
             Date date1 = sdf.parse(todaydate);
             Date date2 = sdf.parse(nextdate);
 
-            System.out.println("date1 : " + sdf.format(date1));
-            System.out.println("date2 : " + sdf.format(date2));
+
+
 
             if (date1.after(date2))
             {
