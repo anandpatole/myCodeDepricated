@@ -874,7 +874,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-       additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
         // mTaskCreationActivity.onInstaBookClickedNew();
     }
 
@@ -1152,7 +1152,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
                                     end_Date=packageData.pestcontrol_next_date;
                                     Calendar cal = Calendar.getInstance();
-                                   // cal.add(Calendar.DATE, 1);
+                                    // cal.add(Calendar.DATE, 1);
                                     SimpleDateFormat format1 = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
                                     String today_date = format1.format(cal.getTime());
                                     service_status= checkDate(today_date,end_Date);
@@ -1161,7 +1161,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                 }
                             }
                         }
-                        if (remainingCount <= 0 || service_status==false)
+                        if (remainingCount <= 0 || service_status==Utility.BOOLEAN_NEW.NO)
                         {
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
