@@ -171,7 +171,9 @@ public class Utility {
     private static final int PHONE_MIN_LENGTH = 10;
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.placeholder_cheep_pro_not_assigned;
-    public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
+   // public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
+     public static final int DEFAULT_CHEEP_LOGO = R.mipmap.ic_launcher;
+
 //    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
     public static final String LOCALE_FOR_HINDI = "hi";
