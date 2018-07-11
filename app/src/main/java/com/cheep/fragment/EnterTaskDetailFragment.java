@@ -874,7 +874,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         if (mTaskCreationActivity.isValidationCompleted()) {
             return;
         }
-       additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
+        additionalChargeReason = Utility.ADDITION_CHARGES_DIALOG_TYPE.OUT_OF_OFFICE_HOURS;
         // mTaskCreationActivity.onInstaBookClickedNew();
     }
 
@@ -1152,8 +1152,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                     remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
                                     end_Date=packageData.pestcontrol_next_date;
                                     Calendar cal = Calendar.getInstance();
-                                   // cal.add(Calendar.DATE, 1);
-                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                    // cal.add(Calendar.DATE, 1);
+                                    SimpleDateFormat format1 = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
                                     String today_date = format1.format(cal.getTime());
                                     service_status= checkDate(today_date,end_Date);
                                 } catch (Exception e) {
@@ -1161,7 +1161,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                 }
                             }
                         }
-                        if (remainingCount <= 0 || service_status==false)
+                        if (remainingCount <= 0 || service_status==Utility.BOOLEAN_NEW.NO)
                         {
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -1355,19 +1355,21 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     public boolean checkDate(String todaydate,String nextdate )
     {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            SimpleDateFormat sdf = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
             Date date1 = sdf.parse(todaydate);
             Date date2 = sdf.parse(nextdate);
 
-            System.out.println("date1 : " + sdf.format(date1));
-            System.out.println("date2 : " + sdf.format(date2));
 
-            if (date1.after(date2)) {
-                return  false;
+
+
+            if (date1.after(date2))
+            {
+                return  true;
             }
 
             if (date1.before(date2)) {
-                return true;
+                return false;
             }
 
             if (date1.equals(date2)) {
