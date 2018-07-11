@@ -1362,12 +1362,13 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             System.out.println("date1 : " + sdf.format(date1));
             System.out.println("date2 : " + sdf.format(date2));
 
-            if (date1.after(date2)) {
-                return  false;
+            if (date1.after(date2))
+            {
+                return  true;
             }
 
             if (date1.before(date2)) {
-                return true;
+                return false;
             }
 
             if (date1.equals(date2)) {
