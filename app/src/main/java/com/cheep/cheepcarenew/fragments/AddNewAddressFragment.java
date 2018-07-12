@@ -19,11 +19,8 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
-import com.cheep.custom_view.tooltips.ViewTooltip;
 import com.cheep.databinding.FragmentAddNewAddressBinding;
-import com.cheep.databinding.TooltipAddressSelectionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
@@ -58,8 +55,8 @@ public class AddNewAddressFragment extends BaseFragment {
 
 
     private String category;
-    private ViewTooltip.TooltipView tooltipView;
-    private AddressModel mAddressModel;
+    private AddressModel mAddressModel = new AddressModel();
+    private LocationInfo mLocationInfo;
 
     public AddNewAddressFragment() {
 
@@ -121,7 +118,7 @@ public class AddNewAddressFragment extends BaseFragment {
         mBinding.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideToolTip(true);
+//                hideToolTip(true);
                 ((AddressActivity) mContext).onBackPressed();
 
             }
@@ -133,7 +130,15 @@ public class AddNewAddressFragment extends BaseFragment {
                 showPlacePickerDialog();
             }
         });
-        mBinding.tvContinue.setOnClickListener(new View.OnClickListener() {
+        mBinding.tvAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPlacePickerDialog();
+            }
+        });
+        mBinding.tvContinue.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Utility.hideKeyboard(mContext);
@@ -142,6 +147,7 @@ public class AddNewAddressFragment extends BaseFragment {
         });
 
     }
+
 
     private void addAddress() {
         if (TextUtils.isEmpty(mBinding.tvAddress.getText().toString().trim())) {
@@ -153,18 +159,18 @@ public class AddNewAddressFragment extends BaseFragment {
             Utility.showToast(mContext, mContext.getString(R.string.validate_pincode));
         } else {
 
-            AddressModel model = new AddressModel();
-            model.category = category;
-            model.address = mBinding.tvAddress.getText().toString().trim();
-            model.address_initials = mBinding.editAddressInitials.getText().toString().trim();
-            model.landmark = mBinding.editAddressLandmark.getText().toString().trim();
-            model.pincode = mBinding.editAddressPincode.getText().toString().trim();
+            mAddressModel.category = category;
+            mAddressModel.address = mBinding.tvAddress.getText().toString().trim();
+            mAddressModel.address_initials = mBinding.editAddressInitials.getText().toString().trim();
+            mAddressModel.landmark = mBinding.editAddressLandmark.getText().toString().trim();
+            mAddressModel.pincode = mBinding.editAddressPincode.getText().toString().trim();
 
-            callAddAddressWS(model, (LatLng) mBinding.tvAddress.getTag());
+            callAddAddressWS(mAddressModel, (LatLng) mBinding.tvAddress.getTag());
         }
     }
 
 
+/*
     private void openTooltip(boolean delay) {
         Log.e(TAG, "openTooltip: **********************");
         TooltipAddressSelectionBinding toolTipBinding = DataBindingUtil.inflate(
@@ -202,6 +208,8 @@ public class AddNewAddressFragment extends BaseFragment {
                 mBinding.editAddressLocality.setVisibility(View.VISIBLE);
                 mBinding.viewLocality.setVisibility(View.VISIBLE);
                 mBinding.cvCurrentLocation.setVisibility(View.VISIBLE);
+
+                showPlacePickerDialog();
             }
         });
 
@@ -211,7 +219,7 @@ public class AddNewAddressFragment extends BaseFragment {
                 .animation(new ViewTooltip.FadeTooltipAnimation(500))
                 .autoHide(false, 0);
 
-        if(tooltipView!=null)
+        if (tooltipView != null)
             hideToolTip(true);
         tooltipView = viewTooltip.getTooltip_view();
 
@@ -219,6 +227,7 @@ public class AddNewAddressFragment extends BaseFragment {
 
 
     }
+*/
 
     public SpannableStringBuilder getSpannableStringForHint(String fullString) {
         String newString = fullString + getString(R.string.label_star);
@@ -269,27 +278,88 @@ public class AddNewAddressFragment extends BaseFragment {
 
                 mBinding.tvAddress.setText(address);
                 mBinding.tvAddress.setTag(place.getLatLng());
-
-                mBinding.editAddressInitials.setVisibility(View.VISIBLE);
-                mBinding.viewAddressInitials.setVisibility(View.VISIBLE);
-
-
-                mBinding.editAddressCity.setVisibility(View.GONE);
-                mBinding.viewCity.setVisibility(View.GONE);
-                mBinding.editAddressLocality.setVisibility(View.GONE);
-                mBinding.viewLocality.setVisibility(View.GONE);
-                mBinding.cvCurrentLocation.setVisibility(View.GONE);
-
-                mBinding.tvAddress.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                openTooltip(false);
-
-                    }
-                },200);
+                getdetailsOfAddress(place.getLatLng());
 
             }
         }
+    }
+
+    private void getdetailsOfAddress(final LatLng latLng) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo locationIno) {
+                            hideProgressDialog();
+                            mLocationInfo = locationIno;
+                            onPostOfFetchLocation();
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        } else {
+            /**
+             * Logged In User so first need to fetch other location info and then call add address
+             * Webservice.
+             */
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo locationIno) {
+                            mLocationInfo = locationIno;
+                            hideProgressDialog();
+                            onPostOfFetchLocation();
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        }
+    }
+
+    private void onPostOfFetchLocation() {
+
+
+        mBinding.editAddressInitials.setVisibility(View.VISIBLE);
+        mBinding.viewAddressInitials.setVisibility(View.VISIBLE);
+
+        mBinding.editAddressPincode.setText(mLocationInfo.pincode);
+
+        mBinding.editAddressCity.setVisibility(View.GONE);
+        mBinding.viewCity.setVisibility(View.GONE);
+        mBinding.editAddressLocality.setVisibility(View.GONE);
+        mBinding.viewLocality.setVisibility(View.GONE);
+        mBinding.cvCurrentLocation.setVisibility(View.GONE);
+
+
+//        mBinding.tvAddress.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                openTooltip(false);
+//
+//            }
+//        }, 200);
+
     }
 
     private void postEvent(AddressModel addressModel) {
@@ -302,7 +372,7 @@ public class AddNewAddressFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        hideToolTip(true);
+//        hideToolTip(true);
         super.onDestroy();
     }
 
@@ -310,8 +380,8 @@ public class AddNewAddressFragment extends BaseFragment {
     /**
      * @param removeNow true if hide tool tip without animation and immediately
      *                  false - remove with animation
-     */
-    private void hideToolTip(boolean removeNow) {
+     *//*
+    privaite void hideToolTip(boolean removeNow) {
         if (tooltipView != null) {
             if (removeNow)
                 tooltipView.removeNow();
@@ -319,7 +389,7 @@ public class AddNewAddressFragment extends BaseFragment {
                 tooltipView.remove();
         }
     }
-
+*/
     public void onEventMainThread(MessageEvent event) {
         Log.e("onEventMainThread", "" + event.BROADCAST_ACTION);
         switch (event.BROADCAST_ACTION) {
@@ -333,7 +403,7 @@ public class AddNewAddressFragment extends BaseFragment {
      * Calling Add Address WS
      *
      * @param addressModel added new address
-     * @param latLng latlong of selected address
+     * @param latLng       latlong of selected address
      */
     private void callAddAddressWS(final AddressModel addressModel, final LatLng latLng) {
         if (!Utility.isConnected(mContext)) {
@@ -342,92 +412,57 @@ public class AddNewAddressFragment extends BaseFragment {
         }
 
         if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
-            ((BaseAppCompatActivity) mContext).showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
-                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
 
-                            GuestUserDetails guestUserDetails = PreferenceUtility.getInstance(mContext).getGuestUserDetails();
+            addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
+            addressModel.cityName = mLocationInfo.City;
+            addressModel.countryName = mLocationInfo.Country;
+            addressModel.stateName = mLocationInfo.State;
+            addressModel.lat = String.valueOf(latLng.latitude);
+            addressModel.lng = String.valueOf(latLng.longitude);
 
-                            addressModel.address_id = "-" + (guestUserDetails.addressList == null ? "1" : String.valueOf(guestUserDetails.addressList.size() + 1));
-                            addressModel.cityName = mLocationIno.City;
-                            addressModel.countryName = mLocationIno.Country;
-                            addressModel.stateName = mLocationIno.State;
-                            addressModel.lat = String.valueOf(latLng.latitude);
-                            addressModel.lng = String.valueOf(latLng.longitude);
+            if (guestUserDetails.addressList == null)
+                guestUserDetails.addressList = new ArrayList<>();
+            guestUserDetails.addressList.add(addressModel);
+            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
 
-                            if (guestUserDetails.addressList == null)
-                                guestUserDetails.addressList = new ArrayList<>();
-                            guestUserDetails.addressList.add(addressModel);
-                            PreferenceUtility.getInstance(mContext).saveGuestUserDetails(guestUserDetails);
+            // TODO : REdirect from here
+            postEvent(addressModel);
 
-                            // TODO : REdirect from here
-                            postEvent(addressModel);
-
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-//                            hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
         } else {
             /**
              * Logged In User so first need to fetch other location info and then call add address
              * Webservice.
              */
-            ((BaseAppCompatActivity) mContext).showProgressDialog();
-            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
-                    mContext,
-                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
-                        @Override
-                        public void onLocationInfoAvailable(LocationInfo mLocationIno) {
 
-                            //Add Header parameters
-                            Map<String, String> mHeaderParams = new HashMap<>();
-                            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
-                            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+            //Add Header parameters
+            showProgressDialog();
+            Map<String, String> mHeaderParams = new HashMap<>();
+            mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+            mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
 
-                            //Add Params
-                            Map<String, Object> mParams = new HashMap<>();
+            //Add Params
+            Map<String, Object> mParams = new HashMap<>();
 
 
-                            addressModel.cityName = mLocationIno.City;
-                            addressModel.countryName = mLocationIno.Country;
-                            addressModel.stateName = mLocationIno.State;
-                            addressModel.lat = String.valueOf(mLocationIno.lat);
-                            addressModel.lng = String.valueOf(mLocationIno.lng);
+            addressModel.cityName = mLocationInfo.City;
+            addressModel.countryName = mLocationInfo.Country;
+            addressModel.stateName = mLocationInfo.State;
+            addressModel.lat = String.valueOf(mLocationInfo.lat);
+            addressModel.lng = String.valueOf(mLocationInfo.lng);
 
 
-                            mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
+            mParams = NetworkUtility.addGuestAddressParams(mParams, addressModel);
 
-                            Utility.hideKeyboard(mContext);
-                            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
-                            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
-                                    , mCallAddAddressWSErrorListener
-                                    , mCallAddAddressResponseListener
-                                    , mHeaderParams
-                                    , mParams
-                                    , null);
-                            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
-                        }
-
-                        @Override
-                        public void internetConnectionNotFound() {
-                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
-                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
-                        }
-                    },
-                    false
-            );
-            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+            Utility.hideKeyboard(mContext);
+            //Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+            VolleyNetworkRequest mVolleyNetworkRequest = new VolleyNetworkRequest(NetworkUtility.WS.ADD_ADDRESS
+                    , mCallAddAddressWSErrorListener
+                    , mCallAddAddressResponseListener
+                    , mHeaderParams
+                    , mParams
+                    , null);
+            Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequest, NetworkUtility.WS.ADD_ADDRESS);
         }
     }
 
@@ -485,7 +520,7 @@ public class AddNewAddressFragment extends BaseFragment {
                 e.printStackTrace();
                 mCallAddAddressWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
-            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+            hideProgressDialog();
         }
     };
 
@@ -495,13 +530,12 @@ public class AddNewAddressFragment extends BaseFragment {
             Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
 
             // Close Progressbar
-            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+            hideProgressDialog();
 
             // Show Toast
 //            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mActivityHireNewJobBinding.getRoot());
             Utility.showToast(mContext, mContext.getString(R.string.label_something_went_wrong));
         }
     };
-
 
 }

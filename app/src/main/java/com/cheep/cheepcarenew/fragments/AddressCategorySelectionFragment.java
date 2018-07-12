@@ -105,7 +105,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
         }
 
 
-        if (!addressModelArrayList.isEmpty() ) {
+        if (!addressModelArrayList.isEmpty()) {
             addressModel = addressModelArrayList.get(0);
             setAddress();
             mBinding.tvAddressTitle.setVisibility(View.VISIBLE);
@@ -134,8 +134,7 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     }
 
     @Override
-    public void setListener()
-    {
+    public void setListener() {
 
     }
 
@@ -244,7 +243,9 @@ public class AddressCategorySelectionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 hideToolTip();
-                openAddNewAddressDialog(addressModel.category);
+//                openAddNewAddressDialog(addressModel.category);
+                ((AddressActivity) mContext).loadFragment(AddNewAddressFragment.TAG, AddNewAddressFragment.newInstance(addressModel.category));
+
             }
         });
 

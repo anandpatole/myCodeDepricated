@@ -24,13 +24,13 @@ import com.cheep.activity.TaskCreationActivity;
 import com.cheep.addresspopupsfortask.AddressListDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.addresspopupsfortask.AddressSizeForHomeOfficeDialog;
+import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.cheepcarenew.adapters.SelectedSubServiceAdapter;
 import com.cheep.cheepcarenew.dialogs.CheepCareNotInYourCityDialog;
 import com.cheep.cheepcarenew.dialogs.NotSubscribedAddressDialog;
 import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;
-import com.cheep.cheepcarenew.activities.LandingScreenPickPackageActivity;
 import com.cheep.databinding.FragmentEnterTaskDetailBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.dialogs.OutOfOfficeHoursDialog;
@@ -54,7 +54,7 @@ import java.util.Calendar;
  * Created by bhavesh on 28/4/17.
  */
 
-public class EnterTaskDetailFragment extends BaseFragment implements UrgentBookingDialog.UrgentBookingListener, OutOfOfficeHoursDialog.OutOfOfficeHoursListener,  com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener {
+public class EnterTaskDetailFragment extends BaseFragment implements UrgentBookingDialog.UrgentBookingListener, OutOfOfficeHoursDialog.OutOfOfficeHoursListener, com.wdullaer.materialdatetimepicker.time.TimePickerDialog.OnTimeSetListener {
     public static final String TAG = EnterTaskDetailFragment.class.getSimpleName();
     private FragmentEnterTaskDetailBinding mFragmentEnterTaskDetailBinding;
     private TaskCreationActivity mTaskCreationActivity;
@@ -212,8 +212,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         Log.d(TAG, "initiateUI() called");
         model = PreferenceUtility.getInstance(mContext).getAdminSettings();
         Calendar now = Calendar.getInstance();
-        if (tpd == null)
-        {            tpd = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
+        if (tpd == null) {
+            tpd = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
                     EnterTaskDetailFragment.this,
                     now.get(Calendar.HOUR_OF_DAY),
                     now.get(Calendar.MINUTE),
@@ -405,8 +405,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         datePickerDialog.getDatePicker().setMinDate(superCalendar.getTimeInMillis());
     }
 
-    private void showTimePickerDialogNew()
-    {
+    private void showTimePickerDialogNew() {
         Calendar now = Calendar.getInstance();
                 /*
                 It is recommended to always create a new instance whenever you need to show a Dialog.
@@ -421,8 +420,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     now.get(Calendar.MINUTE),
                     Utility.BOOLEAN_NEW.NO
             );
-        }
-        else {
+        } else {
             tpd.initialize(
                     EnterTaskDetailFragment.this,
                     now.get(Calendar.HOUR_OF_DAY),
@@ -430,14 +428,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                     now.get(Calendar.SECOND),
                     Utility.BOOLEAN_NEW.NO
             );
-            tpd.setThemeDark( Utility.BOOLEAN_NEW.NO);
-            tpd.enableMinutes( Utility.BOOLEAN_NEW.NO);
-            tpd.dismissOnPause( Utility.BOOLEAN_NEW.YES);
-            tpd.enableSeconds( Utility.BOOLEAN_NEW.NO);
+            tpd.setThemeDark(Utility.BOOLEAN_NEW.NO);
+            tpd.enableMinutes(Utility.BOOLEAN_NEW.NO);
+            tpd.dismissOnPause(Utility.BOOLEAN_NEW.YES);
+            tpd.enableSeconds(Utility.BOOLEAN_NEW.NO);
 
 
             //tpd.setTitle("Select Time");
-        tpd.setVersion(com.wdullaer.materialdatetimepicker.time.TimePickerDialog.Version.VERSION_2);
+            tpd.setVersion(com.wdullaer.materialdatetimepicker.time.TimePickerDialog.Version.VERSION_2);
 
             tpd.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
@@ -449,6 +447,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             tpd.show(mTaskCreationActivity.getFragmentManager(), "Timepickerdialog");
         }
     }
+
     private void showTimePickerDialog() {
 // Get Current Time
         final Calendar c = Calendar.getInstance();
@@ -561,15 +560,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                             if (packageData != null && packageData.address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
                                                 try {
 
-                                                    remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
+                                                    remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
 
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
                                             }
                                         }
-                                        if (remainingCount <= 0)
-                                        {
+                                        if (remainingCount <= 0) {
                                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
@@ -642,9 +640,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                                 Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
                                                 updateTaskVerificationFlags();
                                             }
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                         + getString(R.string.label_between)
@@ -661,8 +657,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                                 updateTaskVerificationFlags();
                                             }
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                                     + getString(R.string.label_between)
@@ -680,8 +675,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                         }
                                     }
                                 }
-                            }
-                            else {
+                            } else {
 
                                 if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                     if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -1039,7 +1033,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
     }
 
 
-
     @Override
     public void onTimeSet(com.wdullaer.materialdatetimepicker.time.TimePickerDialog view, int hourOfDay, int minute, int second) {
         {
@@ -1145,15 +1138,14 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                             if (packageData != null && packageData.address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
                                 try {
 
-                                    remainingCount=Integer.valueOf(packageData.pestcontrolCnt);
+                                    remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
 
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
-                        if (remainingCount <= 0)
-                        {
+                        if (remainingCount <= 0) {
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
@@ -1226,9 +1218,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                 Utility.showSnackBar(getString(R.string.validate_future_date), mFragmentEnterTaskDetailBinding.getRoot());
                                 updateTaskVerificationFlags();
                             }
-                        }
-                        else
-                        {
+                        } else {
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                         + getString(R.string.label_between)
@@ -1245,8 +1235,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                 updateTaskVerificationFlags();
                             }
                         }
-                    }
-                    else{
+                    } else {
                         if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                             String selectedDateTime = startDateTimeSuperCalendar.format(Utility.DATE_FORMAT_DD_MMM)
                                     + getString(R.string.label_between)
@@ -1264,8 +1253,7 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                         }
                     }
                 }
-            }
-            else {
+            } else {
 
                 if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                     if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
@@ -1342,4 +1330,5 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             }
         }
     }
+
 }
