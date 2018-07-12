@@ -51,5 +51,15 @@ public class SubServiceDetailModel implements Parent<SubSubCatModel>, Serializab
 
         @SerializedName("address_id")
         public String address_id;
+
+        @SerializedName("pestcontrol_next_date")
+        public String pestcontrol_next_date;
+
+        @SerializedName("package_duration")
+        public String package_duration;
+
+        @SerializedName("pestcontrol_total_cnt")
+        public String pestcontrol_total_cnt;
+
     }
 }

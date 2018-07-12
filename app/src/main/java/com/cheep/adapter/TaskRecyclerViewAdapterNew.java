@@ -329,7 +329,14 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
 
 
-                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.GONE);
+                    holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
+                    if (TextUtils.isEmpty(model.selectedProvider.experience)
+                            || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+                    } else {
+//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
+                    }
                     // Need to Show reschedule button as PRO is not Finalized now.
                     holder.mUpcomingTaskBinding.frameRescheduleTask.setVisibility(View.VISIBLE);
 
@@ -775,35 +782,36 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mRowTaskBinding.tvSubscribed.setVisibility(View.GONE);
                     //discount
                 }
-                holder.mRowTaskBinding.tvRebookTask.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        @Nullable BannerImageModel bannerImageModel;
-                        @Nullable JobCategoryModel jobCategoryModel;
-                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
-                            jobCategoryModel = null;
-
-                            bannerImageModel = new BannerImageModel();
-                            bannerImageModel.imgCatImageUrl = model.categoryModel.catImageExtras.medium;
-                            bannerImageModel.bannerImage = model.bannerImage;
-                            bannerImageModel.cat_id = model.categoryModel.catId;
-                            bannerImageModel.name = model.categoryModel.catName;
-                            bannerImageModel.minimum_selection = model.minimumSelection;
-
-                        } else {
-
-                            jobCategoryModel = new JobCategoryModel();
-                            jobCategoryModel.catId = model.categoryModel.catId;
-                            jobCategoryModel.catName = model.categoryModel.catName;
-                            jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
-                            jobCategoryModel.isSubscribed=Utility.BOOLEAN.YES;
-                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
-                            bannerImageModel = null;
-                        }
-                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
-
-                    }
-                });
+//                holder.mRowTaskBinding.tvRebookTask.setOnClickListener(new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View view) {
+//                        @Nullable BannerImageModel bannerImageModel;
+//                        @Nullable JobCategoryModel jobCategoryModel;
+//                        if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
+//                            jobCategoryModel = null;
+//
+//                            bannerImageModel = new BannerImageModel();
+//                            bannerImageModel.imgCatImageUrl = model.categoryModel.catImageExtras.medium;
+//                            bannerImageModel.bannerImage = model.bannerImage;
+//                            bannerImageModel.cat_id = model.categoryModel.catId;
+//                            bannerImageModel.name = model.categoryModel.catName;
+//                            bannerImageModel.minimum_selection = model.minimumSelection;
+//
+//                        } else {
+//
+//                            jobCategoryModel = new JobCategoryModel();
+//                            jobCategoryModel.catId = model.categoryModel.catId;
+//                            jobCategoryModel.catName = model.categoryModel.catName;
+//                            jobCategoryModel.catImageExtras = model.categoryModel.catImageExtras;
+//                            jobCategoryModel.isSubscribed=model.categoryModel.isSubscribed;
+//                            jobCategoryModel.catSlug=model.categoryModel.catSlug;
+//                            bannerImageModel = null;
+//                        }
+//                        listener.onBookSimilarTaskClicked(jobCategoryModel, bannerImageModel);
+//
+//                    }
+//                });
                 holder.mRowTaskBinding.swipeLayout.setSwipeEnabled(false);
                 mItemManger.bindView(holder.itemView, position);
                 break;

@@ -65,7 +65,7 @@ public class NotificationRecyclerViewAdapter extends LoadMoreRecyclerAdapter<Not
             holder.mRowNotificationBinding.textDate.setText(model.datetime);
         }
 
-        /**
+        /*
          * @Changes by Bhavesh :-7th July 2017
          * If case we are showing Web Notification, we need to show cheep Logo.
          */

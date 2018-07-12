@@ -203,7 +203,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     }
 
     private void setProSection() {
-        mTaskDetailModel.selectedProvider.userName = "ANAND";
+        //mTaskDetailModel.selectedProvider.userName = "ANAND";
         // Setup First section whether SP is final or not
         if (mTaskDetailModel.selectedProvider != null && !TextUtils.isEmpty(mTaskDetailModel.selectedProvider.providerId)) {
             // Provider is final.
@@ -268,7 +268,7 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.imgProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ProviderProfileActivity.newInstance(mContext, mTaskDetailModel.selectedProvider);
+                    ProviderProfileActivity.newInstance(mContext, mTaskDetailModel.selectedProvider,mTaskDetailModel);
                 }
             });
 

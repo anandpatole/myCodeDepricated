@@ -49,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -157,8 +158,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
     private void setupActionbar() {
 
-
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, Utility.getQuotePriceFormatter(String.valueOf(paymentDataModel.paidAmount))));
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, formatter.format(Double.valueOf(paymentDataModel.paidAmount))));
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);

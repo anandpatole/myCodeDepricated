@@ -120,13 +120,13 @@ public class SelectSubCategoryFragment extends BaseFragment implements WebCallCl
 
 
 
-            if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
-showHideToolTip();
-            }
-            else
-            {
-                mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
-            }
+        if (mTaskCreationActivity.pestControlPackageDataList != null && mTaskCreationActivity.pestControlPackageDataList.size() > 0) {
+            showHideToolTip();
+        }
+        else
+        {
+            mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.GONE);
+        }
 
 
     }
@@ -142,7 +142,7 @@ showHideToolTip();
                 for (SubServiceDetailModel.PackageData packageData : mTaskCreationActivity.pestControlPackageDataList) {
                     if (packageData != null && packageData.address_id.equalsIgnoreCase(addressModel.address_id)) {
                         try {
-                            int totalCount = 4;
+                            int totalCount = Integer.valueOf(packageData.pestcontrol_total_cnt);
                             int remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
                             int usedServiceCount = totalCount - remainingCount;
                             mFragmentSelectSubserviceBinding.lnPestControlToolTip.setVisibility(View.VISIBLE);

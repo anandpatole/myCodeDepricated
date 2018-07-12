@@ -363,11 +363,14 @@ public class AddNewAddressFragment extends BaseFragment {
     }
 
     private void postEvent(AddressModel addressModel) {
-        ((AddressActivity) mContext).onBackPressed();
-        MessageEvent messageEvent = new MessageEvent();
-        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
-        messageEvent.addressModel = addressModel;
-        EventBus.getDefault().postSticky(messageEvent);
+//        ((AddressActivity) mContext).onBackPressed();
+//        MessageEvent messageEvent = new MessageEvent();
+//        messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.ADDRESS_SELECTED_POP_UP;
+//        messageEvent.addressModel = addressModel;
+//        EventBus.getDefault().postSticky(messageEvent);
+
+        ((AddressActivity) mContext).verifyAddressForCity(addressModel);
+
     }
 
     @Override

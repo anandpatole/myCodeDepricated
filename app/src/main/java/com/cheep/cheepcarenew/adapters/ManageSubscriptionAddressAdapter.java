@@ -30,7 +30,6 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
     }
 
     public ManageSubscriptionAddressAdapter(ArrayList<ManageSubscriptionModel> mList,AddressItemClickListener listener) {
-
         this.mList = mList;
         this.addressItemClickListener = listener;
     }

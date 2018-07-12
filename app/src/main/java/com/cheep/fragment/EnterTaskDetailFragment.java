@@ -49,6 +49,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -1134,18 +1135,26 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
                     if (mTaskCreationActivity.mJobCategoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
                         int remainingCount = 0;
+                        int totalCount = 0;
+                        String end_Date = "";
+                        boolean service_status = false;
                         for (SubServiceDetailModel.PackageData packageData : mTaskCreationActivity.pestControlPackageDataList) {
                             if (packageData != null && packageData.address_id.equalsIgnoreCase(mSelectedAddress.address_id)) {
                                 try {
-
+                                    totalCount = Integer.valueOf(packageData.pestcontrol_total_cnt);
                                     remainingCount = Integer.valueOf(packageData.pestcontrolCnt);
-
+                                    end_Date = packageData.pestcontrol_next_date;
+                                    Calendar cal = Calendar.getInstance();
+                                    // cal.add(Calendar.DATE, 1);
+                                    SimpleDateFormat format1 = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
+                                    String today_date = format1.format(cal.getTime());
+                                    service_status = checkDate(today_date, end_Date);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
-                        if (remainingCount <= 0) {
+                        if (remainingCount <= 0 || service_status == Utility.BOOLEAN_NEW.NO) {
                             if (System.currentTimeMillis() < startDateTimeSuperCalendar.getTimeInMillis()) {
                                 if (superCalendar.getTimeInMillis() < calAfter3Hours.getTimeInMillis()) {
 
@@ -1331,4 +1340,30 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         }
     }
 
+
+    public boolean checkDate(String todaydate, String nextdate) {
+        try {
+
+            SimpleDateFormat sdf = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
+            Date date1 = sdf.parse(todaydate);
+            Date date2 = sdf.parse(nextdate);
+
+
+            if (date1.after(date2)) {
+                return true;
+            }
+
+            if (date1.before(date2)) {
+                return false;
+            }
+
+            if (date1.equals(date2)) {
+                return true;
+            }
+
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
 }
