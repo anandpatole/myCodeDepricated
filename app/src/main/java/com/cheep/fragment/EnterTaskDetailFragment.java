@@ -821,7 +821,9 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
 
 
     private void fillAddressView(AddressModel model) {
+
         mFragmentEnterTaskDetailBinding.textTaskWhen.setText(Utility.EMPTY_STRING);
+
         updateTaskVerificationFlags();
         updateWhereLabelWithIcon(true);
 
@@ -1359,10 +1361,6 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
             SimpleDateFormat sdf = new SimpleDateFormat(Utility.DATE_FORMAT_YYYY_MM_DD);
             Date date1 = sdf.parse(todaydate);
             Date date2 = sdf.parse(nextdate);
-
-
-
-
             if (date1.after(date2))
             {
                 return  true;

@@ -875,6 +875,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
                         if (getIntent().hasExtra(NetworkUtility.TAGS.TASK_ID)) {
                             callTaskDetailWS(taskId, providerID);
                         } else {
+
                             setData();
                         }
 
