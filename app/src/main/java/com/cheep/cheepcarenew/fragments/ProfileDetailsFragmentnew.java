@@ -5,11 +5,9 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,8 +40,8 @@ import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
 import com.cheep.cheepcarenew.activities.ManageSubscription;
-import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
+import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.custom_view.DividerItemDecoration;
 import com.cheep.databinding.DialogChangePhoneNumberBinding;
@@ -67,7 +65,6 @@ import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -98,7 +95,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,
         WebCallClass.UpdateEmergencyContactResponseListener,
         WebCallClass.CommonResponseListener,
-        View.OnClickListener,AddressListProfileDialog.DismissDialog {
+        View.OnClickListener, AddressListProfileDialog.DismissDialog {
 
 
     public static final String TAG = "ProfileDetailsFragmentnew";
@@ -172,7 +169,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_PROFILE);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.DELETE_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EDIT_ADDRESS);
-        Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.ADD_ADDRESS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.PROFILE);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.UPDATE_EMERGENCY_CONTACTS);
         Volley.getInstance(mContext).getRequestQueue().cancelAll(NetworkUtility.WS.EDIT_PHONE_NUMBER);
@@ -293,8 +289,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     mBinding.textViewMore.setVisibility(View.VISIBLE);*/
                     break;
                 case R.id.text_view_more:
-                    if(addressList.size()>0)
-                    {
+                    if (addressList.size() > 0) {
                         showAddressListDialog();
                     }
 
@@ -686,6 +681,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             showBottomAddressDialog(null);
         }
     }
+
     private boolean fillAddressRecyclerView(RecyclerView recyclerView) {
         //Setting RecyclerView Adapter
         adapterAddressRecyclerView = new AddressRecyclerViewAdapterProfile(addressList, listener, 1);
@@ -722,14 +718,12 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     }
 
 
-    @Override
+   /* @Override
     public void onLocationFetched(Location mLocation) {
-        super.onLocationFetched(mLocation);
     }
 
     @Override
     public void onLocationNotAvailable() {
-        super.onLocationNotAvailable();
     }
 
     @Override
@@ -744,7 +738,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         } catch (IntentSender.SendIntentException e) {
             // Ignore the error.
         }
-    }
+    }*/
 
 
     @Override
@@ -866,7 +860,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     /* need to show only one address then i
      take zero position data from list*/
     private void setAddress() {
-        if (addressList != null && addressList.size() >0) {
+        if (addressList != null && addressList.size() > 0) {
             for (int i = 0; i < addressList.size(); i++) {
                 mBinding.imgAddress.setImageResource(Utility.getAddressCategoryBlueIcon(addressList.get(0).category));
                 mBinding.tvAddressCategory.setText(addressList.get(0).category);
@@ -876,23 +870,24 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             }
             mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
             mBinding.linearManageCheepCareSubscription.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mBinding.linearManageCheepCareSubscription.setVisibility(View.GONE);
             mBinding.linearAddressLayout.setVisibility(View.GONE);
         }
     }
+
     /*this method is used , when address is  subscribe
      then edit and delete text view not visible */
     /* In AddressModel have one variable is_subscribe if this variable is none this means
      * address is not subscribe */
-    private void hideAndShowView(String isSubscribe){
-        if(isSubscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)){
+    private void hideAndShowView(String isSubscribe) {
+        if (isSubscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NONE)) {
             mBinding.tvEdit.setVisibility(View.VISIBLE);
             mBinding.tvEdit.setOnClickListener(this);
 
             mBinding.tvDelete.setVisibility(View.VISIBLE);
             mBinding.tvDelete.setOnClickListener(this);
-        }else {
+        } else {
             mBinding.tvEdit.setVisibility(View.INVISIBLE);
             mBinding.tvEdit.setOnClickListener(null);
 
@@ -908,21 +903,22 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             addressListDialog.dismissAllowingStateLoss();
             addressListDialog = null;
         }
-        FragmentManager fr=((AppCompatActivity) mContext).getSupportFragmentManager();
-        addressListDialog = AddressListProfileDialog.newInstance(addressList,ProfileDetailsFragmentnew.this);
+        FragmentManager fr = ((AppCompatActivity) mContext).getSupportFragmentManager();
+        addressListDialog = AddressListProfileDialog.newInstance(addressList, ProfileDetailsFragmentnew.this);
         addressListDialog.show(fr, AddressListProfileDialog.TAG);
 
     }
 
     // show dialog for select home and office address
     private void showAddressCategorySelectionDialog() {
-        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY,true ,addressList,Utility.EDIT_ADDRESD_POSITION);
+        addressCategorySelectionDialog = AddressCategorySelectionDialog.newInstance(Utility.EDIT_PROFILE_ACTIVITY, true, addressList, Utility.EDIT_ADDRESD_POSITION);
 
         addressCategorySelectionDialog.show(((BaseAppCompatActivity) getContext()).getSupportFragmentManager(),
                 AddressCategorySelectionDialog.TAG);
     }
+
     /* this method is used , when edit Address Api has success*/
-    public void getDataFromEditAddressDialog(){
+    public void getDataFromEditAddressDialog() {
         callGetProfileWS();
     }
     ///////////////////////////// DELETE CONFIRMATION DIALOG//////////////////////////////////////
@@ -961,7 +957,6 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 break;
         }
     }
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1884,6 +1879,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     private void loadImage(String selectedImagePath) {
         GlideUtility.showCircularImageView(mContext, TAG, mBinding.imgProfileNew, selectedImagePath, Utility.DEFAULT_PROFILE_SRC, true);
     }
+
     private void loadCoverImage(String selectedImagePath) {
         GlideUtility.loadImageView(mContext, mBinding.imgProfileNew, selectedImagePath, R.drawable.icon_profile_img_solid);
     }
@@ -1924,8 +1920,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
 
     @Override
-    public void dismiss_Dialog()
-    {
+    public void dismiss_Dialog() {
         callGetProfileWS();
     }
 }

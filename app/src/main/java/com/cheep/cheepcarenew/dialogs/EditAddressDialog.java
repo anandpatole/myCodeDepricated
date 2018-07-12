@@ -3,16 +3,13 @@ package com.cheep.cheepcarenew.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,13 +23,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
-import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.cheepcarenew.fragments.ProfileDetailsFragmentnew;
+import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.databinding.DialogEditAddressBinding;
 import com.cheep.model.AddressModel;
+import com.cheep.model.LocationInfo;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
+import com.cheep.utils.FetchLocationInfoUtility;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
@@ -60,10 +59,12 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     private String addressId;
     private String lat;
     private String lng;
-    private String country="";
-    private String sate ="";
-    private String city="";
+    private String country = "";
+    private String sate = "";
+    private String city = "";
     int addressPosition = 0;
+    private Context mContext;
+    private LocationInfo mLocationInfo;
 
     public EditAddressDialog() {
         // Required empty public constructor
@@ -129,6 +130,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     private void initiateUI() {
         // set address
         int position = 0;
+        mContext = getContext();
         if (listOfAddress != null) {
             for (int i = 0; i < listOfAddress.size(); i++) {
                 if (addressPosition == position) {
@@ -140,20 +142,20 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                     lat = listOfAddress.get(i).lat;
                     lng = listOfAddress.get(i).lng;
 
-                    if(listOfAddress.get(i).countryName !=null){
+                    if (listOfAddress.get(i).countryName != null) {
                         country = listOfAddress.get(i).countryName;
-                    }else {
-                        country="";
+                    } else {
+                        country = "";
                     }
-                    if(listOfAddress.get(i).stateName !=null){
+                    if (listOfAddress.get(i).stateName != null) {
                         sate = listOfAddress.get(i).stateName;
-                    }else {
-                        sate="";
+                    } else {
+                        sate = "";
                     }
-                    if(listOfAddress.get(i).cityName !=null){
+                    if (listOfAddress.get(i).cityName != null) {
                         city = listOfAddress.get(i).cityName;
-                    }else {
-                        city="";
+                    } else {
+                        city = "";
                     }
                 }
                 position++;
@@ -193,17 +195,17 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     }
 
     private void showPlacePickerDialog() {
-        ((BaseAppCompatActivity) getContext()).showProgressDialog();
+        ((BaseAppCompatActivity) mContext).showProgressDialog();
         try {
-            Utility.hideKeyboard(getContext());
+            Utility.hideKeyboard(mContext);
             PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-            Intent intent = intentBuilder.build((Activity) getContext());
+            Intent intent = intentBuilder.build((Activity) mContext);
             startActivityForResult(intent, Utility.PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             //TODO: Adding dummy place when playservice is not there
             if (mBinding.tvAddress != null) {
 //                edtAddress.setText("Dummy Address with " + Utility.STATIC_LAT + "," + Utility.STATIC_LNG);
-                mBinding.tvAddress.setText(getContext().getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
+                mBinding.tvAddress.setText(mContext.getString(R.string.label_dummy_address, Utility.STATIC_LAT, Utility.STATIC_LNG));
                 mBinding.tvAddress.setFocusable(true);
                 mBinding.tvAddress.setFocusableInTouchMode(true);
                 try {
@@ -215,7 +217,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
             }
 
             e.printStackTrace();
-            Utility.showToast(getContext(), getContext().getString(R.string.label_playservice_not_available));
+            Utility.showToast(mContext, mContext.getString(R.string.label_playservice_not_available));
         }
     }
 
@@ -297,11 +299,11 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ((BaseAppCompatActivity) getContext()).hideProgressDialog();
+        ((BaseAppCompatActivity) mContext).hideProgressDialog();
         if (requestCode == Utility.PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 mBinding.llAddressFields.setVisibility(View.VISIBLE);
-                final Place place = PlacePicker.getPlace(getContext(), data);
+                final Place place = PlacePicker.getPlace(mContext, data);
                 final CharSequence address = place.getAddress();
 
                 mBinding.tvAddress.setText(address);
@@ -311,6 +313,73 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
         }
     }
 
+    private void getdetailsOfAddress(final LatLng latLng) {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        ((BaseAppCompatActivity) mContext).showProgressDialog();
+        if (PreferenceUtility.getInstance(mContext).getUserDetails() == null) {
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo locationInfo) {
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                            mLocationInfo = locationInfo;
+                            onPostOfFetchLocation();
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        } else {
+            /**
+             * Logged In User so first need to fetch other location info and then call add address
+             * Webservice.
+             */
+            FetchLocationInfoUtility mFetchLocationInfoUtility = new FetchLocationInfoUtility(
+                    mContext,
+                    new FetchLocationInfoUtility.FetchLocationInfoCallBack() {
+                        @Override
+                        public void onLocationInfoAvailable(LocationInfo locationInfo) {
+                            mLocationInfo = locationInfo;
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                            onPostOfFetchLocation();
+                        }
+
+                        @Override
+                        public void internetConnectionNotFound() {
+                            ((BaseAppCompatActivity) mContext).hideProgressDialog();
+                            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+                        }
+                    },
+                    false
+            );
+            mFetchLocationInfoUtility.getLocationInfo(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
+        }
+    }
+
+    private void onPostOfFetchLocation() {
+
+
+        mBinding.editAddressInitials.setVisibility(View.VISIBLE);
+        mBinding.viewAddressInitials.setVisibility(View.VISIBLE);
+
+        mBinding.editAddressPincode.setText(mLocationInfo.pincode);
+        country = mLocationInfo.Country;
+        city = mLocationInfo.City;
+        sate = mLocationInfo.State;
+        lat = mLocationInfo.lat;
+        lng = mLocationInfo.lng;
+
+    }
 
     //View.OnClickListener
     @Override
@@ -334,7 +403,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
 
     protected void showProgressDialog(String message) {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog = new ProgressDialog(mContext);
             mProgressDialog.setMessage(message);
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCancelable(false);
@@ -362,7 +431,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
     }
 
     private void callEditProfileWS() {
-        if (!Utility.isConnected(getContext())) {
+        if (!Utility.isConnected(mContext)) {
             Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
             return;
         }
@@ -371,8 +440,8 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
 
         //Add Header parameters
         Map<String, String> mHeaderParams = new HashMap<>();
-        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(getContext()).getXAPIKey());
-        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(getContext()).getUserDetails().userID);
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
         //
         //
         //
@@ -400,7 +469,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                 , mParams
                 , null);
 
-        Volley.getInstance(getContext()).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.EDIT_ADDRESS);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForCategoryList, NetworkUtility.WS.EDIT_ADDRESS);
     }
 
 
@@ -424,16 +493,15 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
 
                         if (mFragment instanceof ProfileTabFragment) {
                             mFragment = ((ProfileTabFragment) mFragment).getObject();
-                            if (mFragment instanceof ProfileDetailsFragmentnew)
-                            {
+                            if (mFragment instanceof ProfileDetailsFragmentnew) {
                                 ((ProfileDetailsFragmentnew) mFragment).getDataFromEditAddressDialog();
                             }
 
-                            DialogFragment  mFragment1 = (DialogFragment) getFragmentManager().findFragmentByTag(AddressListProfileDialog.TAG);
+                            DialogFragment mFragment1 = (DialogFragment) getFragmentManager().findFragmentByTag(AddressListProfileDialog.TAG);
 
                             if (mFragment1 instanceof AddressListProfileDialog) {
 
-                                listOfAddress.set(addressPosition,addressModel);
+                                listOfAddress.set(addressPosition, addressModel);
 
                                 ((AddressListProfileDialog) mFragment1).getDataFromEditAddressDialog(listOfAddress);
 
@@ -453,7 +521,7 @@ public class EditAddressDialog extends DialogFragment implements View.OnClickLis
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
                         //Logout and finish the current activity
-                        Utility.logout(getContext(), true, statusCode);
+                        Utility.logout(mContext, true, statusCode);
 
                         break;
                 }
