@@ -62,6 +62,8 @@ public class FetchLocationInfoUtility {
                             JSONArray jArrayResults = jRoot.getJSONArray("results");
                             for (int i = 0; i < jArrayResults.length(); i++) {
                                 JSONArray jArrayAddressComponents = jArrayResults.getJSONObject(i).getJSONArray("address_components");
+                                String address = jArrayResults.getJSONObject(i).optString("formatted_address");
+                                mLocationInfo.addressString = address;
                                 for (int j = 0; j < jArrayAddressComponents.length(); j++) {
                                     JSONArray jArrayTypes = jArrayAddressComponents.getJSONObject(j).getJSONArray("types");
                                     for (int k = 0; k < jArrayTypes.length(); k++) {
@@ -87,6 +89,9 @@ public class FetchLocationInfoUtility {
                                         // Locality
                                         if (jArrayTypes.get(k).toString().equals("sublocality_level_1")) {
                                             mLocationInfo.Locality = jArrayAddressComponents.getJSONObject(j).getString("long_name");
+                                        }
+                                        if (jArrayTypes.get(k).toString().equals("postal_code")) {
+                                            mLocationInfo.pincode = jArrayAddressComponents.getJSONObject(j).getString("long_name");
                                         }
 
                                     }

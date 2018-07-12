@@ -9,6 +9,8 @@ public class LocationInfo {
     public String State; // administrative_area_level_1
     public String City; // mLocality, administrative_area_level_2
     public String Locality; // sublocality_level_1
+    public String pincode; // postal code of address
+    public String addressString; // postal code of address
 
     public String getDisplayLocationName() {
         return TextUtils.isEmpty(Locality) ? City : Locality;

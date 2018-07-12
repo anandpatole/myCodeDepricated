@@ -552,7 +552,7 @@ public class HomeActivity extends BaseAppCompatActivity
     }
     @Override
     public void onProfileImageClicked(TaskDetailModel taskDetailModel, int position) {
-        ProviderProfileActivity.newInstance(mContext, taskDetailModel.selectedProvider);
+        ProviderProfileActivity.newInstance(mContext, taskDetailModel.selectedProvider,taskDetailModel);
     }
 
     @Override
