@@ -545,7 +545,9 @@ String IS_SUBSCRIBED="is_subscribe";
         String CAT_PRICE = "cat_price";
         String URGENT_BOOKING_CHARGE = "urgent_booking_charge";
         String NON_OFFICE_HOURS_CHARGE = "non_office_hours_charge";
-        String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
+        //String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
+        String MANAGE_SUBSCRIPTION_PACKAGE = "user_package_data";
+
         String MSG_TYPE= "msg_type";
 
 
