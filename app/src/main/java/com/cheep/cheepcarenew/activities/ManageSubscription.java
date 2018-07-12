@@ -17,6 +17,8 @@ import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.adapters.ManageSubscriptionAddressAdapter;
 import com.cheep.cheepcarenew.model.ManageSubscriptionModel;
 import com.cheep.databinding.FragmentManageSubscriptionBinding;
+import com.cheep.model.JobCategoryModel;
+import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
@@ -24,6 +26,8 @@ import com.cheep.tags.MyLinearLayoutManager;
 import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -203,9 +207,20 @@ public class ManageSubscription extends BaseAppCompatActivity implements
                 String error_message;
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
-                        JSONObject jsonData = jsonObject.optJSONObject(NetworkUtility.TAGS.DATA);
-                        addressList = GsonUtility.getObjectListFromJsonString(jsonData.optString(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_PACKAGE), ManageSubscriptionModel[].class);
+                        JSONArray jsonArray = jsonObject.optJSONArray(NetworkUtility.TAGS.DATA);
+                        addressList = new ArrayList<>();
+                        for(int n = 0; n < jsonArray.length(); n++)
+                        {
+                            JSONObject jsonData = jsonArray.getJSONObject(n);
+                            JSONObject jsonDataAll = jsonData.getJSONObject(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_PACKAGE);
+
+                            ManageSubscriptionModel model = (ManageSubscriptionModel) GsonUtility.getObjectFromJsonString(jsonDataAll.toString(), ManageSubscriptionModel.class);
+
+                            addressList.add(model);
+                        }
+
                         setOnlyOneAddressOnView(addressList.get(0));
+
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast

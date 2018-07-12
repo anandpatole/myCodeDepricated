@@ -219,10 +219,11 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                 now.get(Calendar.HOUR_OF_DAY),
                 now.get(Calendar.MINUTE),
                 false
+
         );
         }
         //Update Where lable with icon
-        updateWhereLabelWithIcon(false);
+        updateWhereLabelWithIcon( false);
 
         initAddressUI();
 

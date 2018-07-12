@@ -1,5 +1,7 @@
 package com.cheep.utils;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +34,7 @@ public class GsonUtility {
         }.getType());
     }
 
+    @NonNull
     public static <T> ArrayList<T> getObjectListFromJsonString(String jsonData, Class myclass) {
         return new ArrayList<>(Arrays.asList((T[]) gson.fromJson(jsonData, myclass)));
     }
