@@ -84,6 +84,7 @@
                         android:layout_height="@dimen/chat_width"
                         android:layout_gravity="center"
                         android:gravity="center"
+
                         android:src="@drawable/ic_cheep_circular_icon"
                         tools:ignore="ContentDescription" />
 

@@ -258,6 +258,7 @@ public class Utility {
     public static final String MONTH = "months";
     public static final String PAYMENT_TYPE_IS_PAYU = "payu";
     public static final String HDFC = "HDFC";
+    public static final String ONLY_N ="Only";
 
     /*
     Home Screen Category Image Ratio

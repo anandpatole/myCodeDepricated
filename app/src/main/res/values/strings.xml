@@ -462,10 +462,10 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_featured">Featured</string>
     <string name="empty_favourited_list_1">Haven\'t favourited a service\ncategory yet?</string>
     <string name="empty_favourited_list_2">If you like a service which you often use,\njust tap the heart on it.</string>
-    <string name="empty_subscribed_list">Now with CHEEP Care, enjoy unbelievable
+    <string name="empty_subscribed_list">Now with Cheep Care, enjoy unbelievable
          offers on your favourite services! Check out the
-         packages and get the best care for your home,
-         office and societies.</string>
+         packages and get the best care for your home
+         and office</string>
 
     <string name="no_pros_in_this_category">No PROs in this category</string>
     <string name="step_1_desc_for_strategic_partner">Please select as many services you need from the list below</string>
@@ -731,9 +731,9 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
     <string name="rupee_symbol_x_package_price">₹%1s/MTH </string>
-    <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCHEEP Care user!</string>
+    <string name="msg_not_cc_user">Hi, it seems that you\'re not a\nCheep Care user!</string>
     <string name="label_starting_price_cc">AVAILABLE AS LOW AS ₹%1s/MTH*</string>
-    <string name="msg_become_cc_member">Become a CHEEP Care Subscriber</string>
+    <string name="msg_become_cc_member">Become a Cheep Care Subscriber</string>
     <string name="label_free_with_cc">Free with Cheep Care</string>
     <string name="label_paid_cheep_services">Paid Cheep Services</string>
     <string name="cheep_tips">CHEEP Tips: %1s</string>
