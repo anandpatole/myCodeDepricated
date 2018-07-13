@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.util.Log;
@@ -13,15 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.TaskCreationActivity;
-
 import com.cheep.databinding.DialogServiceDetailBinding;
 import com.cheep.model.JobCategoryModel;
 import com.cheep.model.UserDetails;
@@ -197,6 +193,7 @@ public class ServiceDetailModalDialog extends DialogFragment implements View.OnC
         mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(getContext()).getXAPIKey());
         Map<String, String> mBodyParams = new HashMap<>();
         mBodyParams.put(NetworkUtility.TAGS.MSG_TYPE, Utility.DETAIL_MSG_TYPE.CATEGORY);
+        mBodyParams.put(NetworkUtility.TAGS.CAT_ID, models.catId);
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_BADGE_MESSAGE
                 , mCallGetCityCareDetailsWSErrorListener
