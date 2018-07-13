@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.32" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.33" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -256,7 +256,7 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '27+'
+    supportLibVer = '27.1.1'
     gsonLibVer = '2.7'
     playServiceVer = '15.0.1'
     firebaseServiceVer = '11.8.0'
@@ -370,7 +370,7 @@ dependencies {
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.wdullaer:materialdatetimepicker:3.6.2'
     /////////////////////////////
-    implementation 'com.mixpanel.android:mixpanel-android:5.+'
+    implementation 'com.mixpanel.android:mixpanel-android:5.4.1'
     implementation project(':sdkui')
 
 }
