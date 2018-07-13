@@ -130,7 +130,6 @@ public class Utility {
     // new type for subscription
     public static final String SUBSCRIBE = "SUBSCRIBE";
     public static final String RENEW_SUBSCRIPTION = "RENEW_SUBSCRIPTION";
-    public static final String TYPE_OF_PACKAGE = "packageType";
     public static String YES = "yes";
     public static int TEN = 10;
     public static final String HOME = "Home";
@@ -634,10 +633,10 @@ public class Utility {
         }
     }
 
-    public interface CHEEP_CARE {
-        String SAVE = "Save ₹";
-        String RS = "₹";
-    }
+//    public interface CHEEP_CARE {
+//        String SAVE = "Save ₹";
+//        String RS = "₹";
+//    }
 
     //Bundle Extra parameters
     public interface ReviewByMe {
