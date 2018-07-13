@@ -132,7 +132,7 @@
                     android:background="@drawable/strike"
                     android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_11sp"
+                    android:textSize="@dimen/text_size_9sp"
                     android:visibility="gone"
                     tools:text="@string/thanks" />
                 <com.cheep.custom_view.CFTextViewBold

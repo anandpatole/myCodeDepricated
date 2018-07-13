@@ -256,7 +256,7 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '27.1.1'
+    supportLibVer = '27+'
     gsonLibVer = '2.7'
     playServiceVer = '15.0.1'
     firebaseServiceVer = '11.8.0'

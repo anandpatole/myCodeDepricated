@@ -71,11 +71,14 @@
 
                 <FrameLayout
                     android:id="@+id/layout_individual_profile"
-                    android:layout_width="@dimen/chat_profile_layout_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:layout_gravity="center"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/scale_3dp"
+
                     android:visibility="visible">
 
                     <ImageView
@@ -84,8 +87,7 @@
                         android:layout_height="@dimen/chat_width"
                         android:layout_gravity="center"
                         android:gravity="center"
-
-                        android:src="@drawable/ic_cheep_circular_icon"
+android:src="@drawable/ic_cheep_roun"
                         tools:ignore="ContentDescription" />
 
                     <ImageView
@@ -93,7 +95,7 @@
                         android:layout_width="@dimen/scale_20dp"
                         android:layout_height="@dimen/scale_20dp"
                         android:layout_gravity="end|bottom"
-                        android:layout_marginBottom="@dimen/scale_5dp"
+
                         android:background="@drawable/icon_fav_selector"
                         tools:ignore="ContentDescription" />
                 </FrameLayout>
@@ -254,7 +256,7 @@
                             android:ellipsize="end"
                             android:gravity="start|top"
                             android:lineSpacingExtra="@dimen/scale_2dp"
-                            android:lines="3"
+                            android:lines="4"
                             android:paddingLeft="@dimen/scale_3dp"
                             android:paddingStart="@dimen/scale_3dp"
                             android:textColor="@color/colorSaffron"
@@ -279,12 +281,12 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/scale_8dp"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/scale_5dp"
+            android:layout_marginTop="@dimen/scale_2dp"
             android:isIndicator="true"
             android:progressDrawable="@drawable/rating_bar_selector_payment_detail"
             android:rating="4"
             android:stepSize="1"
-            android:layout_marginBottom="@dimen/scale_5dp"
+            android:layout_marginBottom="@dimen/scale_2dp"
             android:visibility="visible" />
 
         <com.cheep.custom_view.CFTextViewRegular
@@ -294,12 +296,10 @@
             android:ellipsize="end"
             android:gravity="center"
             android:lines="3"
-            android:paddingLeft="@dimen/scale_3dp"
-            android:paddingStart="@dimen/scale_3dp"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_10sp"
+            android:textSize="@dimen/text_size_9sp"
             android:visibility="visible"
-            tools:text="@string/label_response_received" />
+            tools:text="6 Years Experience" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
@@ -338,7 +338,7 @@
                     android:ellipsize="marquee"
                     android:gravity="start|top"
                     android:lineSpacingExtra="@dimen/scale_2dp"
-
+android:maxLines="3"
                     android:paddingLeft="@dimen/scale_3dp"
                     android:paddingStart="@dimen/scale_3dp"
                     android:textColor="@color/color_red_varient_1"
@@ -352,6 +352,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:baselineAligned="false"
+                android:paddingTop="@dimen/scale_8dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
