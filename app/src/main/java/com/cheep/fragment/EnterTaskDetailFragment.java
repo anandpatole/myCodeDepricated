@@ -213,20 +213,31 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
         Log.d(TAG, "initiateUI() called");
         model = PreferenceUtility.getInstance(mContext).getAdminSettings();
         Calendar now = Calendar.getInstance();
+
         if (tpd == null) {
             tpd = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
                     EnterTaskDetailFragment.this,
                     now.get(Calendar.HOUR_OF_DAY),
                     now.get(Calendar.MINUTE),
                     false
+
             );
+
+            if (tpd == null) {
+                tpd = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
+                        EnterTaskDetailFragment.this,
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        false
+                );
+            }
+            //Update Where lable with icon
+            updateWhereLabelWithIcon(false);
+
+            initAddressUI();
+
+
         }
-        //Update Where lable with icon
-        updateWhereLabelWithIcon(false);
-
-        initAddressUI();
-
-
     }
 
     @Override
