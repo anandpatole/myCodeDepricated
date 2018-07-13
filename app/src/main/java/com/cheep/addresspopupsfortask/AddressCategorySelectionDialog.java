@@ -92,8 +92,8 @@ public class AddressCategorySelectionDialog extends DialogFragment {
         }
 
         Log.e(TAG, "initiateUI: ********************");
+        mBinding.tvTitle.setText(R.string.label_please_tell_us_where_do_you_need_the_amc_for);
 
-        mBinding.tvTitle.setText(R.string.select_category);
         if (isWhiteTheme) {
             mBinding.imgBack.setImageResource(R.drawable.icon_arrow_back_blue);
             mBinding.rlTop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));

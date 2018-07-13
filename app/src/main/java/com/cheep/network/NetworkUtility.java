@@ -60,6 +60,7 @@ public class NetworkUtility {
 
 
         public static final String SP_PROFILE_DETAILS = BASE_URL + "customers/sp_profile/details";
+        public static final String SP_IS_CATEGORY_SUBSCRIBED=BASE_URL + "customers/care/isCategorySubscribedForUser";
         public static final String SP_ADD_TO_FAV = BASE_URL + "customers/sp_profile/sp_favourite";
         public static final String ADD_REVIEW = BASE_URL + "customers/sp_profile/add_review";
         public static final String CANCEL_TASK = BASE_URL + "customers/tasks/cancel_task";
@@ -329,7 +330,7 @@ public class NetworkUtility {
         String LAT = "lat";
         String LNG = "lng";
         String SORT_TYPE = "sortType";
-
+String IS_SUBSCRIBED="is_subscribe";
         String OLD_PASSWORD = "old_password";
         String NEW_PASSWORD = "new_password";
 

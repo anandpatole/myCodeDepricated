@@ -31,6 +31,7 @@ import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
 import com.cheep.network.VolleyNetworkRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -381,7 +382,6 @@ public class WebCallClass {
 
                                 JSONArray jsonEmergencyContacts = jsonData.optJSONArray(NetworkUtility.TAGS.EMERGENCY_DATA);
                                 ArrayList<AddressModel> addressList = GsonUtility.getObjectListFromJsonString(jsonData.optJSONArray(NetworkUtility.TAGS.ADDRESS).toString(), AddressModel[].class);
-
                                 successListener.getUserDetails(userDetails, jsonEmergencyContacts, addressList);
 
                             }
