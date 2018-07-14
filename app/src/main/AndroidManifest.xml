@@ -110,7 +110,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
-            android:name="com.cheep.cheepcarenew.activities.ManageSubscription"
+            android:name="com.cheep.cheepcarenew.activities.ManageSubscriptionActivity"
 
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>

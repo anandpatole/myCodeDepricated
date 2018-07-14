@@ -181,6 +181,11 @@ public class HomeFragment extends BaseFragment {
             case Utility.BROADCAST_TYPE.TASK_RATED:
                 mBinding.flRateTask.setVisibility(View.GONE);
                 break;
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_RENEW_SUCCESSFULLY:
+                Log.d(TAG, "MAJID RENEW PACKAGE = [" + "RENEW" + "]" );
+                setCurrentTab(TAB_HOME);
+                break;
+
 
         }
 

@@ -39,7 +39,7 @@ import com.cheep.adapter.AddressRecyclerViewAdapterProfile;
 import com.cheep.adapter.EmergencyContactRecyclerViewAdapter;
 import com.cheep.addresspopupsfortask.AddressCategorySelectionDialog;
 import com.cheep.addresspopupsfortask.AddressSelectionListener;
-import com.cheep.cheepcarenew.activities.ManageSubscription;
+import com.cheep.cheepcarenew.activities.ManageSubscriptionActivity;
 import com.cheep.cheepcarenew.dialogs.AddressListProfileDialog;
 import com.cheep.cheepcarenew.dialogs.BottomAddAddressDialog;
 import com.cheep.custom_view.BottomAlertDialog;
@@ -53,6 +53,7 @@ import com.cheep.fragment.BaseFragment;
 import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -69,6 +70,9 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,6 +134,8 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_details_new, container, false);
+        // add event bus listener
+        EventBus.getDefault().register(this);
         callGetProfileWS();
         return mBinding.getRoot();
     }
@@ -253,7 +259,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                     break;*/
                 case R.id.text_manage_cheep_care_subscription:
                     // manageSubscriptionFragment = ManageSubscriptionFragment.newInstance(addressList);
-                    ManageSubscription.newInstance(getContext());
+                    ManageSubscriptionActivity.newInstance(getContext());
                     //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content, manageSubscriptionFragment, ManageSubscriptionFragment.TAG).commitAllowingStateLoss();
                     break;
                 case R.id.main_profile_edit:
@@ -1922,5 +1928,26 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     @Override
     public void dismiss_Dialog() {
         callGetProfileWS();
+    }
+
+    /**
+     * Event Bus Callbacks
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        Log.d(TAG, "onMessageEvent() called with: event = [" + event.BROADCAST_ACTION + "]");
+        switch (event.BROADCAST_ACTION) {
+            case Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_RENEW_SUCCESSFULLY:
+                Log.e(TAG, "MAJID KHAN = [" + event.BROADCAST_ACTION + "]");
+                getActivity().onBackPressed();
+                break;
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

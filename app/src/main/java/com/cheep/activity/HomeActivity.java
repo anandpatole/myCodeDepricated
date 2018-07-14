@@ -43,7 +43,7 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcarenew.activities.ManageSubscription;
+import com.cheep.cheepcarenew.activities.ManageSubscriptionActivity;
 import com.cheep.cheepcarenew.adapters.PaymentHistoryCCAdapter;
 import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.cheepcarenew.model.AdminSettingModel;
@@ -214,7 +214,7 @@ public class HomeActivity extends BaseAppCompatActivity
 
                // Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
 
-                    ManageSubscription.newInstance(mContext);
+                    ManageSubscriptionActivity.newInstance(mContext);
                     //getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
                     //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
 
