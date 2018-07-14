@@ -276,7 +276,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                 if (addressSizeForHomeOfficeFragment != null) {
                     mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
                     //PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, careCityDetail, addressSizeForHomeOfficeFragment.addressModel);
-                    PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, addressSizeForHomeOfficeFragment.addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext,careCityDetail, packageDetail, addressSizeForHomeOfficeFragment.addressModel);
                 }
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);

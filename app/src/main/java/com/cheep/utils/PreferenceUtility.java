@@ -48,9 +48,9 @@ public class PreferenceUtility {
     private static AdminSettingModel mAdminSettings;
 
 
-    private static final String PREF_SAVE_COMPARISON_CHART = "ComparisionChartFragmentDialog";
-    private static final String PREF_SAVE_CITY_LANDING_MODEl = "CityLandingPageModel";
-    private static final String PREF_TYPE_OF_PACKAGE = "Type";
+//    private static final String PREF_SAVE_COMPARISON_CHART = "ComparisionChartFragmentDialog";
+//    private static final String PREF_SAVE_CITY_LANDING_MODEl = "CityLandingPageModel";
+//    private static final String PREF_TYPE_OF_PACKAGE = "Type";
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -348,7 +348,7 @@ public class PreferenceUtility {
         return mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING);
     }*/
 
-    public void saveComparisonChatDetails(ComparisionChartModel model) {
+/*    public void saveComparisonChatDetails(ComparisionChartModel model) {
         Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
         mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
 
@@ -381,16 +381,5 @@ public class PreferenceUtility {
             }
         }
         return null;
-    }
-
-    public void saveTypeOfPackage(String value) {
-        mSharedPreferences.edit().putString(PREF_TYPE_OF_PACKAGE, value).apply();
-    }
-
-    public String getTypeOfPackage() {
-        if (mSharedPreferences.contains(PREF_TYPE_OF_PACKAGE)) {
-            return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
-        }
-        return null;
-    }
+    }*/
 }

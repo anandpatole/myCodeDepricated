@@ -27,15 +27,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
+import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CheepCarePaymentDataModel;
-import com.cheep.cheepcarenew.model.CityLandingPageModel;
 import com.cheep.cheepcarenew.model.PackageDetail;
-import com.cheep.cheepcarenew.model.UserPackageDataModel;
 import com.cheep.cheepcarenew.model.UserRenewSubscriptionModel;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentSummaryNewBinding;
 import com.cheep.model.AddressModel;
-import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -62,9 +60,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     private PackageDetail packageDetail;
     private AddressModel addressModel;
-    private ComparisionChartModel comparisionChartModel;
     private CheepCarePaymentDataModel paymentDataModel;
-    private CityLandingPageModel cityLandingPageModel;
     private ActivityPaymentSummaryNewBinding mBinding;
     private AppCompatEditText edtCheepPromoCode;
     private BottomAlertDialog cheepCodeDialog;
@@ -81,17 +77,12 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     double taxtAmount = 0.0;
     private String selectedMonth;
     private double amountAfterDiscount;
-    private String packageType;
     private String isHomeOrOffice;
     private String COMING_FROM = "";
     private UserRenewSubscriptionModel renewSubscriptionModel;
     private String citySlug = "";
+    private CareCityDetail careCityDetail;
 
-
-    public static void newInstance(Context context) {
-        Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
-        context.startActivity(intent);
-    }
 
     public static void newInstance(Context context, UserRenewSubscriptionModel userRenewSubscriptionModel, String iWantToRenewMyPackage) {
         Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
@@ -102,10 +93,11 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     }
 
 
-    public static void newInstance(Context context, PackageDetail packageDetail, AddressModel addressModel) {
+    public static void newInstance(Context context, CareCityDetail careCityDetail, PackageDetail packageDetail, AddressModel addressModel) {
         Intent intent = new Intent(context, PaymentSummaryCheepCareActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(addressModel));
+        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
         context.startActivity(intent);
     }
 
@@ -158,12 +150,13 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA) && getIntent().hasExtra(Utility.Extra.DATA_2)) {
                 packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA), PackageDetail.class);
                 addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), AddressModel.class);
+                careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), CareCityDetail.class);
                 Log.e(TAG, "initiateUI: -------------" + addressModel.address);
 
             }
-            comparisionChartModel = PreferenceUtility.getInstance(mContext).getComparisonChatDetails();
-            cityLandingPageModel = PreferenceUtility.getInstance(mContext).getCityLandingPageModel();
-            setPrice();
+//            comparisionChartModel = PreferenceUtility.getInstance(mContext).getComparisonChatDetails();
+//            cityLandingPageModel = PreferenceUtility.getInstance(mContext).getCityLandingPageModel();
+//            setPrice();
             setAddress();
         }
         setCityBannerData();
@@ -189,6 +182,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     }
 
 
+/*
     private void setPrice() {
         for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
 
@@ -220,6 +214,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
         }
     }
+*/
 
     // this method is used to  set  all data when user want renew subscription
     private void setRenewDataOnView(UserRenewSubscriptionModel renewSubscriptionModel) {
@@ -259,22 +254,25 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     }
 
     private void setAddress() {
-        for (int i = 0; cityLandingPageModel.packageDetailList.size() > i; i++) {
-
-            String TYPE = cityLandingPageModel.packageDetailList.get(i).type;
-
-            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
-                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
-                packageId = cityLandingPageModel.packageDetailList.get(i).id;
-
-            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
-                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
-                packageId = cityLandingPageModel.packageDetailList.get(i).id;
-            }
-
-        }
+//        for (int i = 0; cityLandingPageModel.packageDetailList.size() > i; i++) {
+//
+//            String TYPE = cityLandingPageModel.packageDetailList.get(i).type;
+//
+//            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
+//                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
+//                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
+//                packageId = cityLandingPageModel.packageDetailList.get(i).id;
+//
+//            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
+//                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
+//                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
+//                packageId = cityLandingPageModel.packageDetailList.get(i).id;
+//            }
+//
+//        }
+        mBinding.tvPackageName.setText(packageDetail.title);
+        mBinding.tvPackageDescription.setText(packageDetail.subtitle);
+        packageId = packageDetail.id;
 
         if (addressModel.category.equalsIgnoreCase(NetworkUtility.TAGS.HOME)) {
             isHomeOrOffice = Utility.HOME;
@@ -313,8 +311,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
             citySlug = renewSubscriptionModel.citySlug;
             mBinding.tvCityName.setText(renewSubscriptionModel.cityName);
         } else {
-            citySlug = cityLandingPageModel.careCityDetail.citySlug;
-            mBinding.tvCityName.setText(cityLandingPageModel.careCityDetail.cityName);
+            citySlug = careCityDetail.citySlug;
+            mBinding.tvCityName.setText(careCityDetail.cityName);
         }
 
         ViewTreeObserver mViewTreeObserver = mBinding.ivCityImage.getViewTreeObserver();
@@ -406,6 +404,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     }
 
+/*
     private void updatePrice(int howManyMonth) {
         if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
             DecimalFormat formatter = new DecimalFormat("#,###");
@@ -424,6 +423,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
         Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
     }
+*/
 
     private void updateSaveAmountForMonth() {
         profit = oldPrice - newPrice;
@@ -533,17 +533,17 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
             UserRenewSubscriptionModel model = new UserRenewSubscriptionModel();
             model.userPackageId = renewSubscriptionModel.userPackageId;
-            model.totalAmount =  Double.valueOf(renewSubscriptionModel.paidAmount);
+            model.totalAmount = Double.valueOf(renewSubscriptionModel.paidAmount);
             model.discountAmount = discountAmount;
             model.paidAmount = Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString());
             model.taxAmount = String.valueOf(taxtAmount);
             model.paymentType = renewSubscriptionModel.paymentType;
-        }else {
+        } else {
             paymentDataModel = new CheepCarePaymentDataModel();
             paymentDataModel.totalAmount = totalPackageAmount;
             paymentDataModel.promocode = cheepCode;
             paymentDataModel.discountAmount = discountAmount;
-            paymentDataModel.packageType = packageType;
+            paymentDataModel.packageType = packageDetail.type;
             paymentDataModel.taxAmount = String.valueOf(taxtAmount);
             paymentDataModel.packageDuration = selectedMonth;
             paymentDataModel.dsaCode = cheepMateCode;
@@ -628,8 +628,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 storeAllDataForPayment();
                 if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
                     PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), renewSubscriptionModel);
-                }else {
-                    PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, cityLandingPageModel.careCityDetail, addressModel);
+                } else {
+                    PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, careCityDetail, addressModel);
                 }
 
                 break;
@@ -663,8 +663,8 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
             mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, renewSubscriptionModel.id);
             mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, renewSubscriptionModel.packageId);
-        }else {
-            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, cityLandingPageModel.careCityDetail.id);
+        } else {
+            mParams.put(NetworkUtility.TAGS.CARE_CITY_ID, careCityDetail.id);
             mParams.put(NetworkUtility.TAGS.CARE_PACKAGE_ID, packageId);
         }
 
@@ -773,6 +773,59 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 break;
         }
 
+    }
+    private void updatePrice(int howManyMonth) {
+
+        double monthlyPrice = 0;
+        double oldMonthlyPrice = 0;
+        double difference = 0;
+        try {
+            switch (howManyMonth) {
+                case 3:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor3);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor3);
+                    break;
+                case 6:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor6);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor6);
+                    break;
+                case 12:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor12);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor12);
+                    break;
+
+            }
+            difference = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
+            oldMonthlyPrice = monthlyPrice + difference;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        mBinding.tvMeanPackageAmount.setText(getString(R.string.rupee_symbol_x, formatter.format(Double.valueOf(monthlyPrice * howManyMonth))));
+        totalPackageAmount = monthlyPrice * howManyMonth;
+        // totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+        Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
+
+
+        mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(monthlyPrice)));
+
+        mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(oldMonthlyPrice)));
+
+
+        double v = 0;
+        try {
+            v = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v*3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v*6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v*12)));
     }
 
     @Override

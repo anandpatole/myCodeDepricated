@@ -96,7 +96,7 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
                     LoginActivity.newInstance(getContext());
                 } else {
                     //PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, careCityDetail, addressModel);
-                    PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, careCityDetail,packageDetail, addressModel);
                 }
 
             }

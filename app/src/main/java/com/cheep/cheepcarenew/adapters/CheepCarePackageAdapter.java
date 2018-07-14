@@ -73,13 +73,15 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }*/
         switch (model.type){
             case NetworkUtility.PACKAGE_DETAIL_TYPE.premium:
-                holder.mBinding.tvPremiumAndNormal.setText(Utility.EARLY_BIRD_OFFER);
+//                holder.mBinding.tvPremiumAndNormal.setText(Utility.EARLY_BIRD_OFFER);
+                holder.mBinding.tvPremiumAndNormal.setText(holder.mBinding.getRoot().getContext().getString(R.string.label_subscribe));
                 resId = R.drawable.gif_ballon_biz_price;
                 holder.mBinding.tvVip.setVisibility(View.VISIBLE);
                 break;
             case NetworkUtility.PACKAGE_DETAIL_TYPE.normal:
-                holder.mBinding.tvPremiumAndNormal.setText(Utility.VALID_FOR_3_MONTH);
+//                holder.mBinding.tvPremiumAndNormal.setText(Utility.VALID_FOR_3_MONTH);
                 resId = R.drawable.gif_ballon_home_price;
+                holder.mBinding.tvPremiumAndNormal.setText(holder.mBinding.getRoot().getContext().getString(R.string.label_subscribe));
                 holder.mBinding.tvVip.setVisibility(View.GONE);
                 break;
         }
