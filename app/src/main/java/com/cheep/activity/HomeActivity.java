@@ -43,7 +43,7 @@ import com.cheep.adapter.ChatTabRecyclerViewAdapter;
 import com.cheep.adapter.FAQRecyclerViewAdapter;
 import com.cheep.adapter.FavouriteRecyclerViewAdapter;
 import com.cheep.adapter.SlideMenuAdapter;
-import com.cheep.cheepcarenew.activities.ManageSubscription;
+import com.cheep.cheepcarenew.activities.ManageSubscriptionActivity;
 import com.cheep.cheepcarenew.adapters.PaymentHistoryCCAdapter;
 import com.cheep.cheepcarenew.fragments.ProfileTabFragment;
 import com.cheep.cheepcarenew.model.AdminSettingModel;
@@ -212,11 +212,11 @@ public class HomeActivity extends BaseAppCompatActivity
             else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.PACKAGE_PURCHASE))
             {
 
-                // Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
+               // Fragment mFragment = getSupportFragmentManager().findFragmentByTag(ManageSubscriptionFragment.TAG);
 
-                ManageSubscription.newInstance(mContext);
-                //getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
-                //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
+                    ManageSubscriptionActivity.newInstance(mContext);
+                    //getSupportFragmentManager().beginTransaction().add(R.id.content, ManageSubscriptionFragment.newInstance(null)).commitAllowingStateLoss();
+                    //loadFragment(ManageSubscriptionFragment.TAG, ManageSubscriptionFragment.newInstance(null));
 
             }
             else if(bundle.getString(NetworkUtility.TAGS.TYPE) != null && (bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.TASK_BOOKING) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.RESCHEDULE_TASK) || bundle.getString(NetworkUtility.TAGS.TYPE).equalsIgnoreCase(Utility.NOTIFICATION_TYPE.BOOKING_CONFIRMATION)))
@@ -1731,6 +1731,7 @@ public class HomeActivity extends BaseAppCompatActivity
             homeFragment.setCurrentTab(HomeFragment.TAB_HOME);
         }
     }
+
 
     /**
      * Check Version number of application
