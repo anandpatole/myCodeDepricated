@@ -635,10 +635,10 @@ public class Utility {
         }
     }
 
-//    public interface CHEEP_CARE {
-//        String SAVE = "Save ₹";
-//        String RS = "₹";
-//    }
+    public interface CHEEP_CARE {
+        String SAVE = "Save ₹";
+      String RS = "₹";
+  }
 
     //Bundle Extra parameters
     public interface ReviewByMe {
