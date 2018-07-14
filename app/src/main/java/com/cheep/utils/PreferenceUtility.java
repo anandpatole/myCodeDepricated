@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;
+import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
@@ -52,6 +53,8 @@ public class PreferenceUtility {
     private static final String PREF_SAVE_COMPARISON_CHART = "ComparisionChartFragmentDialog";
     private static final String PREF_SAVE_CITY_LANDING_MODEl = "CityLandingPageModel";
     private static final String PREF_TYPE_OF_PACKAGE = "Type";
+    private static  String PREF_ADDRESS_MODEL="Address";
+    public AddressModel addressModel=null;
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -187,9 +190,28 @@ public class PreferenceUtility {
         mSharedPreferences.edit().putString(PREF_TYPE_OF_PACKAGE, value).apply();
     }
 
-    public String getTypeOfPackage() {
+    public String getTypeOfPackage()
+    {
         if (mSharedPreferences.contains(PREF_TYPE_OF_PACKAGE)) {
             return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
+        }
+        return null;
+    }
+
+    public void setAddressModel(AddressModel model) {
+        Log.d(TAG, "setAdminSettings() called with: model = [" + model + "]");
+        mSharedPreferences.edit().putString(PREF_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(model)).apply();
+    }
+
+    public AddressModel getAddressModel() {
+        if (mSharedPreferences.contains(PREF_ADDRESS_MODEL)) {
+            try {
+                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_ADDRESS_MODEL, null));
+                addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), AddressModel.class);
+                return addressModel;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

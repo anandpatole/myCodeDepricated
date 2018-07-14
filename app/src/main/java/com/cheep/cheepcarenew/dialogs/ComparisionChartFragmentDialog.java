@@ -39,17 +39,18 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     private ComparisionChartModel comparisionChartModel;
     private PackageDetail packageDetail;
     private CareCityDetail careCityDetail;
-
+    private  String comingFrom;
     private AcknowledgementPopupDialog acknowledgementPopupDialog;
     private FragmentComparsionChartFragmentDialogBinding mBinding;
     private PackageDetailModelDialog packageDetailModelDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail, CareCityDetail careCityDetail) {
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail, CareCityDetail careCityDetail,String comingFrom) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
         args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
+        args.putString(Utility.Extra.COMING_FROM,comingFrom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,7 +82,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), ComparisionChartModel.class);
             packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
-
+            comingFrom=(getArguments().getString(Utility.Extra.COMING_FROM));
         }
         loadData();
         setListener();
@@ -138,7 +139,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
             if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
                 mBinding.tvPremiumNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
-               // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
+                // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
                 mBinding.tvPremiumOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
                 //mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
@@ -163,7 +164,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail, comparisionChartModel);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail, comparisionChartModel,comingFrom);
         packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 

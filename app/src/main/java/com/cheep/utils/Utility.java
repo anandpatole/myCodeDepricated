@@ -700,6 +700,7 @@ public class Utility {
         String RESULT = "result";
         String DATE = "date";
         String MODEL = "model";
+        String COMING_FROM="coming_from";
         String IS_PAY_NOW = "isPayNow";
         String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
         String POSITION = "position";

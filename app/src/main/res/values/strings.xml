@@ -14,6 +14,7 @@
     <string name="label_dont_have_ac_signup">"Don't have an account?"</string>
     <string name="label_signup">Sign Up</string>
     <string name="label_add_photo">Add Photo</string>
+    <string name="task_change_address">task_change_address</string>
     <string name="sub_cheep_care">. Subscribed Under Cheep Care</string>
     <string name="sub_cheep_premium">. Subscribed Under Cheep Premium</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

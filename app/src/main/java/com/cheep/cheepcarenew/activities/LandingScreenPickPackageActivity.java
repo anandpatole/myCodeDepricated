@@ -33,6 +33,7 @@ import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
 import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
@@ -68,6 +69,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+    private String comingFrom=Utility.EMPTY_STRING;
     // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
     private PackageDetailModelDialog packageDetailModelDialog;
@@ -100,7 +102,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
-
+    public static void newInstance(Context context, CareCityDetail city, String cheepcareBannerListString,String comingFrom) {
+        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
+        intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
+        intent.putExtra(Utility.Extra.COMING_FROM,comingFrom);
+        context.startActivity(intent);
+    }
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         context.startActivity(intent);
@@ -121,6 +129,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
             mCity = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CareCityDetail.class);
             bannerCareCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CareCityDetail[].class);
+            if(getIntent().hasExtra(Utility.Extra.COMING_FROM))
+            {
+                comingFrom=getIntent().getExtras().getString(Utility.Extra.COMING_FROM);
+            }
         }
 
         setCityBannerData();
@@ -374,7 +386,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, packageDetail, mCity);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, packageDetail, mCity,comingFrom);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -384,7 +396,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity, comparisionChartModel);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity, comparisionChartModel,comingFrom);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import com.cheep.dialogs.OutOfOfficeHoursDialog;
 import com.cheep.dialogs.UrgentBookingDialog;
 import com.cheep.model.AddressModel;
 import com.cheep.model.GuestUserDetails;
+import com.cheep.model.MessageEvent;
 import com.cheep.model.SubServiceDetailModel;
 import com.cheep.utils.CalendarUtility;
 import com.cheep.utils.GsonUtility;
@@ -44,12 +46,15 @@ import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.SuperCalendar;
 import com.cheep.utils.Utility;
 import com.cheep.utils.WebCallClass;
+import com.google.android.gms.common.util.SharedPreferencesUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by bhavesh on 28/4/17.
@@ -356,7 +361,8 @@ public class EnterTaskDetailFragment extends BaseFragment implements UrgentBooki
                                 @Override
                                 public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                                     hideProgressDialog();
-                                    LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList));
+                                    PreferenceUtility.getInstance(mContext).setAddressModel(addressModel);
+                                    LandingScreenPickPackageActivity.newInstance(mContext, cityLandingPageModel.careCityDetail, GsonUtility.getJsonStringFromObject(cityLandingPageModel.packageDetailList),getString(R.string.task_change_address));
                                 }
                             });
                         }

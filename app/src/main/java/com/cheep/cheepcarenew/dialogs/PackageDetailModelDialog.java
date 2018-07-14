@@ -40,21 +40,21 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public static final String TAG = PackageDetailModelDialog.class.getSimpleName();
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
-
     private TextView tvData, tvSoundsGood;
     UserDetails userDetails;
-
+private String comingFrom=Utility.EMPTY_STRING;
 
     public PackageDetailModelDialog() {
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail, ComparisionChartModel comparisionChartModel) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail, ComparisionChartModel comparisionChartModel,String comingFrom) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
         args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        args.putString(Utility.Extra.COMING_FROM, comingFrom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,8 +125,9 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
                     CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), CareCityDetail.class);
                     ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), ComparisionChartModel.class);
+                    comingFrom=(String) getArguments().getString(Utility.Extra.COMING_FROM);
                     if (packageDetail != null) {
-                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail, comparisionChartModel);
+                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail, comparisionChartModel,comingFrom);
                         dismiss();
                     }
                 }

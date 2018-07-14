@@ -49,12 +49,14 @@ public class AddressActivity extends BaseAppCompatActivity {
     private CareCityDetail careCityDetail;
     private ComparisionChartModel comparisionChartModel;
     private ActivityAddressBinding mBinding;
+    private String comingFrom=Utility.EMPTY_STRING;
 
-    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, ComparisionChartModel comparisionChartModel) {
+    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, ComparisionChartModel comparisionChartModel,String comingFrom) {
         Intent intent = new Intent(context, AddressActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(careCityDetail));
         intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
+        intent.putExtra(Utility.Extra.COMING_FROM,comingFrom);
         context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
     }
@@ -74,7 +76,10 @@ public class AddressActivity extends BaseAppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_3)) {
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), ComparisionChartModel.class);
         }
-        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comparisionChartModel));
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.COMING_FROM)) {
+            comingFrom = (String) getIntent().getStringExtra(Utility.Extra.COMING_FROM);
+        }
+        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comparisionChartModel,comingFrom));
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
     }
