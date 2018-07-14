@@ -130,7 +130,6 @@ public class Utility {
     // new type for subscription
     public static final String SUBSCRIBE = "SUBSCRIBE";
     public static final String RENEW_SUBSCRIPTION = "RENEW_SUBSCRIPTION";
-    public static final String TYPE_OF_PACKAGE = "packageType";
     public static String YES = "yes";
     public static int TEN = 10;
     public static final String HOME = "Home";
@@ -260,6 +259,7 @@ public class Utility {
     public static final String MONTH = "months";
     public static final String PAYMENT_TYPE_IS_PAYU = "payu";
     public static final String HDFC = "HDFC";
+    public static final String ONLY_N ="Only";
 
     /*
     Home Screen Category Image Ratio
@@ -635,10 +635,10 @@ public class Utility {
         }
     }
 
-    public interface CHEEP_CARE {
-        String SAVE = "Save ₹";
-        String RS = "₹";
-    }
+//    public interface CHEEP_CARE {
+//        String SAVE = "Save ₹";
+//        String RS = "₹";
+//    }
 
     //Bundle Extra parameters
     public interface ReviewByMe {

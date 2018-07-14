@@ -17,13 +17,13 @@
             <RelativeLayout
                 android:id="@+id/relative"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/scale_110dp"
+                android:layout_height="@dimen/scale_100dp"
                 android:background="@color/gray_chart_lower">
 
                 <ImageView
                     android:id="@+id/imge1"
-                    android:layout_width="@dimen/scale_60dp"
-                    android:layout_height="@dimen/scale_70dp"
+                    android:layout_width="@dimen/scale_50dp"
+                    android:layout_height="@dimen/scale_60dp"
                     android:layout_marginLeft="@dimen/scale_28dp"
 
                     android:layout_centerVertical="true"
@@ -51,7 +51,7 @@
                         android:textColor="@color/heading_color"
                         android:textAllCaps="true"
                         android:gravity="center_horizontal"
-                        android:textSize="@dimen/text_size_15sp"/>
+                        android:textSize="@dimen/text_size_13sp"/>
 
                     <com.cheep.custom_view.CFTextViewBold
                         android:id="@+id/tv_heading2"
@@ -65,7 +65,7 @@
                         android:text="@string/heading2"
                         android:gravity="center_horizontal"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_15sp"/>
+                        android:textSize="@dimen/text_size_13sp"/>
 
                 </LinearLayout>
 
@@ -84,6 +84,7 @@
                     android:layout_marginBottom="@dimen/scale_8dp"
                     android:layout_marginEnd="@dimen/scale_8dp"
                     android:layout_marginLeft="@dimen/scale_8dp"
+                    android:textSize="@dimen/text_size_13sp"
                     android:layout_marginRight="@dimen/scale_8dp"
                     android:layout_marginStart="@dimen/scale_8dp"
                     android:layout_marginTop="@dimen/scale_8dp"

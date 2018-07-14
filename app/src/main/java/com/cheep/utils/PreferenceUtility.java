@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.cheep.cheepcarenew.model.AdminSettingModel;
@@ -42,7 +41,7 @@ public class PreferenceUtility {
     //Guest User Pref
     private static final String PREF_FILE_GUEST = "com.cheep.guest";
     private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
-    private static final String CITY_DATA = "com.cheep.guest.citydata";
+//    private static final String CITY_DATA = "com.cheep.guest.citydata";
     private static final String HOME_ADDRESS_SIZE = "com.cheep.homeaddresssize";
     private static final String OFFICE_ADDRESS_SIZE = "com.cheep.officeaddresssize";
     private SharedPreferences mGuestSharedPreferences;
@@ -147,7 +146,7 @@ public class PreferenceUtility {
         return null;
     }
 
-    public void saveComparisonChatDetails(ComparisionChartModel model) {
+  /*  public void saveComparisonChatDetails(ComparisionChartModel model) {
         Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
         mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
 
@@ -192,7 +191,7 @@ public class PreferenceUtility {
             return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
         }
         return null;
-    }
+    }*/
 
     /**
      * It may be useful in future so it is remain as private
@@ -250,14 +249,14 @@ public class PreferenceUtility {
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
 
         // Clear cart detail of all cities
-        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING).split(",");
-        LogUtils.LOGE(TAG, "onUserLogout: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
-        if (ciryArray.length > 0) {
-            for (String s : ciryArray) {
-                removeCityCartDetail(s);
-            }
-            mSharedPreferences.edit().remove(CITY_DATA).apply();
-        }
+//        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING).split(",");
+//        LogUtils.LOGE(TAG, "onUserLogout: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
+//        if (ciryArray.length > 0) {
+//            for (String s : ciryArray) {
+//                removeCityCartDetail(s);
+//            }
+//            mSharedPreferences.edit().remove(CITY_DATA).apply();
+//        }
 
 
         // Clear all Guest User Details if any
@@ -320,10 +319,10 @@ public class PreferenceUtility {
     }
 
 
-    /**
+/*    *//**
      * @param citySlug    slug of cart city
      * @param cartDetails it will have whole care package list with its sub services data, selected address, payment data
-     */
+     *//*
     public void setCityCartDetail(String citySlug, String cartDetails) {
         mSharedPreferences.edit().putString(citySlug, cartDetails).apply();
 
@@ -349,5 +348,5 @@ public class PreferenceUtility {
 
     public String getCityData() {
         return mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING);
-    }
+    }*/
 }

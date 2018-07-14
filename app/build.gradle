@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 33
-        versionName "1.1.32" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
+        versionName "1.1.33" // PLEASE FIRST MAKE SURE MIN-VERSION IS 16.
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -256,11 +256,11 @@ configurations {
 
 // Description
 ext {
-    supportLibVer = '27+'
+    supportLibVer = '27.1.1'
     gsonLibVer = '2.7'
     playServiceVer = '15.0.1'
     firebaseServiceVer = '11.8.0'
-    firebaseMessagingServiceVer = '17.0.0'
+    firebaseMessagingServiceVer = '17.1.0'
     firebaseCoreServiceVer = '16.0.1'
     firebaseCrashServiceVer = '16.0.1'
     firebaseDatabaseServiceVer = '16.0.1'
@@ -358,7 +358,7 @@ dependencies {
 
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'
 //    implementation 'org.jsoup:jsoup:1.10.3'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation files('libs/paynimo_v3.2_uat.jar')
 
     //////////////////////
@@ -370,7 +370,7 @@ dependencies {
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.wdullaer:materialdatetimepicker:3.6.2'
     /////////////////////////////
-    implementation 'com.mixpanel.android:mixpanel-android:5.+'
+    implementation 'com.mixpanel.android:mixpanel-android:5.4.1'
     implementation project(':sdkui')
 
 }

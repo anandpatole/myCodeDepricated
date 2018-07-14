@@ -28,8 +28,10 @@ import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.ComparisionChart.FeatureList;
 import com.cheep.network.NetworkUtility;
 import com.cheep.utils.GsonUtility;
-import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ComparisionChartFragmentDialog extends DialogFragment implements View.OnClickListener {
@@ -37,14 +39,14 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
 
     private ComparisionChartModel comparisionChartModel;
-    private PackageDetail packageDetail;
+    private ArrayList<PackageDetail> packageDetailList;
     private CareCityDetail careCityDetail;
 
     private AcknowledgementPopupDialog acknowledgementPopupDialog;
     private FragmentComparsionChartFragmentDialogBinding mBinding;
     private PackageDetailModelDialog packageDetailModelDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail, CareCityDetail careCityDetail) {
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, List<PackageDetail> packageDetail, CareCityDetail careCityDetail) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
@@ -79,7 +81,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         if (getArguments() != null) {
 
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), ComparisionChartModel.class);
-            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            packageDetailList = GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail[].class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
 
         }
@@ -138,19 +140,16 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
 
             if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
                 mBinding.tvPremiumNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
-               // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
                 mBinding.tvPremiumOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
-                //mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
                 mBinding.tvNormalNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
                 mBinding.tvNormalOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
-                //mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                //mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
             }
 
         }
     }
-    private void makeHeadingTextBold(){
+
+    private void makeHeadingTextBold() {
         final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.comparision_message));
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
         sb.setSpan(bss, 5, 13, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
@@ -158,12 +157,12 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     }
 
     // open show Package Detail Model Fragment Dialog
-    private void showPackageDetailModelFragmentDialog() {
+    private void showPackageDetailModelFragmentDialog(PackageDetail packageDetail) {
         if (packageDetailModelDialog != null) {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail, comparisionChartModel);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail);
         packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
@@ -172,12 +171,22 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
-                showPackageDetailModelFragmentDialog();
+//                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
+                for (PackageDetail packageDetail : packageDetailList) {
+                    if (packageDetail.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
+                        showPackageDetailModelFragmentDialog(packageDetail);
+                        break;
+                    }
+                }
                 break;
             case R.id.tv_book_know_care:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
-                showPackageDetailModelFragmentDialog();
+//                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
+                for (PackageDetail packageDetail : packageDetailList) {
+                    if (packageDetail.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
+                        showPackageDetailModelFragmentDialog(packageDetail);
+                        break;
+                    }
+                }
                 break;
         }
     }

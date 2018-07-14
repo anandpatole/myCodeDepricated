@@ -185,7 +185,7 @@ public class HomeTabRecyclerViewAdapter extends RecyclerView.Adapter<HomeTabRecy
             holder.mRowTabHomeBinding.tvOldPrice.setVisibility(View.VISIBLE);
             holder.mRowTabHomeBinding.tvNewPrice.setVisibility(View.VISIBLE);
             holder.mRowTabHomeBinding.tvOldPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catOldPrice)));
-            holder.mRowTabHomeBinding.tvNewPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catNewPrice))+" "+Utility.ONLY);
+            holder.mRowTabHomeBinding.tvNewPrice.setText(mContext.getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(model.catNewPrice))+" "+Utility.ONLY_N);
         }
 
 

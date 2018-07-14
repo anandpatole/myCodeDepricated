@@ -552,7 +552,7 @@ public class HomeActivity extends BaseAppCompatActivity
     }
     @Override
     public void onProfileImageClicked(TaskDetailModel taskDetailModel, int position) {
-        ProviderProfileActivity.newInstance(mContext, taskDetailModel.selectedProvider);
+        ProviderProfileActivity.newInstance(mContext, taskDetailModel.selectedProvider,taskDetailModel);
     }
 
     @Override
@@ -578,7 +578,8 @@ public class HomeActivity extends BaseAppCompatActivity
         if (mHomeFragment != null) {
             mHomeFragment.setCurrentTab(HomeFragment.TAB_HOME);
             if (jobCategoryModel != null) {
-                TaskCreationActivity.getInstance(mContext, jobCategoryModel);
+                callIsCategorySubscribed(jobCategoryModel);
+                // ;
             } else if (bannerImageModel != null) {
                 StrategicPartnerTaskCreationAct.getInstance(mContext, bannerImageModel);
             }
@@ -1055,6 +1056,125 @@ public class HomeActivity extends BaseAppCompatActivity
         }
         super.onDestroy();
     }
+    //check category is subscribed or not for reebook task
+    private void callIsCategorySubscribed(final JobCategoryModel model)
+    {
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+
+        //Add Header parameters
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, PreferenceUtility.getInstance(mContext).getUserDetails().userID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.CAT_ID, model.catId);
+
+        VolleyNetworkRequest mVolleyNetworkRequestForIsCategorySubscribed = new VolleyNetworkRequest(NetworkUtility.WS.SP_IS_CATEGORY_SUBSCRIBED
+                , mCallIsCategorySubscribedWSErrorListener
+                ,  new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+
+                String strResponse = (String) response;
+                try {
+                    JSONObject jsonObject = new JSONObject(strResponse);
+                    Log.i(TAG, "onResponse: " + jsonObject.toString());
+                    int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+                    String error_message;
+
+                    switch (statusCode) {
+                        case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+                            JSONObject jsonData = jsonObject.getJSONObject(NetworkUtility.TAGS.DATA);
+                            String is_subscribe= jsonData.getString(NetworkUtility.TAGS.IS_SUBSCRIBED);
+                            model.isSubscribed=is_subscribe;
+                            TaskCreationActivity.getInstance(mContext, model);
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+                            // Show Toast
+                            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+                            error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+                            // Show message
+                            Utility.showSnackBar(error_message, mBinding.getRoot());
+                            break;
+                        case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+                        case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+                            //Logout and finish the current activity
+                            Utility.logout(mContext, true, statusCode);
+                            finish();
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                }
+
+            }
+        }
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForIsCategorySubscribed);
+
+    }
+//    Response.Listener mCallIsCategorySubscribedWSResponseListener = new Response.Listener() {
+//        @Override
+//        public void onResponse(Object response) {
+//
+//            String strResponse = (String) response;
+//            try {
+//                JSONObject jsonObject = new JSONObject(strResponse);
+//                Log.i(TAG, "onResponse: " + jsonObject.toString());
+//                int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
+//                String error_message;
+//
+//                switch (statusCode) {
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
+//                        TaskCreationActivity.getInstance(mContext, jobCategoryModel);
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
+//                        // Show Toast
+//                        Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+//                        error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
+//                        // Show message
+//                        Utility.showSnackBar(error_message, mBinding.getRoot());
+//                        break;
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
+//                    case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+//                        //Logout and finish the current activity
+//                        Utility.logout(mContext, true, statusCode);
+//                        finish();
+//                        break;
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                mCallAddSPToFavWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+//            }
+//
+//        }
+//    };
+
+    Response.ErrorListener mCallIsCategorySubscribedWSErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+
+            // Close Progressbar
+//            hideProgressDialog();
+
+
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+
+        }
+    };
+
 
     /**
      * Call Add to fav

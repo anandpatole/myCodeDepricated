@@ -15,7 +15,6 @@ import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.databinding.FragmentAddressCategorySelectionBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
-import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
@@ -37,13 +36,6 @@ public class AddressCategorySelectionFragment extends BaseFragment {
 //    private ViewTooltip.TooltipView tooltipView;
 
     public static AddressCategorySelectionFragment newInstance() {
-        Bundle args = new Bundle();
-        AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static AddressCategorySelectionFragment newInstance(ComparisionChartModel comparisionChartModel) {
         Bundle args = new Bundle();
         AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
         fragment.setArguments(args);

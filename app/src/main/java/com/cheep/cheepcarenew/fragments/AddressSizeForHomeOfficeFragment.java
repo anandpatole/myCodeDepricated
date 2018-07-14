@@ -14,6 +14,8 @@ import com.cheep.activity.LoginActivity;
 import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.activities.PaymentSummaryCheepCareActivity;
 import com.cheep.cheepcarenew.adapters.AddressSizeRecyclerViewAdapter;
+import com.cheep.cheepcarenew.model.CareCityDetail;
+import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.custom_view.GridSpacingItemDecoration;
 import com.cheep.databinding.FragmentAddressSizeForHomeOfficeBinding;
 import com.cheep.fragment.BaseFragment;
@@ -34,11 +36,15 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
     private AddressSizeRecyclerViewAdapter adapter;
     private ArrayList<AddressSizeModel> list;
     public AddressModel addressModel;
+    public PackageDetail packageDetail;
+    public CareCityDetail careCityDetail;
 
-    public static AddressSizeForHomeOfficeFragment newInstance(AddressModel addressModel) {
+    public static AddressSizeForHomeOfficeFragment newInstance(AddressModel addressModel, PackageDetail packageDetail, CareCityDetail careCityDetail) {
         Bundle args = new Bundle();
         AddressSizeForHomeOfficeFragment fragment = new AddressSizeForHomeOfficeFragment();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(addressModel));
+        args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(packageDetail));
+        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(careCityDetail));
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,8 +65,11 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
     @Override
     public void initiateUI() {
         setListeners();
-        if (getArguments() != null)
+        if (getArguments() != null) {
             addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), AddressModel.class);
+            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
+        }
         if (addressModel == null)
             return;
 
@@ -77,12 +86,16 @@ public class AddressSizeForHomeOfficeFragment extends BaseFragment {
             @Override
             public void onClickAddressSize(AddressSizeModel model) {
                 addressModel.addressSizeModel = model;
+                if (packageDetail.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
+                    packageDetail.priceModel = model.normalPriceModel;
+                } else
+                    packageDetail.priceModel = model.premiumPriceModel;
 
                 UserDetails userDetails = PreferenceUtility.getInstance(getContext()).getUserDetails();
                 if (userDetails == null) {
                     LoginActivity.newInstance(getContext());
                 } else {
-                    PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, careCityDetail, addressModel);
                 }
 
             }
