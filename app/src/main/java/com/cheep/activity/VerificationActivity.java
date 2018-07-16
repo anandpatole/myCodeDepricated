@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -25,6 +27,9 @@ import com.cheep.firebase.FierbaseChatService;
 import com.cheep.firebase.FirebaseHelper;
 import com.cheep.firebase.FirebaseUtils;
 import com.cheep.firebase.model.ChatUserModel;
+import com.cheep.fragment.BaseFragment;
+import com.cheep.fragment.InfoFragment;
+import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.LocationInfo;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -48,7 +53,7 @@ import java.util.Map;
  * Created by pankaj on 9/26/16.
  */
 
-public class VerificationActivity extends BaseAppCompatActivity {
+public class VerificationActivity extends BaseAppCompatActivity implements DrawerLayoutInteractionListener {
     private static final String TAG = VerificationActivity.class.getSimpleName();
     private ActivityVerificationBinding mActivityVerificationBinding;
     private UserDetails mUserDetails;
@@ -99,6 +104,19 @@ public class VerificationActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
+
+        setSupportActionBar(mActivityVerificationBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            mActivityVerificationBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
+        }
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
             mUserDetails = (UserDetails) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.USER_DETAILS), UserDetails.class);
@@ -178,14 +196,49 @@ public class VerificationActivity extends BaseAppCompatActivity {
         mActivityVerificationBinding.tvResendCode.setOnClickListener(onClickListener);
         setTermAndCondition();
     }
-
+    public void loadFragment(String tag, BaseFragment baseFragment) {
+        getSupportFragmentManager().beginTransaction().add(R.id.content, baseFragment, tag).addToBackStack(InfoFragment.TAG).commitAllowingStateLoss();
+    }
     private void setTermAndCondition(){
         SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.terms_and_condition));
         mActivityVerificationBinding.tvDesclaimer.setText(mSpannableStringBuilder);
         mActivityVerificationBinding.tvDesclaimer.setMovementMethod(LinkMovementMethod.getInstance());
         mActivityVerificationBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_checked);
+        mActivityVerificationBinding.tvDesclaimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS);
+                if (mFragment == null) {
+                    loadFragment(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS, InfoFragment.newInstance(NetworkUtility.TAGS.PAGEID_TYPE.TERMS));
+                }
+            }
+        });
+    }
+    //DrawerLayoutInteractionListener,
+    @Override
+    public void setUpDrawerLayoutWithToolBar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                        getSupportFragmentManager().popBackStack();
+                    }else {
+                        onBackPressed();
+                    }
+                }
+            });
+        }
     }
 
+    @Override
+    public void profileUpdated() {
+
+    }
 
     /**
      * Listener to manage clear button, when user clicks on clear button on keyboard we have to move focus to previous EditText
@@ -332,7 +385,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityVerificationBinding.getRoot());
+                        Utility.showSnackBarWithTextCenter(error_message, mActivityVerificationBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {
@@ -472,7 +525,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
 
         //Check if User entered all four digits or not
         if (fetchEnteredOTP().length() < 4) {
-            Utility.showSnackBar(getString(R.string.validate_otp_empty), mActivityVerificationBinding.getRoot());
+            Utility.showSnackBarWithTextCenter(getString(R.string.validate_otp_empty), mActivityVerificationBinding.getRoot());
             return false;
         }
 
@@ -835,7 +888,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
 //                        correctOTP = jsonObject.getString(NetworkUtility.TAGS.OTP_CODE);
                         String messasge = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(messasge, mActivityVerificationBinding.getRoot());
+                        Utility.showSnackBarWithTextCenter(messasge, mActivityVerificationBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
@@ -844,7 +897,7 @@ public class VerificationActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivityVerificationBinding.getRoot());
+                        Utility.showSnackBarWithTextCenter(error_message, mActivityVerificationBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {

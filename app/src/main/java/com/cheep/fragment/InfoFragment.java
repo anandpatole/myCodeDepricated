@@ -70,11 +70,14 @@ public class InfoFragment extends BaseFragment {
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: ");
         super.onAttach(context);
-        if (context instanceof DrawerLayoutInteractionListener) {
-            mListener = (DrawerLayoutInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
+
+            if (context instanceof DrawerLayoutInteractionListener) {
+
+                mListener = (DrawerLayoutInteractionListener) context;
+            } else {
+                throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            }
+
     }
 
 
