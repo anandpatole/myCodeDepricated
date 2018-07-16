@@ -12,7 +12,6 @@
 
 
         <com.cheep.custom_view.CFTextViewSemiBold
-
             android:id="@+id/textHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textHeading"
             android:background="@color/gray_chart_upper"
+            android:layout_marginBottom="-4dp"
             android:weightSum="3.2">
 
             <LinearLayout
@@ -107,6 +107,7 @@
                 android:id="@+id/tv_line"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/scale_2dp"
                 android:background="@color/c_60p_opacity_3A3A3A" />
 
             <LinearLayout
@@ -119,7 +120,6 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:elevation="@dimen/scale_5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -168,7 +168,7 @@
                         android:gravity="center"
                         android:text="@string/price"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_9sp" />
+                        android:textSize="@dimen/text_size_8sp" />
 
                 </LinearLayout>
                 </LinearLayout>
@@ -178,6 +178,7 @@
                 android:id="@+id/tv_line2"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/scale_2dp"
                 android:background="@color/c_60p_opacity_3A3A3A" />
 
             <LinearLayout
@@ -238,7 +239,7 @@
                         android:gravity="center"
                         android:text="@string/price"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_9sp" />
+                        android:textSize="@dimen/text_size_8sp" />
 
                 </LinearLayout>
 

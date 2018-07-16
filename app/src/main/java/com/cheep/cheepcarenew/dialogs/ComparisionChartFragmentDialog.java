@@ -115,7 +115,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         dialog.setCanceledOnTouchOutside(true);
         this.setCancelable(true);
 
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setBackgroundDrawableResource(R.color.white_translucent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.AlertAnimation;
         return dialog;
 
@@ -141,19 +141,26 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
             String TYPE = comparisionChartModel.priceLists.get(i).type;
 
             if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.premium)) {
-                mBinding.tvPremiumNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
-                // mBinding.tvPremiumNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                mBinding.tvPremiumOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
-                //mBinding.tvPremiumOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvPremiumNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvPremiumNewPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price,comparisionChartModel.priceLists.get(i).newPrice));
+                mBinding.tvPremiumOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvPremiumOldPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price,comparisionChartModel.priceLists.get(i).oldPrice));
+               // mBinding.tvPremiumOldPrice.setText(getString(R.string.rupee_symbol_x_package_price, Utility.getQuotePriceFormatterAsInteger(comparisionChartModel.priceLists.get(i).oldPrice)));
             } else if (TYPE.equalsIgnoreCase(NetworkUtility.PACKAGE_DETAIL_TYPE.normal)) {
-                mBinding.tvNormalNewPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).newPrice)));
-                mBinding.tvNormalOldPrice.setText(getString(R.string.rupee_symbol_x, Utility.getQuotePriceFormatter(comparisionChartModel.priceLists.get(i).oldPrice)));
-                //mBinding.tvNormalNewPrice.setText(comparisionChartModel.priceLists.get(i).newPrice);
-                //mBinding.tvNormalOldPrice.setText(comparisionChartModel.priceLists.get(i).oldPrice);
+                mBinding.tvNormalNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNormalNewPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price,comparisionChartModel.priceLists.get(i).newPrice));
+                mBinding.tvNormalOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNormalOldPrice.getContext()
+                        , R.string.rupee_symbol_x_package_price,comparisionChartModel.priceLists.get(i).oldPrice));
+
+                /*mBinding.tvNormalNewPrice.setText(getString(R.string.rupee_symbol_x_package_price,
+                        Utility.getQuotePriceFormatterAsInteger(comparisionChartModel.priceLists.get(i).newPrice)));
+                mBinding.tvNormalOldPrice.setText(getString(R.string.rupee_symbol_x_package_price,
+                        Utility.getQuotePriceFormatterAsInteger(comparisionChartModel.priceLists.get(i).oldPrice)));*/
             }
 
         }
     }
+
     private void makeHeadingTextBold(){
         final SpannableStringBuilder sb = new SpannableStringBuilder(getResources().getString(R.string.comparision_message));
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold

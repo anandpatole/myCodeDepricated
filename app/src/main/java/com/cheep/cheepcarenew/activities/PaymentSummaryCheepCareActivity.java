@@ -427,9 +427,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     private void updateSaveAmountForMonth() {
         profit = oldPrice - newPrice;
-        mBinding.tv3SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 3));
-        mBinding.tv6SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 6));
-        mBinding.tv12SaveMonth.setText(Utility.CHEEP_CARE.SAVE + String.valueOf(profit * 12));
+        mBinding.tv3SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 3)));
+        mBinding.tv6SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 6)));
+        mBinding.tv12SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 12)));
 
     }
 

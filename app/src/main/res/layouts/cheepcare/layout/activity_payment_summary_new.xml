@@ -384,7 +384,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_centerInParent="true"
                                 android:layout_marginBottom="@dimen/scale_8dp"
-                                android:background="@color/yellow"
+                                android:background="@color/best_value"
                                 android:padding="@dimen/scale_2dp"
                                 android:text="@string/best_value"
                                 android:textColor="@color/black"

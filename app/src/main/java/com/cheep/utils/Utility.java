@@ -1065,6 +1065,16 @@ public class Utility {
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
     }
+    public static String getQuotePriceFormatterAsInteger(String quotePrice) {
+
+        if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
+            return "0.00";
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
+            return "0.00";
+        DecimalFormat formatter = new DecimalFormat("####");
+        double price = Double.parseDouble(quotePrice);
+        return formatter.format(price);
+    }
 
     /**
      * Get IP address from first non-localhost interface
