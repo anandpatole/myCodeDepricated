@@ -240,7 +240,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                         }
                     });
 
-                    GlideUtility.showCircularImageViewWithColorBorder(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
+                    GlideUtility.showCircularImageView(holder.mUpcomingTaskBinding.imgProfilePic.getContext(), TAG, holder.mUpcomingTaskBinding.imgProfilePic, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO,  true);
 //anand
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
 
@@ -624,7 +624,15 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             listener.onProfileImageClicked(model, position);
                         }
                     });
+                    holder.mRowTaskBinding.imgFav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                            listener.onFavClicked(model, !holder.mRowTaskBinding.imgFav.isSelected(), position);
+                            holder.mRowTaskBinding.imgFav.setSelected(!holder.mRowTaskBinding.imgFav.isSelected());
+
+                        }
+                    });
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.STRATEGIC)) {
                         holder.mRowTaskBinding.tvExperience.setVisibility(View.GONE);
                     } else {
@@ -638,10 +646,15 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                             holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
                         }
                     }
-
+                    holder.mRowTaskBinding.imgFav.setVisibility(View.VISIBLE);
+                    if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
+                        holder.mRowTaskBinding.imgFav.setSelected(true);
+                    else
+                        holder.mRowTaskBinding.imgFav.setSelected(false);
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
                         holder.mRowTaskBinding.textTaskApprovedQuote.setText(R.string.label_free);
                         holder.mRowTaskBinding.textPaymentMode.setText(R.string.label_paid_with_cheep_care);
+
                     } else {
 
                         holder.mRowTaskBinding.textTaskApprovedQuote.setText(holder.mRowTaskBinding.imgProfile.getContext().getString(R.string.rupee_symbol_x_space, Utility.getActualPrice(model.taskPaidAmount, model.selectedProvider.quotePrice)));

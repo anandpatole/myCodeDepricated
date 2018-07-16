@@ -956,7 +956,7 @@
                         android:text="@string/label_view_payment_summary"
                         android:textColor="@color/splash_gradient_end"
                         android:textSize="@dimen/text_size_14sp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <com.cheep.custom_view.CFTextViewRegular
                         android:id="@+id/text_paid"
@@ -966,7 +966,7 @@
                         android:layout_marginBottom="@dimen/scale_16dp"
                         android:textColor="@color/grey_varient_23"
                         android:textSize="@dimen/text_size_14sp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         tools:text="werw" />
 
                     <!--Task Completion Request-->

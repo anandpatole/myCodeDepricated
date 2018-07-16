@@ -21,6 +21,7 @@ import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.databinding.ActivityAddressBinding;
 import com.cheep.fragment.BaseFragment;
 import com.cheep.model.AddressModel;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
@@ -46,16 +47,22 @@ public class AddressActivity extends BaseAppCompatActivity {
 
     private PackageDetail packageDetail;
     private CareCityDetail careCityDetail;
+    private ComparisionChartModel comparisionChartModel;
     private ActivityAddressBinding mBinding;
+    private String comingFrom=Utility.EMPTY_STRING;
 
-    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail) {
+    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, String comingFrom) {
         Intent intent = new Intent(context, AddressActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(careCityDetail));
+        intent.putExtra(Utility.Extra.COMING_FROM,comingFrom);
         context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
     }
 
+    public PackageDetail getPackageDetail() {
+        return packageDetail;
+    }
 
     @Override
     protected void initiateUI() {
@@ -65,7 +72,10 @@ public class AddressActivity extends BaseAppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_2)) {
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CareCityDetail.class);
         }
-        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance());
+        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.COMING_FROM)) {
+            comingFrom = (String) getIntent().getStringExtra(Utility.Extra.COMING_FROM);
+        }
+        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comingFrom));
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
     }
@@ -210,7 +220,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                                         Utility.showToast(AddressActivity.this, getString(R.string.validation_message_same_address_for_same_group_of_care));
                                     } else {
                                         // correct address
-                                        loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(model, packageDetail, careCityDetail));
+                                        loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(model,packageDetail,careCityDetail));
                                     }
                                 }
                             } else {
@@ -275,8 +285,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                 AddressSizeForHomeOfficeFragment addressSizeForHomeOfficeFragment = (AddressSizeForHomeOfficeFragment) getSupportFragmentManager().findFragmentByTag(AddressSizeForHomeOfficeFragment.TAG);
                 if (addressSizeForHomeOfficeFragment != null) {
                     mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
-                    //PaymentSummaryCheepCareActivity.newInstance(mContext, packageDetail, careCityDetail, addressSizeForHomeOfficeFragment.addressModel);
-                    PaymentSummaryCheepCareActivity.newInstance(mContext,careCityDetail, packageDetail, addressSizeForHomeOfficeFragment.addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, careCityDetail,packageDetail, addressSizeForHomeOfficeFragment.addressModel);
                 }
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);

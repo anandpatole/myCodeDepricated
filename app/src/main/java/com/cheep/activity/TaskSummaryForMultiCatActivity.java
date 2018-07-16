@@ -212,13 +212,13 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             mBinding.rlUnknownPro.setVisibility(View.GONE);
 
             // Show Payment Summary textview
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+        //    mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
             String s = "";
             if (!TextUtils.isEmpty(mTaskDetailModel.isAnyAmountPending))
                 s = mTaskDetailModel.isAnyAmountPending.equalsIgnoreCase(Utility.BOOLEAN.YES) ? getString(R.string.label_not_paid) : getString(R.string.label_paid);
 
-            mBinding.textPaid.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setText("(" + s + ")");
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
+           // mBinding.textPaid.setText("(" + s + ")");
 
 
             // Set rating
@@ -340,8 +340,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
 //            }
 
             // Hide Payment Summary textview
-            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mBinding.textPaid.setVisibility(View.GONE);
+     //       mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+         //   mBinding.textPaid.setVisibility(View.GONE);
 
         }
 
@@ -542,27 +542,27 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
     private void updateUIBasedOnTaskStatus() {
         if (Utility.TASK_STATUS.PENDING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.service_confirmed));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+           // mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
             hideRateAndReviewView();
 
         } else if (Utility.TASK_STATUS.PROCESSING.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.service_status_processing));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+           // mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
             hideRateAndReviewView();
 
         } else if (Utility.TASK_STATUS.COMPLETION_REQUEST.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mBinding.textPaid.setVisibility(View.GONE);
+           // mBinding.textPaid.setVisibility(View.GONE);
 
             hideRateAndReviewView();
             // Setup Task Completion Request Dialog
             showTaskCompletionDialog(true);
         } else if (Utility.TASK_STATUS.COMPLETION_CONFIRM.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_task_complete));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+           // mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // No need to hide ChatCall Button Now.
             showChatCallButton(false);
@@ -590,14 +590,14 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
             }
         } else if (Utility.TASK_STATUS.COD.equalsIgnoreCase(mTaskDetailModel.taskStatus) || Utility.TASK_STATUS.PAID.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_confirmed));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+          //  mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
             hideRateAndReviewView();
 
         } else if (Utility.TASK_STATUS.CANCELLED_CUSTOMER.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+          //  mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+          //  mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -611,8 +611,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         } else if (Utility.TASK_STATUS.CANCELLED_SP.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
 //            mBinding.textTaskStatusTop.setText(getString(R.string.task_was_cancelled_by_x, mTaskDetailModel.selectedProvider.userName));
             mBinding.textTaskStatusTop.setText(getString(R.string.msg_task_cancelled_title));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+           // mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Cancellation Reason
             mBinding.lnTaskCancellation.setVisibility(View.VISIBLE);
@@ -627,8 +627,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         // reschedule task status
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_requested));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+           // mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+           // mBinding.textPaid.setVisibility(View.VISIBLE);
 
             // Reschedule request desc
             mBinding.lnTaskRescheduleRequested.setVisibility(View.VISIBLE);
@@ -652,8 +652,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         //Task's Reschedule request got cancelled
         else if (Utility.TASK_STATUS.RESCHEDULE_REQUEST_REJECTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.label_reschedule_rejected));
-            mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
-            mBinding.textPaid.setVisibility(View.VISIBLE);
+            //mBinding.textViewPaymentSummary.setVisibility(View.VISIBLE);
+           // mBinding.textPaid.setVisibility(View.VISIBLE);
 
             mBinding.lnTaskRescheduleRejected.setVisibility(View.VISIBLE);
 
@@ -681,8 +681,8 @@ public class TaskSummaryForMultiCatActivity extends BaseAppCompatActivity {
         //Task's Additional Payment Request comes
         else if (Utility.TASK_STATUS.ADDITIONAL_PAYMENT_REQUESTED.equalsIgnoreCase(mTaskDetailModel.taskStatus)) {
             mBinding.textTaskStatusTop.setText(getString(R.string.task_status_processing));
-            mBinding.textViewPaymentSummary.setVisibility(View.GONE);
-            mBinding.textPaid.setVisibility(View.GONE);
+           // mBinding.textViewPaymentSummary.setVisibility(View.GONE);
+           // mBinding.textPaid.setVisibility(View.GONE);
             mBinding.lnTaskAdditionalQuoteRequested.setVisibility(View.VISIBLE);
 
             String additionalQuoteAmount = getString(R.string.rupee_symbol_x, mTaskDetailModel.additionalQuoteAmount);

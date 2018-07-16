@@ -17,9 +17,10 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cheep.R;
-import com.cheep.cheepcarenew.activities.AddressActivity;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.PackageDetail;
+import com.cheep.cheepcarenew.activities.AddressActivity;
+import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -39,20 +40,20 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
     public static final String TAG = PackageDetailModelDialog.class.getSimpleName();
     private RelativeLayout rootLayout;
     private ProgressDialog mProgressDialog;
-
     private TextView tvData, tvSoundsGood;
     UserDetails userDetails;
-
+private String comingFrom=Utility.EMPTY_STRING;
 
     public PackageDetailModelDialog() {
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail,String comingFrom) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
+        args.putString(Utility.Extra.COMING_FROM, comingFrom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -122,8 +123,10 @@ public class PackageDetailModelDialog extends DialogFragment implements View.OnC
                 if (getArguments() != null) {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
                     CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), CareCityDetail.class);
+
+                    comingFrom=(String) getArguments().getString(Utility.Extra.COMING_FROM);
                     if (packageDetail != null) {
-                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail);
+                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comingFrom);
                         dismiss();
                     }
                 }

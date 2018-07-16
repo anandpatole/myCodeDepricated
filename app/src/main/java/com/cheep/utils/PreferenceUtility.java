@@ -4,10 +4,12 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.cheep.cheepcarenew.model.AdminSettingModel;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;
+import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.GuestUserDetails;
 import com.cheep.model.UserDetails;
@@ -41,7 +43,7 @@ public class PreferenceUtility {
     //Guest User Pref
     private static final String PREF_FILE_GUEST = "com.cheep.guest";
     private static final String PREF_GUEST_USER_INFO = "com.cheep.guest.userinfo";
-//    private static final String CITY_DATA = "com.cheep.guest.citydata";
+    private static final String CITY_DATA = "com.cheep.guest.citydata";
     private static final String HOME_ADDRESS_SIZE = "com.cheep.homeaddresssize";
     private static final String OFFICE_ADDRESS_SIZE = "com.cheep.officeaddresssize";
     private SharedPreferences mGuestSharedPreferences;
@@ -51,6 +53,8 @@ public class PreferenceUtility {
 //    private static final String PREF_SAVE_COMPARISON_CHART = "ComparisionChartFragmentDialog";
 //    private static final String PREF_SAVE_CITY_LANDING_MODEl = "CityLandingPageModel";
 //    private static final String PREF_TYPE_OF_PACKAGE = "Type";
+    private static  String PREF_ADDRESS_MODEL="Address";
+    public AddressModel addressModel=null;
 
     private PreferenceUtility(Context mContext) {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -146,52 +150,71 @@ public class PreferenceUtility {
         return null;
     }
 
-  /*  public void saveComparisonChatDetails(ComparisionChartModel model) {
-        Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
-        mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
+//    public void saveComparisonChatDetails(ComparisionChartModel model) {
+//        Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
+//        mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
+//
+//    }
+//    public ComparisionChartModel getComparisonChatDetails() {
+//        if (mSharedPreferences.contains(PREF_SAVE_COMPARISON_CHART)) {
+//            try {
+//                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_COMPARISON_CHART, null));
+//                comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), ComparisionChartModel.class);
+//                return comparisionChartModel;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public void saveCityLandingPageModel(CityLandingPageModel model) {
+//        Log.d(TAG, "saveCityLandingPageModel() called with: model = [" + model + "]");
+//        mSharedPreferences.edit().putString(PREF_SAVE_CITY_LANDING_MODEl, GsonUtility.getJsonStringFromObject(model)).apply();
+//
+//    }
+//    public CityLandingPageModel getCityLandingPageModel() {
+//        if (mSharedPreferences.contains(PREF_SAVE_CITY_LANDING_MODEl)) {
+//            try {
+//                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_CITY_LANDING_MODEl, null));
+//                cityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), CityLandingPageModel.class);
+//                return cityLandingPageModel;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public void saveTypeOfPackage(String value) {
+//        mSharedPreferences.edit().putString(PREF_TYPE_OF_PACKAGE, value).apply();
+//    }
+//
+//    public String getTypeOfPackage()
+//    {
+//        if (mSharedPreferences.contains(PREF_TYPE_OF_PACKAGE)) {
+//            return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
+//        }
+//        return null;
+//    }
 
+    public void setAddressModel(AddressModel model) {
+        Log.d(TAG, "setAdminSettings() called with: model = [" + model + "]");
+        mSharedPreferences.edit().putString(PREF_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(model)).apply();
     }
-    public ComparisionChartModel getComparisonChatDetails() {
-        if (mSharedPreferences.contains(PREF_SAVE_COMPARISON_CHART)) {
+
+    public AddressModel getAddressModel() {
+        if (mSharedPreferences.contains(PREF_ADDRESS_MODEL)) {
             try {
-                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_COMPARISON_CHART, null));
-                comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), ComparisionChartModel.class);
-                return comparisionChartModel;
+                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_ADDRESS_MODEL, null));
+                addressModel = (AddressModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), AddressModel.class);
+                return addressModel;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         return null;
     }
-
-    public void saveCityLandingPageModel(CityLandingPageModel model) {
-        Log.d(TAG, "saveCityLandingPageModel() called with: model = [" + model + "]");
-        mSharedPreferences.edit().putString(PREF_SAVE_CITY_LANDING_MODEl, GsonUtility.getJsonStringFromObject(model)).apply();
-
-    }
-    public CityLandingPageModel getCityLandingPageModel() {
-        if (mSharedPreferences.contains(PREF_SAVE_CITY_LANDING_MODEl)) {
-            try {
-                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_CITY_LANDING_MODEl, null));
-                cityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), CityLandingPageModel.class);
-                return cityLandingPageModel;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public void saveTypeOfPackage(String value) {
-        mSharedPreferences.edit().putString(PREF_TYPE_OF_PACKAGE, value).apply();
-    }
-
-    public String getTypeOfPackage() {
-        if (mSharedPreferences.contains(PREF_TYPE_OF_PACKAGE)) {
-            return mSharedPreferences.getString(PREF_TYPE_OF_PACKAGE, null);
-        }
-        return null;
-    }*/
 
     /**
      * It may be useful in future so it is remain as private
@@ -249,14 +272,14 @@ public class PreferenceUtility {
         mSharedPreferences.edit().remove(PREF_NOTIFICATION_COUNTER).apply();
 
         // Clear cart detail of all cities
-//        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING).split(",");
-//        LogUtils.LOGE(TAG, "onUserLogout: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
-//        if (ciryArray.length > 0) {
-//            for (String s : ciryArray) {
-//                removeCityCartDetail(s);
-//            }
-//            mSharedPreferences.edit().remove(CITY_DATA).apply();
-//        }
+        String[] ciryArray = mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING).split(",");
+        LogUtils.LOGE(TAG, "onUserLogout: " + mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING));
+        if (ciryArray.length > 0) {
+            for (String s : ciryArray) {
+                removeCityCartDetail(s);
+            }
+            mSharedPreferences.edit().remove(CITY_DATA).apply();
+        }
 
 
         // Clear all Guest User Details if any
@@ -319,8 +342,10 @@ public class PreferenceUtility {
     }
 
 
-/*    *//**
-
+    /**
+     * @param citySlug    slug of cart city
+     * @param cartDetails it will have whole care package list with its sub services data, selected address, payment data
+     */
     public void setCityCartDetail(String citySlug, String cartDetails) {
         mSharedPreferences.edit().putString(citySlug, cartDetails).apply();
 
@@ -346,40 +371,5 @@ public class PreferenceUtility {
 
     public String getCityData() {
         return mSharedPreferences.getString(CITY_DATA, Utility.EMPTY_STRING);
-    }*/
-
-/*    public void saveComparisonChatDetails(ComparisionChartModel model) {
-        Log.d(TAG, "saveComparisonChatDetails() called with: model = [" + model + "]");
-        mSharedPreferences.edit().putString(PREF_SAVE_COMPARISON_CHART, GsonUtility.getJsonStringFromObject(model)).apply();
-
     }
-    public ComparisionChartModel getComparisonChatDetails() {
-        if (mSharedPreferences.contains(PREF_SAVE_COMPARISON_CHART)) {
-            try {
-                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_COMPARISON_CHART, null));
-                comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), ComparisionChartModel.class);
-                return comparisionChartModel;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-    public void saveCityLandingPageModel(CityLandingPageModel model) {
-        Log.d(TAG, "saveCityLandingPageModel() called with: model = [" + model + "]");
-        mSharedPreferences.edit().putString(PREF_SAVE_CITY_LANDING_MODEl, GsonUtility.getJsonStringFromObject(model)).apply();
-
-    }
-    public CityLandingPageModel getCityLandingPageModel() {
-        if (mSharedPreferences.contains(PREF_SAVE_CITY_LANDING_MODEl)) {
-            try {
-                JSONObject jsonObject = new JSONObject(mSharedPreferences.getString(PREF_SAVE_CITY_LANDING_MODEl, null));
-                cityLandingPageModel = (CityLandingPageModel) GsonUtility.getObjectFromJsonString(jsonObject.toString(), CityLandingPageModel.class);
-                return cityLandingPageModel;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }*/
 }

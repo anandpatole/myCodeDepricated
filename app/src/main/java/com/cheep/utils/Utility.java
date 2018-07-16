@@ -171,7 +171,8 @@ public class Utility {
 
     public static final int DEFAULT_PROFILE_SRC = R.drawable.placeholder_cheep_pro_not_assigned;
    // public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_circular_icon;
-     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_pro_logo_square_small;
+     public static final int DEFAULT_CHEEP_LOGO = R.drawable.ic_cheep_roun;
+
 
 //    public static final String DEFAULT_PROFILE_URL = "http://msz.uniklinikum-dresden.de/zkn/images/mitarbeiter/dummy120_dagobert83_female_user_icon.png";//"http://lorempixel.com/200/200/people/";
 
@@ -700,6 +701,7 @@ public class Utility {
         String RESULT = "result";
         String DATE = "date";
         String MODEL = "model";
+        String COMING_FROM="coming_from";
         String IS_PAY_NOW = "isPayNow";
         String DYNAMIC_LINK_URI = "DYNAMIC_LINK_URI";
         String POSITION = "position";

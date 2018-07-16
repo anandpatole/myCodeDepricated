@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -26,12 +27,13 @@ import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.adapters.CheepCareFeatureAdapter;
 import com.cheep.cheepcarenew.adapters.CheepCarePackageAdapter;
-import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
-import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CityLandingPageModel;
 import com.cheep.cheepcarenew.model.PackageDetail;
+import com.cheep.cheepcarenew.dialogs.ComparisionChartFragmentDialog;
+import com.cheep.cheepcarenew.dialogs.PackageDetailModelDialog;
 import com.cheep.databinding.ActivityLandingScreenPickPackageBinding;
+import com.cheep.model.AddressModel;
 import com.cheep.model.ComparisionChart.ComparisionChartModel;
 import com.cheep.model.MessageEvent;
 import com.cheep.network.NetworkUtility;
@@ -67,6 +69,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     private String mPackageListString = Utility.EMPTY_STRING;
     private ArrayList<CareCityDetail> bannerCareCityDetailsList;
     private static final String TAG = "LandingScreenPickPackag";
+    private String comingFrom=Utility.EMPTY_STRING;
     // written by majid 106 to 108
     private ComparisionChartFragmentDialog comparisionChartFragmentDialog;
     private PackageDetailModelDialog packageDetailModelDialog;
@@ -99,7 +102,13 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
         context.startActivity(intent);
     }
-
+    public static void newInstance(Context context, CareCityDetail city, String cheepcareBannerListString,String comingFrom) {
+        Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
+        intent.putExtra(Utility.Extra.CITY_DETAIL, GsonUtility.getJsonStringFromObject(city));
+        intent.putExtra(Utility.Extra.DATA, cheepcareBannerListString);
+        intent.putExtra(Utility.Extra.COMING_FROM,comingFrom);
+        context.startActivity(intent);
+    }
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, LandingScreenPickPackageActivity.class);
         context.startActivity(intent);
@@ -120,6 +129,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
         if (getIntent().hasExtra(Utility.Extra.CITY_DETAIL)) {
             mCity = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getExtras().getString(Utility.Extra.CITY_DETAIL), CareCityDetail.class);
             bannerCareCityDetailsList = GsonUtility.getObjectListFromJsonString(getIntent().getExtras().getString(Utility.Extra.DATA), CareCityDetail[].class);
+            if(getIntent().hasExtra(Utility.Extra.COMING_FROM))
+            {
+                comingFrom=getIntent().getExtras().getString(Utility.Extra.COMING_FROM);
+            }
         }
 
         setCityBannerData();
@@ -133,6 +146,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -207,8 +222,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                 hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
-//                PreferenceUtility.getInstance(mContext).saveCityLandingPageModel(cityLandingPageModel);
                 mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+
                 setData();
             }
         });
@@ -361,7 +376,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, mCityLandingPageModel.packageDetailList, mCity);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, mCityLandingPageModel.packageDetailList, mCity,comingFrom);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -371,7 +386,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCityLandingPageModel.careCityDetail);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCityLandingPageModel.careCityDetail,comingFrom);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -388,7 +403,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     private void navigateToFragment() {
         if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
-//            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
+           // PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
             showPackageDetailModelFragmentDialog(packageDetailData);
         } else if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
             showComparisionChartFragmentDialog();
@@ -408,42 +423,41 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     }
 
-/*
-    private void getSavedData() {
-        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
-        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.careCityDetail.citySlug);
-        if (!TextUtils.isEmpty(cartDetail)) {
-            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
-            savedPackageList.clear();
-            savedPackageList.addAll(list);
-            String webData = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
-            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
-            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
-
-            if (!savedPackageList.isEmpty()) {
-                for (int i = 0; i < mCityLandingPageModel.packageDetailList.size(); i++) {
-                    PackageDetail webPakegDetail = mCityLandingPageModel.packageDetailList.get(i);
-                    for (PackageDetail detail : savedPackageList) {
-                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
-                            webPakegDetail.packageOptionList = detail.packageOptionList;
-                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
-                            webPakegDetail.isSelected = true;
-                        }
-                    }
-                }
-                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
-            }
-        } else {
-            if (!TextUtils.isEmpty(mPackageListString)) {
-                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
-                mCityLandingPageModel.packageDetailList.clear();
-                mCityLandingPageModel.packageDetailList.addAll(list);
-            }
-            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
-        }
-    }
-*/
+//    private void getSavedData() {
+//        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
+//        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.careCityDetail.citySlug);
+//        if (!TextUtils.isEmpty(cartDetail)) {
+//            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+//            savedPackageList.clear();
+//            savedPackageList.addAll(list);
+//            String webData = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
+//            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
+//            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
+//
+//            if (!savedPackageList.isEmpty()) {
+//                for (int i = 0; i < mCityLandingPageModel.packageDetailList.size(); i++) {
+//                    PackageDetail webPakegDetail = mCityLandingPageModel.packageDetailList.get(i);
+//                    for (PackageDetail detail : savedPackageList)
+//                    {
+//                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
+//                            webPakegDetail.packageOptionList = detail.packageOptionList;
+//                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
+//                            webPakegDetail.isSelected = true;
+//                        }
+//                    }
+//                }
+//                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
+//            }
+//        } else {
+//            if (!TextUtils.isEmpty(mPackageListString)) {
+//                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+//                mCityLandingPageModel.packageDetailList.clear();
+//                mCityLandingPageModel.packageDetailList.addAll(list);
+//            }
+//            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
+//        }
+//    }
 
     /************************************************************************************************
      **********************************Calling Webservice for old and new price *********************
@@ -464,8 +478,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
         //noinspection unchecked
         VolleyNetworkRequest mVolleyNetworkRequestForCategoryList = new VolleyNetworkRequest(NetworkUtility.WS.GET_PACKAGE_FEATURE_LIST
-                ,mCallPackageFeatureListWSErrorListener
-                , mCallPackageFeatureListDetailsWSResponseListener
+                , mCallGetCityCareDetailsWSErrorListener
+                , mCallGetCityCareDetailsWSResponseListener
                 , mHeaderParams
                 , null
                 , null);
@@ -474,7 +488,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
 
-    private Response.Listener mCallPackageFeatureListDetailsWSResponseListener = new Response.Listener() {
+    private Response.Listener mCallGetCityCareDetailsWSResponseListener = new Response.Listener() {
         @Override
         public void onResponse(Object response) {
             hideProgressDialog();
@@ -489,7 +503,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), ComparisionChartModel.class);
-//                        PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
+                        //PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
                         navigateToFragment();
 
                         break;
@@ -511,12 +525,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                mCallPackageFeatureListWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
+                mCallGetCityCareDetailsWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 
         }
     };
-    private Response.ErrorListener mCallPackageFeatureListWSErrorListener = new Response.ErrorListener() {
+    private Response.ErrorListener mCallGetCityCareDetailsWSErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             hideProgressDialog();
