@@ -3,7 +3,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Cheep Care</string>
     <!--IDs-->
-    <string name="facebook_app_id" translatable="false">1594162450609778</string>
+    <!--
+    old facebook app id
+        <string name="facebook_app_id" translatable="false">1594162450609778</string>
+    -->
+    <string name="facebook_app_id" translatable="false">471487329942684</string>
     <string name="label_copywrite">Copyright © 2018 &cheep;</string>
     <string name="hint_email">Email ID (optional)</string>
     <string name="hint_password">Password</string>
@@ -633,7 +637,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_enter_amount">Enter Amount</string>
     <string name="label_amount_payable">Amount Payable</string>
     <string name="label_notify_paying_by_wallet">You are about to pay using your %1s wallet</string>
-    <string name="no_pro_available_title" />
+    <string name="no_pro_available_title"/>
     <string name="no_pro_available_description">No PROs is available for this address</string>
     <string name="validate_comment">Please provide valid comment.</string>
     <string name="title_booking_confimation">Booking Confirmation</string>
@@ -720,7 +724,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
     <string name="hint_apply_cheep_promo_code">Apply Cheep Promo code?</string>
     <string name="hint_apply_cheep_mate_code">Have a Cheep Mate Code?</string>
-    <string name="label_empty_string" />
+    <string name="label_empty_string"/>
     <string name="label_proceed_to_checkout">Proceed to Checkout</string>
     <string name="add_package_to_cart">Add Package to Cart</string>
     <string name="label_appliance">%1d Appliances</string>
@@ -728,7 +732,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="info_package_payment_summary">Under CHEEP Care, basic repairs &amp; maintenance will be provided by our PRO\'s. All material will be charged extra as per actuals. For complex jobs, additional payments may be charged by the PRO.</string>
     <string name="label_invalid_code">Invalid Code</string>
     <string name="label_applied_promo_code_message_cheep_care">Yay! You saved %1$s %2$s</string>
-    <string name="terms_and_condition" >By signing in, you agree T&amp;C Apply.</string>
+    <string name="terms_and_condition">By signing in, you agree T&amp;C Apply.</string>
 
     <string name="validate_cheep_mate_code">Mate code can\'t be empty.</string>
     <string name="rupee_symbol_x_package_price_with_star">₹%1s/MTH*</string>
