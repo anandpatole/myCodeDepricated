@@ -1237,8 +1237,8 @@ public class HomeTabFragment extends BaseFragment {
         showORHidePagerIndicator();
 
         // For Setting up view pager Indicator
-        mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setViewPager(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages);
-        bannerViewPagerAdapter.registerDataSetObserver(mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.getDataSetObserver());
+         mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setViewPager(mFragmentTabHomeBinding.layoutBannerHeader.viewPagerBannerImages);
+         bannerViewPagerAdapter.registerDataSetObserver(mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.getDataSetObserver());
         if (mHandler != null) {
             mHandler.removeCallbacks(mAutoSlideRunnable);
             mHandler = null;
@@ -1323,7 +1323,7 @@ public class HomeTabFragment extends BaseFragment {
             mFragmentTabHomeBinding.layoutBannerHeader.indicatorHomeBanner.setVisibility(View.INVISIBLE);
         }
 
-        if (cheepCareBannerViewPagerAdapter != null && cheepCareBannerViewPagerAdapter.getCount() >= 1) {
+        if (cheepCareBannerViewPagerAdapter != null && cheepCareBannerViewPagerAdapter.getCount() >= 2) {
             mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.setVisibility(View.VISIBLE);
         } else {
             mFragmentTabHomeBinding.layoutBannerHeader.indicatorSubscriptionBanner.setVisibility(View.INVISIBLE);
