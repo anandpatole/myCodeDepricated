@@ -88,7 +88,6 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(resId)
                 .asGif()
-                .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.mBinding.ivCharge);
 

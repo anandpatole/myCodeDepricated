@@ -332,7 +332,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
                     if (TextUtils.isEmpty(model.selectedProvider.experience)
                             || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
-                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+                        holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(Utility.checkNonNullAndSet(holder.mUpcomingTaskBinding.tvTaskResponseStatus.getContext().getString(R.string.label_experience_zero)));
                     } else {
 //            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
                         holder.mUpcomingTaskBinding.tvTaskResponseStatus.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));

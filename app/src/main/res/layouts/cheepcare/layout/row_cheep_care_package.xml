@@ -83,7 +83,7 @@
             tools:text="majid khan "
             android:gravity="center"
             android:textAlignment="center"
-            android:background="@drawable/background_premium"
+            android:background="@color/blue_variant_4"
             android:layout_gravity="end|bottom"
             android:paddingLeft="@dimen/scale_15dp"
             android:paddingRight="@dimen/scale_15dp"

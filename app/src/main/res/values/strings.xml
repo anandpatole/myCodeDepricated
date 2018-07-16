@@ -232,6 +232,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="validate_empty_password">Hey! Looks like you forgot to enter the password</string>
     <string name="validate_otp_empty">Please enter the correct OTP or try again for a new OTP.</string>
     <string name="validate_term">Please Check Term And Condition.</string>
+    <string name="validate_terms">    Please agree T&amp;C to further proceed.</string>
     <string name="validate_password_length">Sorry, your password needs to be atleast 6 characters!</string>
     <string name="label_something_went_wrong">Oops! Seems like something went wrong, why don’t you try again or get in touch!</string>
     <string name="label_playservice_not_available">Google Play Service not available.</string>
@@ -443,7 +444,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_partner_pro">Partner</string>
     <string name="label_congratulation">Congratulation</string>
     <!--    <string name="label_brilliant_its_time_to_cheep">Brilliant! Its\' time to CHEEP</string>-->
-    <string name="label_brilliant_its_time_to_cheep">Brilliant, Let\'s get CHEEPING!</string>
+    <string name="label_brilliant_its_time_to_cheep">Brilliant, let\'s get CHEEPING!</string>
     <string name="label_alert_not_active">Sorry! Alert will be active only once your task starts.</string>
     <string name="default_country_code">+91</string>
     <string name="number_one">1</string>

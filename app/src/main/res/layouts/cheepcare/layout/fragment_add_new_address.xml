@@ -193,32 +193,6 @@
                         android:layout_marginLeft="@dimen/scale_10dp"
                         android:layout_marginRight="@dimen/scale_10dp"
                         android:background="@color/grey_varient_30"/>
-
-                    <com.cheep.custom_view.CFEditTextRegular
-                        android:id="@+id/edit_address_landmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/scale_10dp"
-                        android:layout_marginRight="@dimen/scale_10dp"
-                        android:layout_marginTop="@dimen/scale_10dp"
-                        android:background="@color/transparent"
-                        android:hint="@string/hint_landmark"
-                        android:inputType="textCapSentences"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:padding="@dimen/scale_10dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_13sp"
-                        android:theme="@style/EditTextWhiteBG"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/scale_1dp"
-                        android:layout_marginLeft="@dimen/scale_10dp"
-                        android:layout_marginRight="@dimen/scale_10dp"
-                        android:background="@color/grey_varient_30"/>
-
                     <com.cheep.custom_view.CFEditTextRegular
                         android:id="@+id/edit_address_pincode"
                         android:layout_width="match_parent"
@@ -232,6 +206,31 @@
                         android:lines="1"
                         android:maxLines="1"
                         android:maxLength="6"
+                        android:padding="@dimen/scale_10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_13sp"
+                        android:theme="@style/EditTextWhiteBG"/>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/scale_1dp"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:background="@color/grey_varient_30"/>
+                    <com.cheep.custom_view.CFEditTextRegular
+                        android:id="@+id/edit_address_landmark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_10dp"
+                        android:layout_marginRight="@dimen/scale_10dp"
+                        android:layout_marginTop="@dimen/scale_10dp"
+                        android:background="@color/transparent"
+                        android:hint="@string/hint_landmark"
+                        android:inputType="textCapSentences"
+                        android:lines="1"
+                        android:maxLines="1"
                         android:padding="@dimen/scale_10dp"
                         android:singleLine="true"
                         android:textColor="@color/black"
