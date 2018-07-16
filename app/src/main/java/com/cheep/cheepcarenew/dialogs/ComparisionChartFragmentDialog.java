@@ -31,20 +31,23 @@ import com.cheep.utils.GsonUtility;
 import com.cheep.utils.PreferenceUtility;
 import com.cheep.utils.Utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ComparisionChartFragmentDialog extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = ComparisionChartFragmentDialog.class.getSimpleName();
 
     private ComparisionChartModel comparisionChartModel;
-    private PackageDetail packageDetail;
+    private ArrayList<PackageDetail> packageDetailList;
     private CareCityDetail careCityDetail;
     private  String comingFrom;
     private AcknowledgementPopupDialog acknowledgementPopupDialog;
     private FragmentComparsionChartFragmentDialogBinding mBinding;
     private PackageDetailModelDialog packageDetailModelDialog;
 
-    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, PackageDetail packageDetail, CareCityDetail careCityDetail,String comingFrom) {
+    public static ComparisionChartFragmentDialog newInstance(ComparisionChartModel comparisionChartModel, List<PackageDetail> packageDetail, CareCityDetail careCityDetail, String comingFrom) {
         ComparisionChartFragmentDialog fragment = new ComparisionChartFragmentDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(comparisionChartModel));
@@ -80,7 +83,7 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
         if (getArguments() != null) {
 
             comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), ComparisionChartModel.class);
-            packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail.class);
+            packageDetailList =  GsonUtility.getObjectListFromJsonString(getArguments().getString(Utility.Extra.DATA_2), PackageDetail[].class);
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), CareCityDetail.class);
             comingFrom=(getArguments().getString(Utility.Extra.COMING_FROM));
         }
@@ -159,12 +162,12 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     }
 
     // open show Package Detail Model Fragment Dialog
-    private void showPackageDetailModelFragmentDialog() {
+    private void showPackageDetailModelFragmentDialog(PackageDetail packageDetail) {
         if (packageDetailModelDialog != null) {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail, comparisionChartModel,comingFrom);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, careCityDetail,comingFrom);
         packageDetailModelDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
@@ -173,13 +176,23 @@ public class ComparisionChartFragmentDialog extends DialogFragment implements Vi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_book_know_premimu:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
-                showPackageDetailModelFragmentDialog();
+              //  PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
+                for (PackageDetail packageDetail : packageDetailList) {
+                    if (packageDetail.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
+                        showPackageDetailModelFragmentDialog(packageDetail);
+                        break;
+                    }
+                }
                 break;
             case R.id.tv_book_know_care:
-                PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
-                showPackageDetailModelFragmentDialog();
-                break;
+               // PreferenceUtility.getInstance(getContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.NORMAL);
+                for (PackageDetail packageDetail : packageDetailList) {
+                    if (packageDetail.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
+                        showPackageDetailModelFragmentDialog(packageDetail);
+                        break;
+                    }
+                }
+               break;
         }
     }
 

@@ -51,11 +51,10 @@ public class AddressActivity extends BaseAppCompatActivity {
     private ActivityAddressBinding mBinding;
     private String comingFrom=Utility.EMPTY_STRING;
 
-    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, ComparisionChartModel comparisionChartModel,String comingFrom) {
+    public static void newInstance(Context context, PackageDetail packageDetail, CareCityDetail careCityDetail, String comingFrom) {
         Intent intent = new Intent(context, AddressActivity.class);
         intent.putExtra(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         intent.putExtra(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(careCityDetail));
-        intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
         intent.putExtra(Utility.Extra.COMING_FROM,comingFrom);
         context.startActivity(intent);
         ((Activity) context).overridePendingTransition(0, 0);
@@ -73,13 +72,10 @@ public class AddressActivity extends BaseAppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_2)) {
             careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_2), CareCityDetail.class);
         }
-        if (getIntent() != null && getIntent().hasExtra(Utility.Extra.DATA_3)) {
-            comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getIntent().getStringExtra(Utility.Extra.DATA_3), ComparisionChartModel.class);
-        }
         if (getIntent() != null && getIntent().hasExtra(Utility.Extra.COMING_FROM)) {
             comingFrom = (String) getIntent().getStringExtra(Utility.Extra.COMING_FROM);
         }
-        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comparisionChartModel,comingFrom));
+        loadFragment(AddressCategorySelectionFragment.TAG, AddressCategorySelectionFragment.newInstance(comingFrom));
         registerReceiver(mBR_OnLoginSuccess, new IntentFilter(Utility.BR_ON_LOGIN_SUCCESS));
 
     }
@@ -224,7 +220,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                                         Utility.showToast(AddressActivity.this, getString(R.string.validation_message_same_address_for_same_group_of_care));
                                     } else {
                                         // correct address
-                                        loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(model));
+                                        loadFragment(AddressSizeForHomeOfficeFragment.TAG, AddressSizeForHomeOfficeFragment.newInstance(model,packageDetail,careCityDetail));
                                     }
                                 }
                             } else {
@@ -289,7 +285,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                 AddressSizeForHomeOfficeFragment addressSizeForHomeOfficeFragment = (AddressSizeForHomeOfficeFragment) getSupportFragmentManager().findFragmentByTag(AddressSizeForHomeOfficeFragment.TAG);
                 if (addressSizeForHomeOfficeFragment != null) {
                     mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
-                    PaymentSummaryCheepCareActivity.newInstance(mContext, ((AddressActivity) mContext).getPackageDetail(), addressSizeForHomeOfficeFragment.addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, careCityDetail,packageDetail, addressSizeForHomeOfficeFragment.addressModel);
                 }
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);

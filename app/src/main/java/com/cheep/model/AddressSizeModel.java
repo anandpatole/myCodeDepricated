@@ -11,8 +11,20 @@ public class AddressSizeModel {
     @SerializedName("id")
     @Expose
     public String id;
+
     @SerializedName("value")
     @Expose
     public String value;
+
+    @SerializedName("normal")
+    @Expose
+    public PriceModel normalPriceModel;
+
+    @SerializedName("premium")
+    @Expose
+    public PriceModel premiumPriceModel;
+
     public boolean isSelected = false;
+
 }
+

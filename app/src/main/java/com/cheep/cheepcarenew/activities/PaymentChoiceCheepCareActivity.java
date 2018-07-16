@@ -21,6 +21,7 @@ import com.cheep.cheepcarenew.dialogs.AcknowledgementPopupDialog;
 import com.cheep.cheepcarenew.dialogs.PaymentFailedDialog;
 import com.cheep.cheepcarenew.model.CareCityDetail;
 import com.cheep.cheepcarenew.model.CheepCarePaymentDataModel;
+import com.cheep.cheepcarenew.model.UserRenewSubscriptionModel;
 import com.cheep.databinding.ActivityPaymentChoiceCheepCareBinding;
 import com.cheep.dialogs.AcknowledgementInteractionListener;
 import com.cheep.model.AddressModel;
@@ -70,6 +71,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     public static final int PAYTM_SUBSCRIPTION = 3;
     private String cartDetail = "";
     private CheepCarePaymentDataModel paymentDataModel;
+    private UserRenewSubscriptionModel renewSubscriptionModel;
     private Map<String, Object> mTaskCreationParams;
 
     //    private SubscribedTaskDetailModel subscribedTaskDetailModel;
@@ -83,6 +85,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
 
     public static final String PAYMENT_FOR_SUBSCRIPTION = "payment_for_subscription";
     public static final String PAYMENT_FOR_TASK_CREATION = "payment_for_task_creation";
+    public static final String PAYMENT_FOR_RENEW_PACKAGE = "payment_for_renew_package";
     private AcknowledgementPopupDialog acknowledgementPopupDialog;
 
 
@@ -98,6 +101,14 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         intent.putExtra(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(mCareCityDetail));
         intent.putExtra(Utility.Extra.SELECTED_ADDRESS_MODEL, GsonUtility.getJsonStringFromObject(addressModel));
         intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_SUBSCRIPTION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void newInstance(Context context, UserRenewSubscriptionModel userRenewSubscriptionModel) {
+        Intent intent = new Intent(context, PaymentChoiceCheepCareActivity.class);
+        intent.putExtra(Utility.Extra.DATA, userRenewSubscriptionModel);
+        intent.putExtra(Utility.Extra.PAYMENT_VIEW, PAYMENT_FOR_RENEW_PACKAGE);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -152,6 +163,8 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             String date = day + "-" + month + "-" + year;
             String oneDayMinusFromDate = CalendarUtility.getOneDayMinusDateFromPassingDate(date);
             mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, oneDayMinusFromDate));
+        } else if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)) {
+            renewSubscriptionModel = (UserRenewSubscriptionModel) getIntent().getSerializableExtra(Utility.Extra.DATA);
         }
         setupActionbar();
     }
@@ -159,7 +172,16 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
     private void setupActionbar() {
 
         DecimalFormat formatter = new DecimalFormat("#,###");
-        mBinding.textTitle.setText(getString(R.string.label_please_pay_x, formatter.format(Double.valueOf(paymentDataModel.paidAmount))));
+        if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)) {
+            mBinding.textTitle.setText(getString(R.string.label_please_pay_x, formatter.format(Double.valueOf(paymentDataModel.paidAmount))));
+
+        } else if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)) {
+            //remove value after dot
+            double x = Double.valueOf(renewSubscriptionModel.paidAmount);
+            int paidAmount = (int) x;
+            //String paidAmount = new DecimalFormat("##").format(renewSubscriptionModel.paidAmount);
+            mBinding.textTitle.setText(getString(R.string.label_please_pay_x, formatter.format(Double.valueOf(paidAmount))));
+        }
         setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Utility.EMPTY_STRING);
@@ -186,9 +208,13 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             public void onClickOfThanks() {
 
                 MessageEvent messageEvent = new MessageEvent();
-                messageEvent.id = careCityDetail.id;
-                messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
-
+                if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_SUBSCRIPTION)){
+                    messageEvent.id = careCityDetail.id;
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_SUCCESSFULLY;
+                }else if(paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)) {
+                    messageEvent.id = renewSubscriptionModel.id;
+                    messageEvent.BROADCAST_ACTION = Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_RENEW_SUCCESSFULLY;
+                }
                 EventBus.getDefault().post(messageEvent);
 
                 callProfileWsforUpdatedAddressList();
@@ -806,7 +832,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                 // todo :: >> this is our final success
                                 String siMandateId = checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getInstruction().getId();
                                 LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
-                                callCreateCheepCarePackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)){
+                                    callRenewUserPackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                }else {
+                                    callCreateCheepCarePackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                }
                                 Log.v("TRANSACTION SI STATUS=>", "SI Transaction not Initiated");
 
                             } else if (checkoutObj.getMerchantResponsePayload()
@@ -820,7 +850,11 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
                                 String siMandateId = checkoutObj.getMerchantResponsePayload().getPaymentMethod().getPaymentTransaction().getInstruction().getId();
                                 LogUtils.LOGE(TAG, "onResultOfPayNimo:siMandateId " + siMandateId);
                                 // todo :: >> this is our final success
-                                callCreateCheepCarePackageWS(paymentlog, siMandateId, Utility.BOOLEAN.YES);
+                                if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)){
+                                    callRenewUserPackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                }else {
+                                    callCreateCheepCarePackageWS(paymentlog, Utility.EMPTY_STRING, Utility.BOOLEAN.NO);
+                                }
 
                             } else {
                                 //SI TRANSACTION STATUS - Failure (status code OTHER THAN 0300 means failure)
@@ -910,5 +944,54 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         return result;
     }
 
+    ////////////////////////////////////////////////////////////////////  RENEW USER PACKAGE ///////////////////////////////////////////////////////
 
+    private void callRenewUserPackageWS(String paymentLog, String subsId, String isSubscription) {
+        LogUtils.LOGE(TAG, "callCreateCheepCarePackageWS: paymentLog \n" + paymentLog);
+
+
+        if (!Utility.isConnected(mContext)) {
+            Utility.showSnackBar(Utility.NO_INTERNET_CONNECTION, mBinding.getRoot());
+            return;
+        }
+        showProgressDialog();
+
+        UserDetails userDetails = PreferenceUtility.getInstance(mContext).getUserDetails();
+        //Add Header parameters
+
+        Map<String, String> mHeaderParams = new HashMap<>();
+        mHeaderParams.put(NetworkUtility.TAGS.X_API_KEY, PreferenceUtility.getInstance(mContext).getXAPIKey());
+        mHeaderParams.put(NetworkUtility.TAGS.USER_ID, userDetails.userID);
+
+        //Add Params
+        Map<String, Object> mParams = new HashMap<>();
+        mParams.put(NetworkUtility.TAGS.USER_PACKAGE_ID, String.valueOf(renewSubscriptionModel.userPackageId));
+        mParams.put(NetworkUtility.TAGS.TOTAL_AMOUNT, String.valueOf(renewSubscriptionModel.totalAmount));
+        mParams.put(NetworkUtility.TAGS.DISCOUNT_AMOUNT, String.valueOf(renewSubscriptionModel.discountAmount));
+        mParams.put(NetworkUtility.TAGS.PAID_AMOUNT, String.valueOf(renewSubscriptionModel.paidAmount));
+        mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(renewSubscriptionModel.taxAmount));
+
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, renewSubscriptionModel.paymentType);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
+
+        LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);
+
+        // Url is based on condition if address id is greater then 0 then it means we need to update the existing address
+        VolleyNetworkRequest mVolleyNetworkRequestForSPList = new VolleyNetworkRequest(NetworkUtility.WS.CARE_PACKAGE_RENEW
+                , mCallGenerateHashWSErrorListenerRenew
+                , mCallCreateCheepCareTaskWSResponseListener
+                , mHeaderParams
+                , mParams
+                , null);
+        Volley.getInstance(mContext).addToRequestQueue(mVolleyNetworkRequestForSPList);
+    }
+
+    Response.ErrorListener mCallGenerateHashWSErrorListenerRenew = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(final VolleyError error) {
+            hideProgressDialog();
+            LogUtils.LOGD(TAG, "onErrorResponse() called with: error = [" + error + "]");
+            Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
+        }
+    };
 }

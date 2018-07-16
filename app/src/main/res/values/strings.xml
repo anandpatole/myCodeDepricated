@@ -683,6 +683,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="label_yearly">Yearly</string>
     <string name="description_yearly_package">Go epic with yearlong CHEEP CARE just how you like it.</string>
     <string name="label_save_600_year">(Save ₹600/year)</string>
+    <string name="label_save_rupee">Save ₹%1$s</string>
     <string name="label_inclusive_of_taxes">Inclusive\nof taxes</string>
     <string name="label_support_in_progress">Support in progress</string>
     <string name="label_book_a_similar_task">Book a Similar Task</string>

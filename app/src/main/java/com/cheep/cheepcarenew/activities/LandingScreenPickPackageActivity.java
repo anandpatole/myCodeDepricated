@@ -148,16 +148,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mCityLandingPageModel != null) {
-            LogUtils.LOGE(TAG, "onResume:cart detail found");
-            getSavedData();
-        } else {
-            LogUtils.LOGE(TAG, "onResume: no city data found");
-        }
-    }
+
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -231,9 +222,8 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             public void getCityCareData(CityLandingPageModel cityLandingPageModel) {
                 hideProgressDialog();
                 mCityLandingPageModel = cityLandingPageModel;
-                PreferenceUtility.getInstance(mContext).saveCityLandingPageModel(cityLandingPageModel);
                 mPackageListString = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-                getSavedData();
+
                 setData();
             }
         });
@@ -381,12 +371,12 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
     }
 
     // open show Comparision Chart Fragment Dialog
-    private void showComparisionChartFragmentDialog(PackageDetail packageDetail) {
+    private void showComparisionChartFragmentDialog() {
         if (comparisionChartFragmentDialog != null) {
             comparisionChartFragmentDialog.dismissAllowingStateLoss();
             comparisionChartFragmentDialog = null;
         }
-        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, packageDetail, mCity,comingFrom);
+        comparisionChartFragmentDialog = ComparisionChartFragmentDialog.newInstance(comparisionChartModel, mCityLandingPageModel.packageDetailList, mCity,comingFrom);
         comparisionChartFragmentDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -396,7 +386,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
             packageDetailModelDialog.dismissAllowingStateLoss();
             packageDetailModelDialog = null;
         }
-        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCity, comparisionChartModel,comingFrom);
+        packageDetailModelDialog = PackageDetailModelDialog.newInstance(packageDetail, mCityLandingPageModel.careCityDetail,comingFrom);
         packageDetailModelDialog.show(getSupportFragmentManager(), TAG);
     }
 
@@ -413,10 +403,10 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     private void navigateToFragment() {
         if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.PREMIUM)) {
-            PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
+           // PreferenceUtility.getInstance(getApplicationContext()).saveTypeOfPackage(Utility.CAR_PACKAGE_TYPE.PREMIUM);
             showPackageDetailModelFragmentDialog(packageDetailData);
         } else if (packageDetailData.type.equalsIgnoreCase(Utility.CAR_PACKAGE_TYPE.NORMAL)) {
-            showComparisionChartFragmentDialog(packageDetailData);
+            showComparisionChartFragmentDialog();
         }
     }
     /**
@@ -433,40 +423,41 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
     }
 
-    private void getSavedData() {
-        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
-        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.careCityDetail.citySlug);
-        if (!TextUtils.isEmpty(cartDetail)) {
-            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
-            savedPackageList.clear();
-            savedPackageList.addAll(list);
-            String webData = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
-            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
-            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
-            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
-
-            if (!savedPackageList.isEmpty()) {
-                for (int i = 0; i < mCityLandingPageModel.packageDetailList.size(); i++) {
-                    PackageDetail webPakegDetail = mCityLandingPageModel.packageDetailList.get(i);
-                    for (PackageDetail detail : savedPackageList) {
-                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
-                            webPakegDetail.packageOptionList = detail.packageOptionList;
-                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
-                            webPakegDetail.isSelected = true;
-                        }
-                    }
-                }
-                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
-            }
-        } else {
-            if (!TextUtils.isEmpty(mPackageListString)) {
-                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
-                mCityLandingPageModel.packageDetailList.clear();
-                mCityLandingPageModel.packageDetailList.addAll(list);
-            }
-            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
-        }
-    }
+//    private void getSavedData() {
+//        ArrayList<PackageDetail> savedPackageList = new ArrayList<>();
+//        String cartDetail = PreferenceUtility.getInstance(this).getCityCartDetail(mCityLandingPageModel.careCityDetail.citySlug);
+//        if (!TextUtils.isEmpty(cartDetail)) {
+//            ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(cartDetail, PackageDetail[].class);
+//            savedPackageList.clear();
+//            savedPackageList.addAll(list);
+//            String webData = GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList);
+//            LogUtils.LOGE(TAG, "Saved data--- " + cartDetail);
+//            LogUtils.LOGE(TAG, "---------------------------------------------------------------------");
+//            LogUtils.LOGE(TAG, "Saved web data--- " + webData);
+//
+//            if (!savedPackageList.isEmpty()) {
+//                for (int i = 0; i < mCityLandingPageModel.packageDetailList.size(); i++) {
+//                    PackageDetail webPakegDetail = mCityLandingPageModel.packageDetailList.get(i);
+//                    for (PackageDetail detail : savedPackageList)
+//                    {
+//                        if (detail.packageOptionList != null && !detail.packageOptionList.isEmpty() && detail.packageSlug.equalsIgnoreCase(webPakegDetail.packageSlug) && detail.isSelected) {
+//                            webPakegDetail.packageOptionList = detail.packageOptionList;
+//                            webPakegDetail.mSelectedAddressList = detail.mSelectedAddressList;
+//                            webPakegDetail.isSelected = true;
+//                        }
+//                    }
+//                }
+//                LogUtils.LOGE(TAG, "replacedData: " + GsonUtility.getJsonStringFromObject(mCityLandingPageModel.packageDetailList));
+//            }
+//        } else {
+//            if (!TextUtils.isEmpty(mPackageListString)) {
+//                ArrayList<PackageDetail> list = GsonUtility.getObjectListFromJsonString(mPackageListString, PackageDetail[].class);
+//                mCityLandingPageModel.packageDetailList.clear();
+//                mCityLandingPageModel.packageDetailList.addAll(list);
+//            }
+//            LogUtils.LOGE(TAG, "getSavedData: no cart data found");
+//        }
+//    }
 
     /************************************************************************************************
      **********************************Calling Webservice for old and new price *********************
@@ -512,7 +503,7 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
 
                         comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(jsonObject.optString(NetworkUtility.TAGS.DATA), ComparisionChartModel.class);
-                        PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
+                        //PreferenceUtility.getInstance(mContext).saveComparisonChatDetails(comparisionChartModel);
                         navigateToFragment();
 
                         break;

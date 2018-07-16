@@ -130,7 +130,6 @@ public class Utility {
     // new type for subscription
     public static final String SUBSCRIBE = "SUBSCRIBE";
     public static final String RENEW_SUBSCRIPTION = "RENEW_SUBSCRIPTION";
-    public static final String TYPE_OF_PACKAGE = "packageType";
     public static String YES = "yes";
     public static int TEN = 10;
     public static final String HOME = "Home";
@@ -241,6 +240,8 @@ public class Utility {
     public static final String REMOVE = "remove";
     public static final String ADD = "add";
     public static final int EDIT_ADDRESD_POSITION = 0;
+
+    public static final String MANAGE_SUBSCRIPTION = "ManageSubscriptionActivity";
 
     //Different Types of Braoadcast Actions
     public static final String BR_ON_TASK_CREATED = "com.cheep.ontaskcreated";
@@ -637,8 +638,8 @@ public class Utility {
 
     public interface CHEEP_CARE {
         String SAVE = "Save ₹";
-        String RS = "₹";
-    }
+      String RS = "₹";
+  }
 
     //Bundle Extra parameters
     public interface ReviewByMe {
@@ -713,6 +714,13 @@ public class Utility {
         String SP_USER_ID = "sp_user_id ";
         String IS_SUBSCRIPTION = "is_subscription";
         String BROADCAST_TYPE = "broadCastType";
+        String CONING_FORM = "ManageSubscriptionActivity";
+    }
+
+    public interface NUMBER {
+        String THREE = "3";
+        String SIX = "6";
+        String TWELVE = "12";
     }
 
 //    public interface cat {
@@ -823,6 +831,7 @@ public class Utility {
         int TASK_PAID_SUCCESSFULLY = 21;
         int PACKAGE_SUBSCRIBED_SUCCESSFULLY = 22;
         int SUBSCRIBED_TASK_CREATE_SUCCESSFULLY = 23;
+        int PACKAGE_SUBSCRIBED_RENEW_SUCCESSFULLY = 24;
 
         //when user selects other subscribed address we need to re-open TaskCreationCcActivity as different addresses will hav
         // different limits
@@ -1329,9 +1338,9 @@ public class Utility {
         //milliseconds
         long different = date2.getTime() - date1.getTime();
 
-        LogUtils.LOGD("ManageSubscription", "startDate : " + startDate);
-        LogUtils.LOGD("ManageSubscription", "endDate : " + endDate);
-        LogUtils.LOGD("ManageSubscription", "different : " + different);
+        LogUtils.LOGD("Manage", "startDate : " + startDate);
+        LogUtils.LOGD("Manage", "endDate : " + endDate);
+        LogUtils.LOGD("Manage", "different : " + different);
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;

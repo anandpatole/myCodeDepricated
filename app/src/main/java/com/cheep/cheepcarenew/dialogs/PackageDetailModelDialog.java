@@ -48,12 +48,11 @@ private String comingFrom=Utility.EMPTY_STRING;
         // Required empty public constructor
     }
 
-    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail, ComparisionChartModel comparisionChartModel,String comingFrom) {
+    public static PackageDetailModelDialog newInstance(PackageDetail packageDetail, CareCityDetail cityDetail,String comingFrom) {
         PackageDetailModelDialog fragment = new PackageDetailModelDialog();
         Bundle args = new Bundle();
         args.putString(Utility.Extra.DATA, GsonUtility.getJsonStringFromObject(packageDetail));
         args.putString(Utility.Extra.DATA_2, GsonUtility.getJsonStringFromObject(cityDetail));
-        args.putString(Utility.Extra.DATA_3, GsonUtility.getJsonStringFromObject(comparisionChartModel));
         args.putString(Utility.Extra.COMING_FROM, comingFrom);
         fragment.setArguments(args);
         return fragment;
@@ -124,10 +123,10 @@ private String comingFrom=Utility.EMPTY_STRING;
                 if (getArguments() != null) {
                     PackageDetail packageDetail = (PackageDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA), PackageDetail.class);
                     CareCityDetail careCityDetail = (CareCityDetail) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_2), CareCityDetail.class);
-                    ComparisionChartModel comparisionChartModel = (ComparisionChartModel) GsonUtility.getObjectFromJsonString(getArguments().getString(Utility.Extra.DATA_3), ComparisionChartModel.class);
+
                     comingFrom=(String) getArguments().getString(Utility.Extra.COMING_FROM);
                     if (packageDetail != null) {
-                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail, comparisionChartModel,comingFrom);
+                        AddressActivity.newInstance(getContext(), packageDetail, careCityDetail,comingFrom);
                         dismiss();
                     }
                 }

@@ -37,20 +37,15 @@ public class AddressCategorySelectionFragment extends BaseFragment {
     private String comingFrom=Utility.EMPTY_STRING;
 //    private ViewTooltip.TooltipView tooltipView;
 
-    public static AddressCategorySelectionFragment newInstance() {
-        Bundle args = new Bundle();
-        AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static AddressCategorySelectionFragment newInstance(ComparisionChartModel comparisionChartModel,String comingFrom) {
+    public static AddressCategorySelectionFragment newInstance(String comingFrom) {
         Bundle args = new Bundle();
         AddressCategorySelectionFragment fragment = new AddressCategorySelectionFragment();
         args.putString(Utility.Extra.COMING_FROM,comingFrom);
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
     public void setAddressModel(AddressModel addressModel) {
         this.addressModel = addressModel;

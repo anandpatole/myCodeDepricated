@@ -358,6 +358,9 @@ public class HomeTabFragment extends BaseFragment {
             getCategoryListFromServer();
             getBannerImageListFromServer();
         }
+        if(event.BROADCAST_ACTION == Utility.BROADCAST_TYPE.PACKAGE_SUBSCRIBED_RENEW_SUCCESSFULLY){
+
+        }
     }
 
     private void initiateRecyclerView(ArrayList<JobCategoryModel> list) {

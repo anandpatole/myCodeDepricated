@@ -157,6 +157,7 @@ public class NetworkUtility {
         public static final String CHECK_CHEEP_CARE_CODE = BASE_URL + "customers/care/check_cheepcarecode";
         public static final String GET_CARE_PACKAGE_TIP = BASE_URL + "customers/care/getCarePackageTip";
         public static final String PURCHASE_CARE_PACKAGE = BASE_URL + "customers/care/purchaseCarePackage";
+        public static final String CARE_PACKAGE_RENEW = BASE_URL + "customers/care/carePackageRenew";
         public static final String GET_USER_SUBSCRIBED_CARE_PACKAGE = BASE_URL + "customers/care/getUserSubscribedCarePackage";
         public static final String GET_CARE_FREE_PAID_SERVICES_FOR_CATEGORY = BASE_URL + "customers/care/getCareFreePaidServicesForCategory";
         public static final String CARE_CREATE_TASK = BASE_URL + "customers/care/createTask";
@@ -487,6 +488,7 @@ String IS_SUBSCRIBED="is_subscribe";
         String GST_RATE = "GST_RATE";
         String SUBTITLE = "subtitle";
         String TOTAL_AMOUNT = "total_amount";
+        String USER_PACKAGE_ID = "user_package_id";
         String PROMOCODE = "promocode";
         String TAX_AMOUNT = "tax_amount";
         String IS_ANNUALLY = "is_annually";
@@ -546,7 +548,9 @@ String IS_SUBSCRIBED="is_subscribe";
         String URGENT_BOOKING_CHARGE = "urgent_booking_charge";
         String NON_OFFICE_HOURS_CHARGE = "non_office_hours_charge";
         //String MANAGE_SUBSCRIPTION_PACKAGE = "packageDetail";
-        String MANAGE_SUBSCRIPTION_PACKAGE = "user_package_data";
+        String MANAGE_SUBSCRIPTION_USER_PACKAGE_DATA = "user_package_data";
+        String MANAGE_SUBSCRIPTION_USER_PACKAGE_DETAILS = "package_detail";
+        String MANAGE_SUBSCRIPTION_USER_CITY_CARE_DETAIL = "city_care_detail";
 
         String MSG_TYPE= "msg_type";
 

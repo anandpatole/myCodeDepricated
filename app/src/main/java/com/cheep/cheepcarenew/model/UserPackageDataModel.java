@@ -2,11 +2,13 @@ package com.cheep.cheepcarenew.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
- * Created by majid on 12-07-2018.
+ * Created by majid on 27-06-2018.
  */
 
-public class UserPackageDataModel {
+public class UserPackageDataModel implements Serializable {
 
     @SerializedName("user_package_id")
     public String userPackageId;
