@@ -971,7 +971,7 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
         mParams.put(NetworkUtility.TAGS.PAID_AMOUNT, String.valueOf(renewSubscriptionModel.paidAmount));
         mParams.put(NetworkUtility.TAGS.TAX_AMOUNT, String.valueOf(renewSubscriptionModel.taxAmount));
 
-        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, renewSubscriptionModel.paymentType);
+        mParams.put(NetworkUtility.TAGS.PAYMENT_METHOD, paymentMethod);
         mParams.put(NetworkUtility.TAGS.PAYMENT_LOG, paymentLog);
 
         LogUtils.LOGE(TAG, "callBookProAndPayForNormalTaskWS: mParams " + mParams);

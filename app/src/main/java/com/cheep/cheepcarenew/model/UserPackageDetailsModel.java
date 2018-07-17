@@ -1,5 +1,6 @@
 package com.cheep.cheepcarenew.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -24,4 +25,6 @@ public class UserPackageDetailsModel implements Serializable {
 
     @SerializedName("new_price")
     public String new_price;
+
+
 }

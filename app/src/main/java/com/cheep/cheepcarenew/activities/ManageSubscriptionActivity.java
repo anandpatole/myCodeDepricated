@@ -167,7 +167,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         userRenewSubscriptionModel.pincode = userPackageDataModel.pincode;
         userRenewSubscriptionModel.category = userPackageDataModel.category;
         userRenewSubscriptionModel.paidAmount = userPackageDataModel.paidAmount;
-        userRenewSubscriptionModel.paymentType = userPackageDataModel.paymentType;
+        userRenewSubscriptionModel.assetTypeId = userPackageDataModel.assetTypeId;
 
         //package_detail
         userRenewSubscriptionModel.title = userPackageDetailsModel.title;
