@@ -112,6 +112,7 @@
     <color name="light_blue_line_color">#99C8E2F9</color>
     <color name="red">#E20505</color>
     <color name="yellow">#FF9501</color>
+    <color name="best_value">#FFD479</color>
     <color name="yellow_varient_1">#FFF8DE</color>
     <color name="yellow_varient_2">#FEF3BE</color>
     <color name="colorSaffron">#f16609</color>

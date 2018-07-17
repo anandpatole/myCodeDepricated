@@ -736,7 +736,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         if(!isDesclaimerEnabled){
             Utility.hideKeyboard(mContext);
-            Utility.showSnackBar(getString(R.string.validate_term), mActivityLoginBinding.getRoot());
+            Utility.showSnackBarWithTextCenter(getString(R.string.validate_terms), mActivityLoginBinding.getRoot());
             return false;
         }
 
@@ -833,7 +833,8 @@ public class LoginActivity extends BaseAppCompatActivity implements
     /**
      * Listeners for tracking Webservice calls
      */
-    Response.Listener mCallLoginWSResponseListener = new Response.Listener() {
+    Response.Listener mCallLoginWSResponseListener = new Response.Listener()
+    {
         @Override
         public void onResponse(Object response) {
 

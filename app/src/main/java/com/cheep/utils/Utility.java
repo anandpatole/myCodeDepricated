@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +24,11 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cheep.BuildConfig;
@@ -621,7 +624,19 @@ public class Utility {
     public static void showSnackBar(String message, View view) {
         Snackbar.make(view, message, 3000).show();
     }
+    public static void showSnackBarWithTextCenter(String message, View view) {
+      Snackbar mSnackbar=  Snackbar.make(view, message, 3000);
+        View mView = mSnackbar.getView();
+        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            mTextView.setTextAlignment(mTextView.TEXT_ALIGNMENT_CENTER);
+            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        } else {
+            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+        mSnackbar.show();
 
+    }
     public static void showToast(Context mContext, String message) {
         Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
     }
@@ -1059,6 +1074,16 @@ public class Utility {
         if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
             return "0.00";
         DecimalFormat formatter = new DecimalFormat("#,##,##0.00");
+        double price = Double.parseDouble(quotePrice);
+        return formatter.format(price);
+    }
+    public static String getQuotePriceFormatterAsInteger(String quotePrice) {
+
+        if (quotePrice == null || quotePrice.equalsIgnoreCase("null"))
+            return "0.00";
+        if (quotePrice.equalsIgnoreCase("") || quotePrice.equalsIgnoreCase("0") || quotePrice.equalsIgnoreCase("0.0") || quotePrice.equalsIgnoreCase("0.00"))
+            return "0.00";
+        DecimalFormat formatter = new DecimalFormat("####");
         double price = Double.parseDouble(quotePrice);
         return formatter.format(price);
     }

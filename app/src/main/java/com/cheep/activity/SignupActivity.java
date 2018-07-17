@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -34,7 +35,9 @@ import com.android.volley.VolleyError;
 import com.cheep.BuildConfig;
 import com.cheep.R;
 import com.cheep.databinding.ActivitySignupBinding;
+import com.cheep.fragment.BaseFragment;
 import com.cheep.fragment.InfoFragment;
+import com.cheep.interfaces.DrawerLayoutInteractionListener;
 import com.cheep.model.UserDetails;
 import com.cheep.network.NetworkUtility;
 import com.cheep.network.Volley;
@@ -59,7 +62,8 @@ import static com.cheep.utils.Utility.REQUEST_CODE_IMAGE_CAPTURE_ADD_PROFILE;
  * Created by pankaj on 9/26/16.
  */
 
-public class SignupActivity extends BaseAppCompatActivity {
+public class SignupActivity extends BaseAppCompatActivity implements DrawerLayoutInteractionListener
+{
 
     private static final String TAG = SignupActivity.class.getSimpleName();
     private ActivitySignupBinding mActivitySignupBinding;
@@ -90,7 +94,18 @@ public class SignupActivity extends BaseAppCompatActivity {
     protected void initiateUI() {
 
         getWindow().setBackgroundDrawableResource(R.drawable.login_bg_blur);
-
+        setSupportActionBar(mActivitySignupBinding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            mActivitySignupBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    onBackPressed();
+                }
+            });
+        }
 
         //Check if we got any user details that need to be updated
         if (getIntent().hasExtra(Utility.Extra.USER_DETAILS)) {
@@ -132,7 +147,31 @@ public class SignupActivity extends BaseAppCompatActivity {
 //        mActivitySignupBinding.imgProfile.setOnClickListener(onClickListener);
         mActivitySignupBinding.btnGo.setOnClickListener(onClickListener);
     }
+    //DrawerLayoutInteractionListener,
+    @Override
+    public void setUpDrawerLayoutWithToolBar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(Utility.EMPTY_STRING);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utility.hideKeyboard(mContext);
+                    if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                        getSupportFragmentManager().popBackStack();
+                    }else {
+                        onBackPressed();
+                    }
+                }
+            });
+        }
+    }
 
+    @Override
+    public void profileUpdated() {
+
+    }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -233,11 +272,23 @@ public class SignupActivity extends BaseAppCompatActivity {
         builder.show();
 
     }
+    public void loadFragment(String tag, BaseFragment baseFragment) {
+        getSupportFragmentManager().beginTransaction().add(R.id.content,baseFragment, tag).addToBackStack(InfoFragment.TAG).commitAllowingStateLoss();
+    }
     private void setTermAndCondition(){
         SpannableStringBuilder mSpannableStringBuilder = new SpannableStringBuilder(getString(R.string.terms_and_condition));
         mActivitySignupBinding.tvDesclaimer.setText(mSpannableStringBuilder);
         mActivitySignupBinding.tvDesclaimer.setMovementMethod(LinkMovementMethod.getInstance());
         mActivitySignupBinding.imgCheckbox.setImageResource(R.drawable.ic_checkbox_icon_checked);
+        mActivitySignupBinding.tvDesclaimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment mFragment = getSupportFragmentManager().findFragmentByTag(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS);
+                if (mFragment == null) {
+                    loadFragment(InfoFragment.TAG + "_" + NetworkUtility.TAGS.PAGEID_TYPE.TERMS, InfoFragment.newInstance(NetworkUtility.TAGS.PAGEID_TYPE.TERMS));
+                }
+            }
+        });
     }
     private void dispatchTakePictureIntent(int requestCode, int requestPermissionCode) {
         //Go ahead with Camera capturing
@@ -565,7 +616,7 @@ public class SignupActivity extends BaseAppCompatActivity {
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
                         String error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
-                        Utility.showSnackBar(error_message, mActivitySignupBinding.getRoot());
+                        Utility.showSnackBarWithTextCenter(error_message, mActivitySignupBinding.getRoot());
                         break;
                 }
             } catch (JSONException e) {
