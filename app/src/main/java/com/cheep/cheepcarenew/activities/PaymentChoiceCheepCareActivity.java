@@ -162,9 +162,12 @@ public class PaymentChoiceCheepCareActivity extends BaseAppCompatActivity implem
             String year = String.valueOf(superCalendar.getCalendar().get(Calendar.YEAR));
             String date = day + "-" + month + "-" + year;
             String oneDayMinusFromDate = CalendarUtility.getOneDayMinusDateFromPassingDate(date);
+
             mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, oneDayMinusFromDate));
         } else if (paymentFor.equalsIgnoreCase(PAYMENT_FOR_RENEW_PACKAGE)) {
             renewSubscriptionModel = (UserRenewSubscriptionModel) getIntent().getSerializableExtra(Utility.Extra.DATA);
+            String date = CalendarUtility.getFutureDate(renewSubscriptionModel.endDate,renewSubscriptionModel.packageDuration);
+            mBinding.tvAutoRenewalMsg.setText(getString(R.string.label_with_payment_desc_cheep_care, date));
         }
         setupActionbar();
     }

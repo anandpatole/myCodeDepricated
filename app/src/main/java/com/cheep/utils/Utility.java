@@ -19,6 +19,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -1420,6 +1421,14 @@ public class Utility {
             default:
                 return "th";
         }
+    }
+
+    public static String getCurrentDate(){
+        Date d = new Date();
+        CharSequence s  = DateFormat.format("yyyy-M-dd", d.getTime());
+        Log.e("Utility","CURRENT DATE:- "+s);
+
+        return s.toString();
     }
 
 }

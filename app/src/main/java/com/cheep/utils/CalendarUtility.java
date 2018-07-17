@@ -231,4 +231,28 @@ public class CalendarUtility {
 
         return getDateStringWithSuffic(Integer.parseInt(yesterdayDate[2])) +" " +yesterdayDate[1]+" "+ yesterdayDate[5];
     }
+
+    public static String getFutureDate(String date,String duration){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-M-dd");
+        Date dateObject = null;
+        try {
+            dateObject = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar c = Calendar.getInstance();
+
+        c.setTime(dateObject); // Now use today date.
+
+        c.add(Calendar.MONTH, +Integer.valueOf(duration)); // Adds days
+
+        Date newDate = c.getTime();
+
+        Log.e(TAG,"FUTURE DATE" + newDate.toString());
+
+        String [] collectDate = String.valueOf(newDate).split(" ");
+        return getDateStringWithSuffic(Integer.parseInt(collectDate[2])) +" " +collectDate[1]+" "+ collectDate[5];
+    }
 }

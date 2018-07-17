@@ -58,4 +58,8 @@ public class UserPackageDataModel implements Serializable {
     @Expose
     public String assetTypeId;
 
+    @SerializedName("PRIOR_PACKAGE_RENEW_NOTFICATION_DAY")
+    @Expose
+    public String PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY;
+
 }

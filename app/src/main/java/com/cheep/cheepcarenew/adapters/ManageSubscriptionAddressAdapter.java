@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cheep.R;
+import com.cheep.cheepcarenew.model.ManagesSubscriptionModel;
 import com.cheep.cheepcarenew.model.UserPackageDataModel;
 import com.cheep.databinding.RowAddressSubscriptionBinding;
 import com.cheep.utils.Utility;
@@ -20,14 +21,14 @@ import java.util.ArrayList;
 
 public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<ManageSubscriptionAddressAdapter.ViewHolder> {
 
-    private ArrayList<UserPackageDataModel> mList;
+    private ArrayList<ManagesSubscriptionModel> mList;
     AddressItemClickListener addressItemClickListener;
 
     public interface AddressItemClickListener {
-        void onClickItem(UserPackageDataModel model, int position);
+        void onClickItem(ManagesSubscriptionModel model);
     }
 
-    public ManageSubscriptionAddressAdapter(ArrayList<UserPackageDataModel> mList, AddressItemClickListener listener) {
+    public ManageSubscriptionAddressAdapter(ArrayList<ManagesSubscriptionModel> mList, AddressItemClickListener listener) {
         this.mList = mList;
         this.addressItemClickListener = listener;
     }
@@ -43,16 +44,17 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
         if (position == (getItemCount() - 1)) {
             holder.mRowAddressBinding.dividers.setVisibility(View.GONE);
         }
-        final UserPackageDataModel model = mList.get(position);
+        //final UserPackageDataModel model = mList.get(position);
 
-        holder.mRowAddressBinding.textFullAddress.setText(model.address);
-        holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.category));
-        holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.category), 0, 0, 0);
+         final ManagesSubscriptionModel model = mList.get(position);
+
+        holder.mRowAddressBinding.textFullAddress.setText(model.userPackageData.address);
+        holder.mRowAddressBinding.textAddressCategory.setText(Utility.getAddressCategoryString(model.userPackageData.category));
+        holder.mRowAddressBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(model.userPackageData.category), 0, 0, 0);
         holder.mRowAddressBinding.frontLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Collections.swap(mList, 0, position);
-                addressItemClickListener.onClickItem(getItem(position),position);
+                addressItemClickListener.onClickItem(getItem(position));
             }
         });
     }
@@ -62,7 +64,7 @@ public class ManageSubscriptionAddressAdapter extends RecyclerView.Adapter<Manag
         return mList.size();
     }
 
-    public UserPackageDataModel getItem(int position) {
+    public ManagesSubscriptionModel getItem(int position) {
         return mList.get(position);
     }
 

@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
@@ -15,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.cheep.R;
 import com.cheep.activity.BaseAppCompatActivity;
 import com.cheep.cheepcarenew.adapters.ManageSubscriptionAddressAdapter;
+import com.cheep.cheepcarenew.model.ManagesSubscriptionModel;
 import com.cheep.cheepcarenew.model.UserCityCareDetail;
 import com.cheep.cheepcarenew.model.UserPackageDataModel;
 import com.cheep.cheepcarenew.model.UserPackageDetailsModel;
@@ -36,7 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
@@ -44,14 +48,13 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         View.OnClickListener {
 
     public static final String TAG = "ManageSubscriptionActivity";
-    private ArrayList<UserPackageDataModel> userPackageDataList;
-    private ArrayList<UserPackageDetailsModel> userPackageDetailsList;
-    private ArrayList<UserCityCareDetail> userCityCareDetailsList;
     private ManageSubscriptionAddressAdapter adapter;
     private FragmentManageSubscriptionBinding mBinding;
+    ArrayList<ManagesSubscriptionModel> managesSubscriptionList=null;
     int dateDifference = 0;
     // model classes
     private UserRenewSubscriptionModel userRenewSubscriptionModel;
+    private ManagesSubscriptionModel managesSubscriptionModel;
 
     public static void newInstance(Context context) {
 
@@ -66,9 +69,11 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
 
         // add event bus listener
         EventBus.getDefault().register(this);
+
         initiateUI();
         setListeners();
         callManageSubscriptionWS();
+
     }
     @Nullable
     @Override
@@ -100,36 +105,35 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         mBinding.subscriptionRecyclerView.setLayoutManager(layoutManager);
         mBinding.subscriptionRecyclerView.setNestedScrollingEnabled(false);
         mBinding.subscriptionRecyclerView.setHasFixedSize(false);
-        adapter = new ManageSubscriptionAddressAdapter(userPackageDataList, ManageSubscriptionActivity.this);
+        adapter = new ManageSubscriptionAddressAdapter(managesSubscriptionList, ManageSubscriptionActivity.this);
         mBinding.subscriptionRecyclerView.setAdapter(adapter);
 
     }
 
-    private void setOnlyOneAddressOnView(UserPackageDataModel userPackageDataModel,
-                                         UserPackageDetailsModel userPackageDetailsModel,UserCityCareDetail userCityCareDetail) {
+    private void setOnlyOneAddressOnView(ManagesSubscriptionModel managesSubscriptionModel) {
         mBinding.onlyOneAddressLayout.setVisibility(View.VISIBLE);
         mBinding.allAddressLayout.setVisibility(View.GONE);
-        mBinding.textFullAddress.setText(userPackageDataModel.address);
-        if (userPackageDataModel.packageType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
+        mBinding.textFullAddress.setText(managesSubscriptionModel.userPackageData.address);
+        if (managesSubscriptionModel.userPackageData.packageType.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM)) {
             mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PREMIUM_PACKAGE);
         } else {
             mBinding.tvCheepCarePackage.setText(Utility.CHEEP_CARE_PACKAGE);
         }
-        mBinding.textSubscriptionDuration.setText(userPackageDataModel.packageDuration + " " + Utility.MONTH);
-        mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(userPackageDataModel.category));
-        mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(userPackageDataModel.category), 0, 0, 0);
+        mBinding.textSubscriptionDuration.setText(managesSubscriptionModel.userPackageData.packageDuration + " " + Utility.MONTH);
+        mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(managesSubscriptionModel.userPackageData.category));
+        mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(managesSubscriptionModel.userPackageData.category), 0, 0, 0);
 
-        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, userPackageDataModel.paidAmount));
+        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, managesSubscriptionModel.userPackageData.paidAmount));
 
-        if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(userPackageDataModel.paymentType)) {
+        if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(managesSubscriptionModel.userPackageData.paymentType)) {
             mBinding.textPaymentMethod.setText(Utility.HDFC);
         } else {
-            mBinding.textPaymentMethod.setText(userPackageDataModel.paymentType);
+            mBinding.textPaymentMethod.setText(managesSubscriptionModel.userPackageData.paymentType);
         }
 
-        mBinding.textSubscribedOn.setText(Utility.getDate(userPackageDataModel.startDate)); // grt date like 23th jun 208
-        mBinding.textSubscriptionEndDate.setText(Utility.getDate(userPackageDataModel.endDate));
-        if (userPackageDataModel.isRenew.equalsIgnoreCase(Utility.YES)) {
+        mBinding.textSubscribedOn.setText(Utility.getDate(managesSubscriptionModel.userPackageData.startDate)); // grt date like 23th jun 208
+        mBinding.textSubscriptionEndDate.setText(Utility.getDate(managesSubscriptionModel.userPackageData.endDate));
+        if (managesSubscriptionModel.userPackageData.isRenew.equalsIgnoreCase(Utility.YES)) {
             mBinding.relativeAutoRenewal.setVisibility(View.VISIBLE);
             mBinding.renewLl.setVisibility(View.GONE);
         } else {
@@ -139,49 +143,49 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         // calculate how many date to left to from end date
         /* if day is more than 10 then RENEW BUTTON is clickable and color will be blue
          * other wise color will be gray and not clickable*/
-        dateDifference = Utility.getDifferenceBetweenTwoDate(userPackageDataModel.startDate, userPackageDataModel.endDate);
-        if (dateDifference >= Utility.TEN) {
-            mBinding.renewBtn.setTextColor(getResources().getColor(R.color.dark_blue));
+
+        dateDifference = Utility.getDifferenceBetweenTwoDate(Utility.getCurrentDate(), managesSubscriptionModel.userPackageData.endDate); //2018-12-20
+        if (dateDifference <= Integer.valueOf(managesSubscriptionModel.PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY)) {
+            mBinding.linearRenew.setVisibility(View.VISIBLE);
         } else {
-            mBinding.renewBtn.setTextColor(getResources().getColor(R.color.black_translucent_1));
+            mBinding.linearRenew.setVisibility(View.VISIBLE);
         }
 
-        collectDataForRenewSubscription(userPackageDataModel,userPackageDetailsModel,userCityCareDetail);
+        collectDataForRenewSubscription(managesSubscriptionModel);
     }
     // this method is used to collect data for renew subscription
-    private void collectDataForRenewSubscription(UserPackageDataModel userPackageDataModel,
-                                                 UserPackageDetailsModel userPackageDetailsModel,UserCityCareDetail userCityCareDetail){
+    private void collectDataForRenewSubscription(ManagesSubscriptionModel model){
         userRenewSubscriptionModel = new UserRenewSubscriptionModel();
 
         //user_package_data
-        userRenewSubscriptionModel.userPackageId = userPackageDataModel.userPackageId;
-        userRenewSubscriptionModel.packageId = userPackageDataModel.packageId;
-        userRenewSubscriptionModel.packageType = userPackageDataModel.packageType;
-        userRenewSubscriptionModel.packageDuration = userPackageDataModel.packageDuration;
-        userRenewSubscriptionModel.startDate = userPackageDataModel.startDate;
-        userRenewSubscriptionModel.endDate = userPackageDataModel.endDate;
-        userRenewSubscriptionModel.addressId = userPackageDataModel.addressId;
-        userRenewSubscriptionModel.isRenew = userPackageDataModel.isRenew;
-        userRenewSubscriptionModel.name = userPackageDataModel.name;
-        userRenewSubscriptionModel.address = userPackageDataModel.address;
-        userRenewSubscriptionModel.pincode = userPackageDataModel.pincode;
-        userRenewSubscriptionModel.category = userPackageDataModel.category;
-        userRenewSubscriptionModel.paidAmount = userPackageDataModel.paidAmount;
-        userRenewSubscriptionModel.assetTypeId = userPackageDataModel.assetTypeId;
+        userRenewSubscriptionModel.userPackageId = model.userPackageData.userPackageId;
+        userRenewSubscriptionModel.packageId = model.userPackageData.packageId;
+        userRenewSubscriptionModel.packageType = model.userPackageData.packageType;
+        userRenewSubscriptionModel.packageDuration = model.userPackageData.packageDuration;
+        userRenewSubscriptionModel.startDate = model.userPackageData.startDate;
+        userRenewSubscriptionModel.endDate = model.userPackageData.endDate;
+        userRenewSubscriptionModel.addressId = model.userPackageData.addressId;
+        userRenewSubscriptionModel.isRenew = model.userPackageData.isRenew;
+        userRenewSubscriptionModel.name = model.userPackageData.name;
+        userRenewSubscriptionModel.address = model.userPackageData.address;
+        userRenewSubscriptionModel.pincode = model.userPackageData.pincode;
+        userRenewSubscriptionModel.category = model.userPackageData.category;
+        userRenewSubscriptionModel.paidAmount = model.userPackageData.paidAmount;
+        userRenewSubscriptionModel.assetTypeId = model.userPackageData.assetTypeId;
 
         //package_detail
-        userRenewSubscriptionModel.title = userPackageDetailsModel.title;
-        userRenewSubscriptionModel.subtitle = userPackageDetailsModel.subtitle;
-        userRenewSubscriptionModel.type = userPackageDetailsModel.type;
-        userRenewSubscriptionModel.old_price = userPackageDetailsModel.old_price;
-        userRenewSubscriptionModel.new_price = userPackageDetailsModel.new_price;
+        userRenewSubscriptionModel.title = model.userPackageDetail.title;
+        userRenewSubscriptionModel.subtitle = model.userPackageDetail.subtitle;
+        userRenewSubscriptionModel.type = model.userPackageDetail.type;
+        userRenewSubscriptionModel.old_price = model.userPackageDetail.old_price;
+        userRenewSubscriptionModel.new_price = model.userPackageDetail.new_price;
 
         //city_care_detail
-        userRenewSubscriptionModel.id = userCityCareDetail.id;
-        userRenewSubscriptionModel.cityTitle = userCityCareDetail.title;
-        userRenewSubscriptionModel.citySubtitle = userCityCareDetail.subtitle;
-        userRenewSubscriptionModel.citySlug = userCityCareDetail.citySlug;
-        userRenewSubscriptionModel.cityName = userCityCareDetail.cityName;
+        userRenewSubscriptionModel.id = model.userCityCareDetail.id;
+        userRenewSubscriptionModel.cityTitle = model.userCityCareDetail.title;
+        userRenewSubscriptionModel.citySubtitle = model.userCityCareDetail.subtitle;
+        userRenewSubscriptionModel.citySlug = model.userCityCareDetail.citySlug;
+        userRenewSubscriptionModel.cityName = model.userCityCareDetail.cityName;
 
 
         Log.e(TAG, "USER PACKAGE ID = [" + userRenewSubscriptionModel.userPackageId + "]");
@@ -190,10 +194,10 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
 
     // ManageSubscriptionAddressAdapter.AddressItemClickListener
     @Override
-    public void onClickItem(UserPackageDataModel model,int position)
+    public void onClickItem(ManagesSubscriptionModel model)
     {
 
-        setOnlyOneAddressOnView(model,userPackageDetailsList.get(position),userCityCareDetailsList.get(position));
+        setOnlyOneAddressOnView(model);
 
     }
 
@@ -263,26 +267,27 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
                 switch (statusCode) {
                     case NetworkUtility.TAGS.STATUSCODETYPE.SUCCESS:
                         JSONArray jsonArray = jsonObject.optJSONArray(NetworkUtility.TAGS.DATA);
-                        userPackageDataList = new ArrayList<>();
-                        userPackageDetailsList = new ArrayList<>();
-                        userCityCareDetailsList = new ArrayList<>();
+                        if(managesSubscriptionList == null){
+                            managesSubscriptionList = new ArrayList<>();
+                        }
                         for(int n = 0; n < jsonArray.length(); n++)
                         {
                             JSONObject jsonData = jsonArray.getJSONObject(n);
+
                             JSONObject userPackageData = jsonData.getJSONObject(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_USER_PACKAGE_DATA);
                             JSONObject packageDetails = jsonData.getJSONObject(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_USER_PACKAGE_DETAILS);
                             JSONObject cityCareDetail = jsonData.getJSONObject(NetworkUtility.TAGS.MANAGE_SUBSCRIPTION_USER_CITY_CARE_DETAIL);
+                            managesSubscriptionModel = new ManagesSubscriptionModel();
+                            managesSubscriptionModel.userPackageData = (UserPackageDataModel) GsonUtility.getObjectFromJsonString(userPackageData.toString(), UserPackageDataModel.class);
+                            managesSubscriptionModel.userPackageDetail = (UserPackageDetailsModel) GsonUtility.getObjectFromJsonString(packageDetails.toString(), UserPackageDetailsModel.class);
+                            managesSubscriptionModel.userCityCareDetail = (UserCityCareDetail) GsonUtility.getObjectFromJsonString(cityCareDetail.toString(), UserCityCareDetail.class);
+                            JSONObject item = jsonArray.getJSONObject(n);
+                            managesSubscriptionModel.PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY = item.getString(NetworkUtility.TAGS.PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY);
 
-                            UserPackageDataModel user_package_data_model = (UserPackageDataModel) GsonUtility.getObjectFromJsonString(userPackageData.toString(), UserPackageDataModel.class);
-                            UserPackageDetailsModel package_details_model = (UserPackageDetailsModel) GsonUtility.getObjectFromJsonString(packageDetails.toString(), UserPackageDetailsModel.class);
-                            UserCityCareDetail city_care_detail_model = (UserCityCareDetail) GsonUtility.getObjectFromJsonString(cityCareDetail.toString(), UserCityCareDetail.class);
-
-                            userPackageDataList.add(user_package_data_model);
-                            userPackageDetailsList.add(package_details_model);
-                            userCityCareDetailsList.add(city_care_detail_model);
+                            managesSubscriptionList.add(managesSubscriptionModel);
                         }
 
-                        setOnlyOneAddressOnView(userPackageDataList.get(0),userPackageDetailsList.get(0),userCityCareDetailsList.get(0));
+                        setOnlyOneAddressOnView(managesSubscriptionList.get(0));
 
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:

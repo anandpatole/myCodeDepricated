@@ -321,6 +321,7 @@ public class NetworkUtility {
 
         String X_API_KEY = "x_api_key";
         String EMAIL_ADDRESS = "email_address";
+        String PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY ="PRIOR_PACKAGE_RENEW_NOTFICATION_DAY";
 
         String ADDRESS_INITIALS = "address_initials";
         String ADDRESS = "address";
