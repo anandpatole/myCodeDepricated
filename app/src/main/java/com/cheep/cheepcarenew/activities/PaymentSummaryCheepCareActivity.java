@@ -1,9 +1,11 @@
 package com.cheep.cheepcarenew.activities;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Spannable;
@@ -217,6 +219,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 */
 
     // this method is used to  set  all data when user want renew subscription
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     private void setRenewDataOnView(UserRenewSubscriptionModel renewSubscriptionModel) {
         // package_detail
         mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
