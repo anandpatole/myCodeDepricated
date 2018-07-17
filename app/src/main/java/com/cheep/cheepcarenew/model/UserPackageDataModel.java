@@ -1,5 +1,6 @@
 package com.cheep.cheepcarenew.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -51,5 +52,10 @@ public class UserPackageDataModel implements Serializable {
 
     @SerializedName("payment_type")
     public String paymentType;
+
+
+    @SerializedName("asset_type_id")
+    @Expose
+    public String assetTypeId;
 
 }

@@ -953,9 +953,6 @@ public class Utility {
         String SUBSCRIBED = "subscribed";
     }
 
-    public static String removeFirstChar(String s) {
-        return s.substring(1);
-    }
 
     /**
      * This category types for blue collar(instabook) and white collar(normal)
