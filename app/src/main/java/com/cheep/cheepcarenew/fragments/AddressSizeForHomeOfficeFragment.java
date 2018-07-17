@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class AddressSizeForHomeOfficeFragment extends BaseFragment {
 
-    FragmentAddressSizeForHomeOfficeBinding mBinding;
+    private FragmentAddressSizeForHomeOfficeBinding mBinding;
     public static final String TAG = "AddressCategorySelectionFragment";
     private AddressSizeRecyclerViewAdapter adapter;
     private ArrayList<AddressSizeModel> list;
