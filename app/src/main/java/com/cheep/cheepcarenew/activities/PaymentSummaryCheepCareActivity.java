@@ -882,9 +882,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 12)));
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
     }
 
     private void updatePriceForRenew(int howManyMonth) {
@@ -937,9 +937,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf(v * 12)));
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
     }
 
     @Override

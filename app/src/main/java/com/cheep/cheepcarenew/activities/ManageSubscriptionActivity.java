@@ -122,8 +122,9 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         mBinding.textSubscriptionDuration.setText(managesSubscriptionModel.userPackageData.packageDuration + " " + Utility.MONTH);
         mBinding.textAddressCategory.setText(Utility.getAddressCategoryString(managesSubscriptionModel.userPackageData.category));
         mBinding.textAddressCategory.setCompoundDrawablesWithIntrinsicBounds(Utility.getAddressCategoryBlueIcon(managesSubscriptionModel.userPackageData.category), 0, 0, 0);
-
-        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, managesSubscriptionModel.userPackageData.paidAmount));
+        double paidAmount =Double.parseDouble(managesSubscriptionModel.userPackageData.paidAmount);
+        int amount = (int) paidAmount;
+        mBinding.textAmountPaid.setText(mContext.getString(R.string.rupee_symbol_x, String.valueOf(amount)));
 
         if (Utility.PAYMENT_TYPE_IS_PAYU.equalsIgnoreCase(managesSubscriptionModel.userPackageData.paymentType)) {
             mBinding.textPaymentMethod.setText(Utility.HDFC);
