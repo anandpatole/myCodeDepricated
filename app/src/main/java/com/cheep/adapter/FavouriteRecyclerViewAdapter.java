@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.LeadingMarginSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,11 +117,11 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     int offerIndex = mOfferIndexMap.containsKey(model.providerId) ? mOfferIndexMap.get(model.providerId) : 0;
-                    SpannableString labelOffer = new SpannableString("22 kdkkskdksd sdsdjdasdadja asdadsjdsja a adjdjdj jsadsdjjdjd addkjsjdajad");
+                    SpannableString labelOffer = new SpannableString(model.offerList.get(offerIndex));
                     labelOffer.setSpan(new LeadingMarginSpan.Standard(mLiveIconOffset, 0), 0, labelOffer.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     holder.mRowFavouriteBinding.tvLiveFeed.setText(labelOffer);
                     offerIndex = (offerIndex == (liveFeedCounter - 1) ? 0 : offerIndex + 1);
-                   // mOfferIndexMap.put(model.catId, offerIndex);
+                    mOfferIndexMap.put(model.providerId, offerIndex);
                 }
             });
             offerAnimation.start();
@@ -131,7 +132,23 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
             holder.mRowFavouriteBinding.ivLiveAnimated.setVisibility(View.GONE);
             holder.mRowFavouriteBinding.tvLiveFeed.setVisibility(View.GONE);
         }
-        holder.mRowFavouriteBinding.categoryName.setText("Plumber");
+        int bagResId = Utility.getProLevelBadge(model.pro_level);
+        if (bagResId != -1)
+            holder.mRowFavouriteBinding.imgBadge.setImageResource(bagResId);
+        String temp="";
+        for(int i=0;i<model.categories.size();i++)
+        {
+            if(i==0)
+            {
+                temp= temp +model.categories.get(i);
+            }
+            else
+            {
+                temp = temp+ model.categories.get(i)+" , ";
+            }
+        }
+
+        holder.mRowFavouriteBinding.categoryName.setText(temp);
         // holder.mRowFavouriteBinding.textTotalJobs.setText(Utility.getJobs(context, model.jobsCount));
         holder.mRowFavouriteBinding.textTotalTasks.setText(Utility.getTasks(context, model.taskCount));
 
@@ -164,7 +181,14 @@ holder.mRowFavouriteBinding.textAddressKmAway.setText(model.sp_locality);
                 }
             }
         });
-        Utility.showRating(model.rating, holder.mRowFavouriteBinding.ratingBar);
+        if (TextUtils.isEmpty(model.experience)
+                || Utility.ZERO_STRING.equals(model.experience)) {
+            holder.mRowFavouriteBinding.labelExperience.setText(Utility.checkNonNullAndSet(holder.mRowFavouriteBinding.labelExperience.getContext().getString(R.string.label_experience_zero)));
+        } else {
+//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+            holder.mRowFavouriteBinding.labelExperience.setText(Utility.getExperienceString(model.experience, "\n"));
+        }
+        Utility.showRating(model.experience, holder.mRowFavouriteBinding.ratingBar);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

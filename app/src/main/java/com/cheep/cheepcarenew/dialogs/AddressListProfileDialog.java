@@ -1,6 +1,7 @@
 package com.cheep.cheepcarenew.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddressListProfileDialog extends DialogFragment {
+public class AddressListProfileDialog extends DialogFragment implements  DialogInterface.OnDismissListener {
 
     public static final String TAG = AddressListDialog.class.getSimpleName();
     private DialogAddressListProfileBinding mBinding;
@@ -58,7 +59,7 @@ public class AddressListProfileDialog extends DialogFragment {
     {
         public void dismiss_Dialog();
     }
-    public void   getDataFromEditAddressDialog(ArrayList<AddressModel> listOfAddress)
+    public void  getDataFromEditAddressDialog(ArrayList<AddressModel> listOfAddress)
     {
         this.listOfAddress=listOfAddress;
         setAdapter();
@@ -112,7 +113,12 @@ public class AddressListProfileDialog extends DialogFragment {
 
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().getAttributes().windowAnimations = R.style.AlertAnimation;
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
 
+            }
+        });
         return dialog;
 
     }
@@ -345,14 +351,14 @@ public class AddressListProfileDialog extends DialogFragment {
             Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
         }
     };
-
     @Override
-    public void dismiss() {
+    public void onDismiss(final DialogInterface dialog) {
         if(listners!=null)
         {
             listners.dismiss_Dialog();
         }
-        super.dismiss();
+        super.onDismiss(dialog);
 
     }
+
 }

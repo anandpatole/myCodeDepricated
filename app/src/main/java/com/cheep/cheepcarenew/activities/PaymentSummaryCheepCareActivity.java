@@ -35,6 +35,9 @@ import com.cheep.cheepcarenew.model.PackageDetail;
 import com.cheep.cheepcarenew.model.UserRenewSubscriptionModel;
 import com.cheep.custom_view.BottomAlertDialog;
 import com.cheep.databinding.ActivityPaymentSummaryNewBinding;
+import com.cheep.dialogs.PestControlHelpDialog;
+import com.cheep.dialogs.PriceSummaryDialog;
+import com.cheep.fragment.SelectSubCategoryFragment;
 import com.cheep.model.AddressModel;
 import com.cheep.model.AddressSizeModel;
 import com.cheep.model.MessageEvent;
@@ -212,6 +215,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         mBinding.rlPromoCode.setOnClickListener(this);
         mBinding.rlMateCode.setOnClickListener(this);
         mBinding.tvPayNow.setOnClickListener(this);
+        mBinding.priceSummaryDialog.setOnClickListener(this);
 
     }
 
@@ -682,6 +686,10 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                     PaymentChoiceCheepCareActivity.newInstance(getApplicationContext(), "", paymentDataModel, careCityDetail, addressModel);
                 }
 
+                break;
+            case R.id.price_summary_dialog:
+                PriceSummaryDialog dialog = PriceSummaryDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), PriceSummaryDialog.TAG);
                 break;
 
         }

@@ -422,6 +422,7 @@
                         android:textSize="@dimen/text_size_10sp" />
 
                     <ImageView
+                        android:id="@+id/price_summary_dialog"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_marginBottom="@dimen/scale_4dp"

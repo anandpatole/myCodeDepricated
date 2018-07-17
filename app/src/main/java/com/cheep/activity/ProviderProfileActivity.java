@@ -176,7 +176,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
 
     public void setData() {
         mActivityProviderProfileBinding.textName.setText(providerModel.userName);
-        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance + getString(R.string.label_away));
+        mActivityProviderProfileBinding.textExpectedTime.setText(providerModel.sp_locality + ", " + providerModel.distance);
         mActivityProviderProfileBinding.textExpectedTime.setSelected(true);
 
         if (taskDetailModel != null) {
