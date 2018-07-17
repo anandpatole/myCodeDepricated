@@ -99,7 +99,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
         EmergencyContactRecyclerViewAdapter.EmergencyInteractionListener,
         WebCallClass.UpdateEmergencyContactResponseListener,
         WebCallClass.CommonResponseListener,
-        View.OnClickListener, AddressListProfileDialog.DismissDialog {
+        View.OnClickListener, AddressListProfileDialog.DismissDialog,DialogInterface.OnDismissListener{
 
 
     public static final String TAG = "ProfileDetailsFragmentnew";
@@ -1198,6 +1198,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
             String strResponse = (String) response;
             try {
+                hideProgressDialog();
                 JSONObject jsonObject = new JSONObject(strResponse);
                 Log.i(TAG, "onResponse: " + jsonObject.toString());
                 int statusCode = jsonObject.getInt(NetworkUtility.TAGS.STATUS_CODE);
@@ -1219,15 +1220,18 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_GENERALIZE_MESSAGE:
                         // Show Toast
+
                         Utility.showSnackBar(getString(R.string.label_something_went_wrong), mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.DISPLAY_ERROR_MESSAGE:
+
                         error_message = jsonObject.getString(NetworkUtility.TAGS.MESSAGE);
                         // Show message
                         Utility.showSnackBar(error_message, mBinding.getRoot());
                         break;
                     case NetworkUtility.TAGS.STATUSCODETYPE.USER_DELETED:
                     case NetworkUtility.TAGS.STATUSCODETYPE.FORCE_LOGOUT_REQUIRED:
+
                         //Logout and finish the current activity
                         Utility.logout(mContext, true, statusCode);
                         if (getActivity() != null)
@@ -1236,6 +1240,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                hideProgressDialog();
                 mCallGetProfileWSErrorListener.onErrorResponse(new VolleyError(e.getMessage()));
             }
 //            hideProgressDialog();
@@ -1927,6 +1932,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
 
     @Override
     public void dismiss_Dialog() {
+        showProgressDialog();
         callGetProfileWS();
     }
 
@@ -1949,5 +1955,12 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        showProgressDialog();
+        callGetProfileWS();
     }
 }

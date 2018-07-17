@@ -106,6 +106,10 @@ public class ProviderModel implements Serializable {
     @SerializedName("live_lable_arr")
     public List<String> offerList;
 
+
+    @SerializedName("sp_categories")
+    public List<String> categories;
+
     public int getQuotePriceInInteger() {
         if (TextUtils.isEmpty(quotePrice)) {
             // Return lesser than 1
