@@ -149,7 +149,7 @@ public class ManageSubscriptionActivity extends BaseAppCompatActivity implements
         if (dateDifference <= Integer.valueOf(managesSubscriptionModel.PRIOR_PACKAGE_RENEW_NOTIFICATION_DAY)) {
             mBinding.linearRenew.setVisibility(View.VISIBLE);
         } else {
-            mBinding.linearRenew.setVisibility(View.VISIBLE);
+            mBinding.linearRenew.setVisibility(View.GONE);
         }
 
         collectDataForRenewSubscription(managesSubscriptionModel);

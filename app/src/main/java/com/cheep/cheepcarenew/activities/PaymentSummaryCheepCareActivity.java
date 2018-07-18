@@ -216,41 +216,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     }
 
-
-/*
-    private void setPrice() {
-        for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
-
-            String TYPE = comparisionChartModel.priceLists.get(i).type;
-
-            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
-
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
-
-
-                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
-
-            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
-
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
-
-                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
-            }
-
-        }
-    }
-*/
-
     // this method is used to  set  all data when user want renew subscription
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     private void setRenewDataOnView(UserRenewSubscriptionModel renewSubscriptionModel) {
@@ -290,22 +255,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     }
 
     private void setAddress() {
-//        for (int i = 0; cityLandingPageModel.packageDetailList.size() > i; i++) {
-//
-//            String TYPE = cityLandingPageModel.packageDetailList.get(i).type;
-//
-//            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-//                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
-//                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
-//                packageId = cityLandingPageModel.packageDetailList.get(i).id;
-//
-//            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-//                mBinding.tvPackageName.setText(cityLandingPageModel.packageDetailList.get(i).title);
-//                mBinding.tvPackageDescription.setText(cityLandingPageModel.packageDetailList.get(i).subtitle);
-//                packageId = cityLandingPageModel.packageDetailList.get(i).id;
-//            }
-//
-//        }
         mBinding.tvPackageName.setText(packageDetail.title);
         mBinding.tvPackageDescription.setText(packageDetail.subtitle);
         packageId = packageDetail.id;
@@ -440,34 +389,177 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     }
 
-/*
-    private void updatePrice(int howManyMonth) {
+    private void validateCheepMateCode() {
+        cheepMateCode = edtCheepMateCode.getText().toString().trim();
+        mBinding.ivTickMateCode.setSelected(true);
+        mBinding.ivTickMateCode.setVisibility(View.VISIBLE);
+        mBinding.ivInfoMateCode.setVisibility(View.INVISIBLE);
+        mBinding.txtMateCodeMessage.setVisibility(View.INVISIBLE);
+        mBinding.txtApplyMateCode.setText(cheepMateCode);
+    }
+    private void storeAllDataForPayment() {
+
         if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
-            DecimalFormat formatter = new DecimalFormat("#,###");
-            formatter.format(Double.valueOf(renewSubscriptionModel.paidAmount));
-            mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + formatter.format(Double.valueOf(renewSubscriptionModel.paidAmount)));
-            totalPackageAmount = Double.parseDouble(renewSubscriptionModel.paidAmount);
+            switch (renewSubscriptionModel.packageDuration) {
+                case Utility.NUMBER.THREE:
+                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor3) * 3;
+                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor3);
+                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
+                    break;
+                case Utility.NUMBER.SIX:
+                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor6) * 6;
+                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor6);
+                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
+                    break;
+                case Utility.NUMBER.TWELVE:
+                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor12) * 12;
+                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor12);
+                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
+                    break;
+
+            }
+
+
+            renewSubscriptionModel.discountAmount = discountAmount;
+            renewSubscriptionModel.paidAmount = String.valueOf(totalPackageAmount);
         } else {
-            profit = oldPrice - newPrice;
-            DecimalFormat formatter = new DecimalFormat("#,###");
-            formatter.format(Double.valueOf(newPrice * howManyMonth));
-            mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + formatter.format(Double.valueOf(newPrice * howManyMonth)));
-            // mBinding.tvMeanPackageAmount.setText(Utility.CHEEP_CARE.RS + String.valueOf(newPrice * howManyMonth));
-            totalPackageAmount = newPrice * howManyMonth;
-            // totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+            paymentDataModel = new CheepCarePaymentDataModel();
+            paymentDataModel.totalAmount = totalPackageAmount;
+            paymentDataModel.promocode = cheepCode;
+            paymentDataModel.discountAmount = discountAmount;
+            paymentDataModel.packageType = packageDetail.type;
+            paymentDataModel.taxAmount = String.valueOf(taxtAmount);
+            paymentDataModel.packageDuration = selectedMonth;
+            paymentDataModel.dsaCode = cheepMateCode;
+            paymentDataModel.paidAmount = totalPackageAmount;//Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+            paymentDataModel.packageId = packageId;
+            paymentDataModel.packageTitle = packageDetail.title;
+            paymentDataModel.addressId = addressModel.address_id;
+            paymentDataModel.addressAssetTypeId = addressModel.addressSizeModel.id;
+        }
+    }
+
+    private void calculateDiscountPrice() {
+        discountAmount = totalPackageAmount * discountRate / 100;
+
+    }
+
+    private void calculatePaidAmountPrice() {
+        amountAfterDiscount = totalPackageAmount - discountAmount;
+    }
+
+    private void updatePrice(int howManyMonth) {
+
+        double monthlyPrice = 0;
+        double oldMonthlyPrice = 0;
+        double difference = 0;
+        try {
+            switch (howManyMonth) {
+                case 3:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor3);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor3);
+                    break;
+                case 6:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor6);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor6);
+                    break;
+                case 12:
+                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor12);
+                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor12);
+                    break;
+
+            }
+            difference = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
+            oldMonthlyPrice = monthlyPrice + difference;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        totalPackageAmount = monthlyPrice * howManyMonth;
+        totalPackageAmount = totalPackageAmount + taxtAmount;
+        mBinding.tvMeanPackageAmount.setText(getString(R.string.rupee_symbol_x, formatter.format(Double.valueOf(totalPackageAmount))));
         Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
+
+
+        mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(monthlyPrice)));
+
+        mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(oldMonthlyPrice)));
+
+
+        double v = 0;
+        try {
+            v = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
     }
-*/
 
-  /*  private void updateSaveAmountForMonth() {
-        profit = oldPrice - newPrice;
-        mBinding.tv3SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 3)));
-        mBinding.tv6SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 6)));
-        mBinding.tv12SaveMonth.setText(Utility.CHEEP_CARE.SAVE + Utility.getQuotePriceFormatterAsInteger(String.valueOf(profit * 12)));
+    private void updatePriceForRenew(int howManyMonth) {
 
-    }*/
+        double monthlyPrice = 0;
+        double oldMonthlyPrice = 0;
+        double difference = 0;
+        try {
+            switch (howManyMonth) {
+                case 3:
+                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor3);
+                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor3);
+                    selectedMonth = Utility.NUMBER.THREE;
+                    break;
+                case 6:
+                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor6);
+                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor6);
+                    selectedMonth = Utility.NUMBER.SIX;
+                    break;
+                case 12:
+                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor12);
+                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor12);
+                    selectedMonth = Utility.NUMBER.TWELVE;
+                    break;
+
+            }
+            difference = Double.parseDouble(priceModelForRenew.oldNewDifference);
+            oldMonthlyPrice = monthlyPrice + difference;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        totalPackageAmount = monthlyPrice * howManyMonth;
+        totalPackageAmount = totalPackageAmount + taxtAmount;
+        mBinding.tvMeanPackageAmount.setText(getString(R.string.rupee_symbol_x, formatter.format(Double.valueOf(totalPackageAmount))));
+        // totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
+        Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
+
+
+        mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(monthlyPrice)));
+
+        mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
+                , R.string.rupee_symbol_x_package_price, String.valueOf(oldMonthlyPrice)));
+
+
+        double v = 0;
+        try {
+            v = Double.parseDouble(priceModelForRenew.oldNewDifference);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
+    }
+
 
     private void showCheepCodeDialog() {
         View view = View.inflate(mContext, R.layout.dialog_add_promocode, null);
@@ -542,8 +634,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 }
                 validateCheepMateCode();
                 cheepCodeDialog.dismiss();
-
-//                validateCheepCode(edtCheepcode.getText().toString());
                 Utility.hideKeyboard(mContext, edtCheepMateCode);
 
 
@@ -554,66 +644,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         cheepCodeDialog.showDialog();
     }
 
-    private void validateCheepMateCode() {
-        cheepMateCode = edtCheepMateCode.getText().toString().trim();
-        mBinding.ivTickMateCode.setSelected(true);
-        mBinding.ivTickMateCode.setVisibility(View.VISIBLE);
-        mBinding.ivInfoMateCode.setVisibility(View.INVISIBLE);
-        mBinding.txtMateCodeMessage.setVisibility(View.INVISIBLE);
-        mBinding.txtApplyMateCode.setText(cheepMateCode);
-    }
 
-    //Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
-    private void storeAllDataForPayment() {
-
-        if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
-            switch (renewSubscriptionModel.packageDuration) {
-                case Utility.NUMBER.THREE:
-                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor3) * 3;
-                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor3);
-                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
-                    break;
-                case Utility.NUMBER.SIX:
-                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor6) * 6;
-                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor6);
-                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
-                    break;
-                case Utility.NUMBER.TWELVE:
-                    renewSubscriptionModel.totalAmount = Double.valueOf(priceModelForRenew.monthCostFor12) * 12;
-                    renewSubscriptionModel.taxAmount = String.valueOf(priceModelForRenew.gstFor12);
-                    renewSubscriptionModel.totalAmount = renewSubscriptionModel.totalAmount + taxtAmount;
-                    break;
-
-            }
-
-
-            renewSubscriptionModel.discountAmount = discountAmount;
-            renewSubscriptionModel.paidAmount = String.valueOf(totalPackageAmount);
-        } else {
-            paymentDataModel = new CheepCarePaymentDataModel();
-            paymentDataModel.totalAmount = totalPackageAmount;
-            paymentDataModel.promocode = cheepCode;
-            paymentDataModel.discountAmount = discountAmount;
-            paymentDataModel.packageType = packageDetail.type;
-            paymentDataModel.taxAmount = String.valueOf(taxtAmount);
-            paymentDataModel.packageDuration = selectedMonth;
-            paymentDataModel.dsaCode = cheepMateCode;
-            paymentDataModel.paidAmount = totalPackageAmount;//Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
-            paymentDataModel.packageId = packageId;
-            paymentDataModel.packageTitle = packageDetail.title;
-            paymentDataModel.addressId = addressModel.address_id;
-            paymentDataModel.addressAssetTypeId = addressModel.addressSizeModel.id;
-        }
-    }
-
-    private void calculateDiscountPrice() {
-        discountAmount = totalPackageAmount * discountRate / 100;
-
-    }
-
-    private void calculatePaidAmountPrice() {
-        amountAfterDiscount = totalPackageAmount - discountAmount;
-    }
 
     // View.OnClickListener
     @SuppressLint("ResourceType")
@@ -834,118 +865,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 break;
         }
 
-    }
-
-    private void updatePrice(int howManyMonth) {
-
-        double monthlyPrice = 0;
-        double oldMonthlyPrice = 0;
-        double difference = 0;
-        try {
-            switch (howManyMonth) {
-                case 3:
-                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor3);
-                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor3);
-                    break;
-                case 6:
-                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor6);
-                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor6);
-                    break;
-                case 12:
-                    monthlyPrice = Double.parseDouble(packageDetail.priceModel.monthCostFor12);
-                    taxtAmount = Double.parseDouble(packageDetail.priceModel.gstFor12);
-                    break;
-
-            }
-            difference = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
-            oldMonthlyPrice = monthlyPrice + difference;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        totalPackageAmount = monthlyPrice * howManyMonth;
-        totalPackageAmount = totalPackageAmount + taxtAmount;
-        mBinding.tvMeanPackageAmount.setText(getString(R.string.rupee_symbol_x, formatter.format(Double.valueOf(totalPackageAmount))));
-        Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
-
-
-        mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                , R.string.rupee_symbol_x_package_price, String.valueOf(monthlyPrice)));
-
-        mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                , R.string.rupee_symbol_x_package_price, String.valueOf(oldMonthlyPrice)));
-
-
-        double v = 0;
-        try {
-            v = Double.parseDouble(packageDetail.priceModel.oldNewDifference);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 12)));
-    }
-
-    private void updatePriceForRenew(int howManyMonth) {
-
-        double monthlyPrice = 0;
-        double oldMonthlyPrice = 0;
-        double difference = 0;
-        try {
-            switch (howManyMonth) {
-                case 3:
-                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor3);
-                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor3);
-                    selectedMonth = Utility.NUMBER.THREE;
-                    break;
-                case 6:
-                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor6);
-                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor6);
-                    selectedMonth = Utility.NUMBER.SIX;
-                    break;
-                case 12:
-                    monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor12);
-                    taxtAmount = Double.parseDouble(priceModelForRenew.gstFor12);
-                    selectedMonth = Utility.NUMBER.TWELVE;
-                    break;
-
-            }
-            difference = Double.parseDouble(priceModelForRenew.oldNewDifference);
-            oldMonthlyPrice = monthlyPrice + difference;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        totalPackageAmount = monthlyPrice * howManyMonth;
-        totalPackageAmount = totalPackageAmount + taxtAmount;
-        mBinding.tvMeanPackageAmount.setText(getString(R.string.rupee_symbol_x, formatter.format(Double.valueOf(totalPackageAmount))));
-        // totalPackageAmount = Double.parseDouble(Utility.removeFirstChar(mBinding.tvMeanPackageAmount.getText().toString()));
-        Log.e(TAG, "TOTAL_AMOUNT " + totalPackageAmount);
-
-
-        mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                , R.string.rupee_symbol_x_package_price, String.valueOf(monthlyPrice)));
-
-        mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                , R.string.rupee_symbol_x_package_price, String.valueOf(oldMonthlyPrice)));
-
-
-        double v = 0;
-        try {
-            v = Double.parseDouble(priceModelForRenew.oldNewDifference);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 12)));
     }
 
     @Override

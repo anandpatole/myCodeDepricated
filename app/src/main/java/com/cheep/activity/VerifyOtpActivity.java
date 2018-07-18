@@ -105,6 +105,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
         setupActionbar();
         EventBus.getDefault().register(this);
 
+
     }
 
     private void setupActionbar() {
@@ -169,6 +170,7 @@ public class VerifyOtpActivity extends BaseAppCompatActivity {
                 mActivityVerifyOtpBinding.tvSendOtp.setEnabled(!mActivityVerifyOtpBinding.etMobileNumber.getText().toString().isEmpty());
                 mActivityVerifyOtpBinding.tvSendOtp.setText(getString(R.string.label_proceed));
                 mActivityVerifyOtpBinding.tvWeCreateXWallet.setVisibility(View.VISIBLE);
+                Utility.hideKeyboard(getApplicationContext());
             }
 
         }.start();
