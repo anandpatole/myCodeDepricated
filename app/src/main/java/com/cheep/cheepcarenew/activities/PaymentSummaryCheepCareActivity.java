@@ -219,41 +219,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
     }
 
-
-/*
-    private void setPrice() {
-        for (int i = 0; comparisionChartModel.priceLists.size() > i; i++) {
-
-            String TYPE = comparisionChartModel.priceLists.get(i).type;
-
-            if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
-
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
-
-
-                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
-
-            } else if (TYPE.equalsIgnoreCase(PreferenceUtility.getInstance(mContext).getTypeOfPackage())) {
-                packageType = TYPE;
-                mBinding.tvNewPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvNewPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).newPrice));
-
-                mBinding.tvOldPrice.setText(Utility.getCheepCarePackageMonthlyPrice(mBinding.tvOldPrice.getContext()
-                        , R.string.rupee_symbol_x_package_price, comparisionChartModel.priceLists.get(i).oldPrice));
-
-                newPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).newPrice);
-                oldPrice = Double.parseDouble(comparisionChartModel.priceLists.get(i).oldPrice);
-            }
-
-        }
-    }
-*/
-
     // this method is used to  set  all data when user want renew subscription
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     private void setRenewDataOnView(UserRenewSubscriptionModel renewSubscriptionModel) {

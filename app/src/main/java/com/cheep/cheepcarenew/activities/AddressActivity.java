@@ -285,7 +285,7 @@ public class AddressActivity extends BaseAppCompatActivity {
                 AddressSizeForHomeOfficeFragment addressSizeForHomeOfficeFragment = (AddressSizeForHomeOfficeFragment) getSupportFragmentManager().findFragmentByTag(AddressSizeForHomeOfficeFragment.TAG);
                 if (addressSizeForHomeOfficeFragment != null) {
                     mUserDetails.addressList.add(addressSizeForHomeOfficeFragment.addressModel);
-                    PaymentSummaryCheepCareActivity.newInstance(mContext, careCityDetail,packageDetail, addressSizeForHomeOfficeFragment.addressModel);
+                    PaymentSummaryCheepCareActivity.newInstance(mContext, careCityDetail,addressSizeForHomeOfficeFragment.packageDetail, addressSizeForHomeOfficeFragment.addressModel);
                 }
                 // Save the user now.
                 PreferenceUtility.getInstance(mContext).saveUserDetails(mUserDetails);
