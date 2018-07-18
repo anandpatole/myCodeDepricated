@@ -157,7 +157,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
             holder.mRowFavouriteBinding.textVerified.setVisibility(View.VISIBLE);
         } else {
             //holder.mRowFavouriteBinding.textVerified.setTextColor(ContextCompat.getColor(context, R.color.yellow));
-            holder.mRowFavouriteBinding.textVerified.setVisibility(View.GONE);
+            holder.mRowFavouriteBinding.textVerified.setVisibility(View.INVISIBLE);
         }
 holder.mRowFavouriteBinding.textAddressKmAway.setText(model.sp_locality);
         holder.mRowFavouriteBinding.textAddressKmAway1.setText(model.distance);

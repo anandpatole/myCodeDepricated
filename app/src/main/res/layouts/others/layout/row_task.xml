@@ -93,7 +93,7 @@
                         android:layout_alignEnd="@+id/img_profile"
                         android:src="@drawable/icon_favourite_not_selected"
                         android:layout_marginTop="@dimen/scale_32dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_alignRight="@+id/img_profile" />
                 </RelativeLayout>
                 <RatingBar

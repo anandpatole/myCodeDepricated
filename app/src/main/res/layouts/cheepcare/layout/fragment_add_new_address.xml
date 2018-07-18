@@ -193,6 +193,7 @@
                         android:layout_marginLeft="@dimen/scale_10dp"
                         android:layout_marginRight="@dimen/scale_10dp"
                         android:background="@color/grey_varient_30"/>
+
                     <com.cheep.custom_view.CFEditTextRegular
                         android:id="@+id/edit_address_pincode"
                         android:layout_width="match_parent"

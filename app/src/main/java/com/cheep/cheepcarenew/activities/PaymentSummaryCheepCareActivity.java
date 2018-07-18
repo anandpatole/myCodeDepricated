@@ -76,9 +76,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
     private String cheepMateCode = "";
     private AppCompatEditText edtCheepMateCode;
     private double discountRate;
-    double oldPrice = 0;
-    double newPrice = 0;
-    double profit = 0;
+    private String months = Utility.EMPTY_STRING;
     private String packageId;
     private double totalPackageAmount;
     double discountAmount = 0.0;
@@ -152,7 +150,6 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 e.printStackTrace();
             }
         } else {
-//            updateSaveAmountForMonth();
             selectedMonth = "12";
             updatePrice(12);
         }
@@ -637,7 +634,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12SaveMonth.setSelected(false);
 
                 updatePrice(3);
-                selectedMonth = "3";
+                selectedMonth = Utility.NUMBER.THREE;
 
 
                 break;
@@ -654,7 +651,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(false);
                 mBinding.tv12SaveMonth.setSelected(false);
                 updatePrice(6);
-                selectedMonth = "6";
+                selectedMonth = Utility.NUMBER.SIX;
                 break;
             case R.id.card_12_months:
                 mBinding.card3Months.setSelected(false);
@@ -669,7 +666,7 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 mBinding.tv12Month.setSelected(true);
                 mBinding.tv12SaveMonth.setSelected(true);
                 updatePrice(12);
-                selectedMonth = "12";
+                selectedMonth = Utility.NUMBER.TWELVE;
                 break;
 
             case R.id.rl_promo_code:
@@ -688,8 +685,14 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
 
                 break;
             case R.id.price_summary_dialog:
-                PriceSummaryDialog dialog = PriceSummaryDialog.newInstance();
+                PriceSummaryDialog dialog = null;
+                if (COMING_FROM.equalsIgnoreCase(Utility.MANAGE_SUBSCRIPTION)) {
+                    dialog = PriceSummaryDialog.newInstance(priceModelForRenew, selectedMonth, discountAmount);
+                } else {
+                    dialog = PriceSummaryDialog.newInstance(packageDetail.priceModel, selectedMonth, discountAmount);
+                }
                 dialog.show(getSupportFragmentManager(), PriceSummaryDialog.TAG);
+
                 break;
 
         }
@@ -882,9 +885,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 12)));
     }
 
     private void updatePriceForRenew(int howManyMonth) {
@@ -897,14 +900,17 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
                 case 3:
                     monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor3);
                     taxtAmount = Double.parseDouble(priceModelForRenew.gstFor3);
+                    selectedMonth = Utility.NUMBER.THREE;
                     break;
                 case 6:
                     monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor6);
                     taxtAmount = Double.parseDouble(priceModelForRenew.gstFor6);
+                    selectedMonth = Utility.NUMBER.SIX;
                     break;
                 case 12:
                     monthlyPrice = Double.parseDouble(priceModelForRenew.monthCostFor12);
                     taxtAmount = Double.parseDouble(priceModelForRenew.gstFor12);
+                    selectedMonth = Utility.NUMBER.TWELVE;
                     break;
 
             }
@@ -937,9 +943,9 @@ public class PaymentSummaryCheepCareActivity extends BaseAppCompatActivity imple
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 3)));
-        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 6)));
-        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int)v * 12)));
+        mBinding.tv3SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 3)));
+        mBinding.tv6SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 6)));
+        mBinding.tv12SaveMonth.setText(getString(R.string.label_save_rupee, String.valueOf((int) v * 12)));
     }
 
     @Override

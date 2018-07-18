@@ -104,6 +104,7 @@ public class UserRenewSubscriptionModel implements Serializable {
     @SerializedName("asset_type_id")
     @Expose
     public String assetTypeId;
+
     @SerializedName("PRIOR_PACKAGE_RENEW_NOTFICATION_DAY")
     @Expose
     public String priorPackageRenewNotficationDay;

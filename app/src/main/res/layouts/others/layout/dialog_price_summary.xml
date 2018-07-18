@@ -11,7 +11,7 @@
         android:paddingRight="@dimen/scale_10dp"
         android:paddingBottom="@dimen/scale_31dp"
 
-        android:background="@drawable/rounded_bottom_part_only_fill_white_5x5">
+        android:background="@drawable/rounded_rect_white">
 
 
 
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/img_header"
-android:paddingLeft="@dimen/scale_20dp"
+            android:paddingLeft="@dimen/scale_20dp"
             android:paddingRight="@dimen/scale_20dp"
             android:orientation="horizontal"
             android:paddingTop="20dp"
@@ -36,16 +36,19 @@ android:paddingLeft="@dimen/scale_20dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16sp" />
 
-
-            <ImageView
+            <LinearLayout
                 android:id="@+id/cancel"
-                android:layout_width="@dimen/scale_10dp"
-                android:layout_height="@dimen/scale_10dp"
-                android:layout_gravity="right|center_vertical"
-
+                android:layout_width="@dimen/scale_31dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/cancel"/>
+                android:layout_height="@dimen/scale_31dp">
+                <ImageView
 
+                    android:layout_width="@dimen/scale_10dp"
+                    android:layout_height="@dimen/scale_10dp"
+                    android:layout_gravity="top"
+                    android:visibility="gone"
+                    android:src="@drawable/cancel"/>
+            </LinearLayout>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -97,7 +100,7 @@ android:paddingLeft="@dimen/scale_20dp"
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="1.3"
                 android:text="Subscription  \n Amount "
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_12sp"/>
@@ -131,7 +134,7 @@ android:paddingLeft="@dimen/scale_20dp"
             <com.cheep.custom_view.CFTextViewRegular
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="1.3"
                 android:text="GST Amount"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_12sp"/>
@@ -144,6 +147,40 @@ android:paddingLeft="@dimen/scale_20dp"
                 android:textSize="@dimen/text_size_14sp"/>
             <com.cheep.custom_view.CFTextViewRegular
                 android:id="@+id/subscription_gst"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="2345"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_12sp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/promocodell"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/scale_5dp"
+            android:layout_marginLeft="@dimen/scale_31dp"
+            android:layout_marginRight="@dimen/scale_31dp"
+            android:layout_height="wrap_content">
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:text="Promo Code Discount"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_12sp"/>
+            <com.cheep.custom_view.CFTextViewRegular
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp"/>
+            <com.cheep.custom_view.CFTextViewRegular
+                android:id="@+id/promo_code_discount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

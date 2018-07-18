@@ -326,7 +326,7 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 
                     // Show Rating
                     holder.mUpcomingTaskBinding.ratingBar.setVisibility(View.VISIBLE);
-                    Utility.showRating(model.selectedProvider.rating, holder.mUpcomingTaskBinding.ratingBar);
+                    Utility.showRating(model.selectedProvider.experience, holder.mUpcomingTaskBinding.ratingBar);
 
 
                     holder.mUpcomingTaskBinding.tvTaskResponseStatus.setVisibility(View.VISIBLE);
@@ -618,6 +618,13 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                 if (model.selectedProvider != null && !TextUtils.isEmpty(model.selectedProvider.providerId)) {
                     GlideUtility.showCircularImageViewWithColorBorder(holder.mRowTaskBinding.imgProfile.getContext(), TAG, holder.mRowTaskBinding.imgProfile, model.selectedProvider.profileUrl, Utility.DEFAULT_CHEEP_LOGO, R.color.grey_dark_color, true);
                     //experience
+                    if (TextUtils.isEmpty(model.selectedProvider.experience)
+                            || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
+                        holder.mRowTaskBinding.tvExperience.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
+                    } else {
+//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
+                        holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
+                    }
                     holder.mRowTaskBinding.imgProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -638,19 +645,9 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
                     } else {
                         holder.mRowTaskBinding.tvExperience.setVisibility(View.VISIBLE);
 
-                        if (TextUtils.isEmpty(model.selectedProvider.experience)
-                                || Utility.ZERO_STRING.equals(model.selectedProvider.experience)) {
-                            holder.mRowTaskBinding.tvExperience.setText(Utility.checkNonNullAndSet(holder.mRowTaskBinding.tvExperience.getContext().getString(R.string.label_experience_zero)));
-                        } else {
-//            holder.tvExperience.setText(holder.mView.getContext().getResources().getQuantityString(R.plurals.getExperienceString, Integer.parseInt(provider.experience), provider.experience));
-                            holder.mRowTaskBinding.tvExperience.setText(Utility.getExperienceString(model.selectedProvider.experience, "\n"));
-                        }
+
                     }
-                    holder.mRowTaskBinding.imgFav.setVisibility(View.VISIBLE);
-                    if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
-                        holder.mRowTaskBinding.imgFav.setSelected(true);
-                    else
-                        holder.mRowTaskBinding.imgFav.setSelected(false);
+
                     if (model.taskType.equalsIgnoreCase(Utility.TASK_TYPE.SUBSCRIBED)) {
                         holder.mRowTaskBinding.textTaskApprovedQuote.setText(R.string.label_free);
                         holder.mRowTaskBinding.textPaymentMode.setText(R.string.label_paid_with_cheep_care);
@@ -691,8 +688,14 @@ public class TaskRecyclerViewAdapterNew extends LoadMoreSwipeRecyclerAdapter<Tas
 
 
                     // Show Rating
-                    Utility.showRating(model.selectedProvider.rating, holder.mRowTaskBinding.ratingBar);
+                    Utility.showRating(model.selectedProvider.experience, holder.mRowTaskBinding.ratingBar);
                     holder.mRowTaskBinding.ratingBar.setVisibility(View.VISIBLE);
+
+                    holder.mRowTaskBinding.imgFav.setVisibility(View.VISIBLE);
+                    if (Utility.BOOLEAN.YES.equals(model.selectedProvider.isFavourite))
+                        holder.mRowTaskBinding.imgFav.setSelected(true);
+                    else
+                        holder.mRowTaskBinding.imgFav.setSelected(false);
                 } else {
 
                     holder.mRowTaskBinding.ratingBar.setVisibility(View.GONE);
