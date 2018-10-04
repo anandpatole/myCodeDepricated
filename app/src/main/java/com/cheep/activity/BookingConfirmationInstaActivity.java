@@ -154,7 +154,7 @@ public class BookingConfirmationInstaActivity extends BaseAppCompatActivity {
         mBinding.tvTaskDescription.setText(spannableStringBuilder);
         mBinding.tvLabelCategory.setText(taskDetailModel.categoryModel.catName);
         if (taskDetailModel.categoryModel.isSubscribed.equalsIgnoreCase(Utility.BOOLEAN.YES)) {
-boolean check_pest=Utility.BOOLEAN_NEW.NO;
+            boolean check_pest=Utility.BOOLEAN_NEW.NO;
             if (mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM) || mSelectedAddressModel.is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
                 if (taskDetailModel.categoryModel.catSlug.equalsIgnoreCase(Utility.CAT_SLUG_TYPES.PEST_CONTROL)) {
 
@@ -198,18 +198,18 @@ boolean check_pest=Utility.BOOLEAN_NEW.NO;
                 }
 
                 if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
-              if(check_pest==Utility.BOOLEAN_NEW.NO)
-              {
-                  mBinding.tvPaynow.setVisibility(View.GONE);
-                  mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-                  mBinding.tvGotcha.setVisibility(View.VISIBLE);
-              }
-              else
-              {
-                  mBinding.tvPaynow.setVisibility(View.VISIBLE);
-                  mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
-                  mBinding.tvGotcha.setVisibility(View.GONE);
-              }
+                    if(check_pest==Utility.BOOLEAN_NEW.NO)
+                    {
+                        mBinding.tvPaynow.setVisibility(View.GONE);
+                        mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                        mBinding.tvGotcha.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        mBinding.tvPaynow.setVisibility(View.VISIBLE);
+                        mBinding.lnPayLaterPayNowButtons.setVisibility(View.GONE);
+                        mBinding.tvGotcha.setVisibility(View.GONE);
+                    }
 
                     mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                     additionalCharge = 0;
@@ -291,8 +291,11 @@ boolean check_pest=Utility.BOOLEAN_NEW.NO;
                 mBinding.recyclerViewPaid.setVisibility(View.GONE);
                 // mBinding.viewLine1.setVisibility(View.GONE);
             }
-
+            mBinding.rlpromocode.setVisibility(View.GONE);
+            mBinding.lnPromoCodeDisclaimer.setVisibility(View.GONE);
         } else {
+            mBinding.rlpromocode.setVisibility(View.VISIBLE);
+            mBinding.lnPromoCodeDisclaimer.setVisibility(View.VISIBLE);
             if (taskDetailModel.additionalChargeReason.equalsIgnoreCase(Utility.ADDITION_CHARGES_DIALOG_TYPE.NONE)) {
                 mBinding.rlAdditionalCharges.setVisibility(View.GONE);
                 additionalCharge = 0;
@@ -498,6 +501,7 @@ boolean check_pest=Utility.BOOLEAN_NEW.NO;
             addressId = 0;
         }
         if (addressId <= 0) {
+            mTaskCreationParams=new HashMap<>();
             NetworkUtility.addGuestAddressParams(mTaskCreationParams, mSelectedAddressModel);
 
         } else {

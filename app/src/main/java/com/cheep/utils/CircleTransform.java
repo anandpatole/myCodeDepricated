@@ -6,9 +6,12 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+
+import java.security.MessageDigest;
 
 public class CircleTransform extends BitmapTransformation {
     private static final String TAG = CircleTransform.class.getSimpleName();
@@ -19,13 +22,13 @@ public class CircleTransform extends BitmapTransformation {
     private String tag;
 
     public CircleTransform(Context context, String url, String tag) {
-        super(context);
+       // super(context);
         this.mUrl = url;
         this.tag = url + "=" + tag;
     }
 
     public CircleTransform(Context context, boolean roundedCorner, int borderColor, int borderWidth, String url, String tag) {
-        super(context);
+      //  super(context);
 //        Log.d(TAG, "CircleTransform() called with: context = [" + context + "], roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + url + "], tag = [" + tag + "]");
         this.roundedCorner = roundedCorner;
         this.borderColor = borderColor;
@@ -35,7 +38,7 @@ public class CircleTransform extends BitmapTransformation {
     }
 
     public CircleTransform(Context context, boolean roundedCorner, int borderColor, int borderWidth, int url, String tag) {
-        super(context);
+   //     super(context);
 //        Log.d(TAG, "CircleTransform() called with: context = [" + context + "], roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + url + "], tag = [" + tag + "]");
         this.roundedCorner = roundedCorner;
         this.borderColor = borderColor;
@@ -84,8 +87,13 @@ public class CircleTransform extends BitmapTransformation {
         return circleCrop(pool, toTransform);
     }
 
+//    @Override
+//    public String getId() {
+//        return "[roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + mUrl + "], tag = [" + tag + "]";
+//    }
+
     @Override
-    public String getId() {
-        return "[roundedCorner = [" + roundedCorner + "], borderColor = [" + borderColor + "], borderWidth = [" + borderWidth + "], url = [" + mUrl + "], tag = [" + tag + "]";
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
     }
-} 
+}

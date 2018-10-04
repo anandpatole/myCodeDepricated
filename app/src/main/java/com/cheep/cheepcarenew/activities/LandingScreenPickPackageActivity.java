@@ -195,9 +195,6 @@ public class LandingScreenPickPackageActivity extends BaseAppCompatActivity {
 
         Glide.with(mContext)
                 .load(R.drawable.ic_home_with_heart_text)
-                .asGif()
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(mBinding.ivCheepCareGif);
 
         mBinding.tvCityName.setText(mCity.cityName);

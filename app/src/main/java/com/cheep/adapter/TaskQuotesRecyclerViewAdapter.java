@@ -273,9 +273,8 @@ public class TaskQuotesRecyclerViewAdapter extends RecyclerView.Adapter<TaskQuot
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(provider.request_detail_status)) {
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
-                    .asGif()
-                    .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
+
                     .into(holder.imgChat);
         } else {
             Glide.with(mContext)

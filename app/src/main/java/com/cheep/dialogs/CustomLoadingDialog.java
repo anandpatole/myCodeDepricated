@@ -57,9 +57,7 @@ public class CustomLoadingDialog extends DialogFragment {
         customProgressBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_custom_progress, container, false);
         Glide.with(this)
                 .load(R.drawable.ic_loading)
-                .asGif()
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
                 .into(customProgressBinding.imgProfilePic);
         return customProgressBinding.getRoot();
     }

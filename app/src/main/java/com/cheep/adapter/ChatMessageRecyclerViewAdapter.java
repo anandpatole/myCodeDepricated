@@ -2,12 +2,15 @@ package com.cheep.adapter;
 
 import android.app.Activity;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.R;
@@ -318,31 +321,35 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
                 GlideUtility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
                     @Override
-                    public boolean onException(Exception e, Object obj, Target target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Object resource, Object obj, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
+
                 });
             } else if (!TextUtils.isEmpty(model.mediaUrl)) {
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
                 GlideUtility.loadImageView(mContext, viewHolder.mRowChatSenderMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
                     @Override
-                    public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
+
                 });
             } else if (!TextUtils.isEmpty(model.localMediaUrl)) {
                 viewHolder.mRowChatSenderMediaBinding.progressBar.setVisibility(View.VISIBLE);
@@ -372,31 +379,35 @@ public class ChatMessageRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.VISIBLE);
                 GlideUtility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaThumbUrl, 0, new RequestListener() {
                     @Override
-                    public boolean onException(Exception e, Object obj, Target target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Object resource, Object obj, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
+
                 });
             } else if (!TextUtils.isEmpty(model.mediaUrl)) {
                 viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.VISIBLE);
                 GlideUtility.loadImageView(mContext, viewHolder.mRowChatReceiverMediaBinding.imgMedia, model.mediaUrl, 0, new RequestListener() {
                     @Override
-                    public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.mRowChatReceiverMediaBinding.progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
+
                 });
             }
 

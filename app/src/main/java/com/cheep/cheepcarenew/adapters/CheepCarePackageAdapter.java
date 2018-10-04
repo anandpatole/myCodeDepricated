@@ -50,7 +50,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
 
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(model.packageImage)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
                 .into(holder.mBinding.ivItemBackground);
 
         int resId = R.drawable.gif_ballon_home_price;
@@ -87,8 +87,7 @@ public class CheepCarePackageAdapter extends LoadMoreRecyclerAdapter<CheepCarePa
         }
         Glide.with(holder.mBinding.getRoot().getContext())
                 .load(resId)
-                .asGif()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
                 .into(holder.mBinding.ivCharge);
 
         holder.mBinding.tvTitle.setText(model.title);

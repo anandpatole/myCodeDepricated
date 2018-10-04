@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,8 +48,12 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cheep.BuildConfig;
@@ -1743,28 +1748,28 @@ public class StrategicPartnerFragPhaseTwo extends BaseFragment implements Reques
     }
 
     private void loadImageByGlide(String localFilePath, final ImageView imageView) {
-        Glide.with(mContext)
-                .load(localFilePath)
-                .asBitmap()
-                .thumbnail(0.2f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .listener(new RequestListener<String, Bitmap>() {
 
-                    @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        if (mIsStrategicPartner) {
-//                            mImgThumb.setImageBitmap(Utility.getRoundedCornerBitmap(resource, mImgThumb.getContext()));
-//                        } else {
-                        imageView.setImageBitmap(resource);
-//                        }
-                        return true;
-                    }
-                }).into(imageView);
+//        Glide.with(mContext)
+//                .load(localFilePath)
+//                .asBitmap()
+//                .thumbnail(0.2f)
+//
+//                .listener(new RequestListener<Bitmap>() {
+//
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+//                        imageView.setImageBitmap(resource);
+//                        return true;
+//                    }
+//
+//
+//                }).into(imageView);
     }
 
     /**

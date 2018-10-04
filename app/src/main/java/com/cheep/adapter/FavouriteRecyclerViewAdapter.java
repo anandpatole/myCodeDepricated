@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+
 
 /**
  * Created by pankaj on 9/27/16.
@@ -92,7 +92,7 @@ public class FavouriteRecyclerViewAdapter extends RecyclerView.Adapter<Favourite
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final ProviderModel model = mList.get(holder.getAdapterPosition());
-        GlideUtility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), TAG, holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
+        GlideUtility.showCircularImageView(holder.mRowFavouriteBinding.imgProfile.getContext(), "", holder.mRowFavouriteBinding.imgProfile, model.profileUrl,Utility.DEFAULT_CHEEP_LOGO);
         holder.mRowFavouriteBinding.textName.setText(model.userName);
         //holder.mRowFavouriteBinding.textTotalReviews.setText(context.getString(R.string.label_x_reviews, model.reviews));
         holder.mRowFavouriteBinding.textVerified.setText(Utility.BOOLEAN.YES.equalsIgnoreCase(model.isVerified) ? context.getString(R.string.label_verified) : context.getString(R.string.label_pending));

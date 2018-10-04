@@ -378,9 +378,7 @@ public class ProviderProfileActivity extends BaseAppCompatActivity implements Re
         if (Utility.SEND_TASK_DETAIL_REQUESTED_STATUS.ALREADY_REQUESTED.equalsIgnoreCase(providerModel.request_detail_status)) {
             Glide.with(mContext)
                     .load(R.drawable.ic_chat_requested_animation_with_counter)
-                    .asGif()
-                    .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
                     .into(mActivityProviderProfileBinding.imgChat);
         } else {
             Glide.with(mContext)

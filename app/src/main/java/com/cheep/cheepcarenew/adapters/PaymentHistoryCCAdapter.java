@@ -69,9 +69,7 @@ public class PaymentHistoryCCAdapter extends LoadMoreRecyclerAdapter<PaymentHist
             } else {
                 Glide.with(context)
                         .load(R.drawable.ic_home_with_heart_text)
-                        .asGif()
-                        .dontAnimate()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
                         .into(holder.mBinding.imgProfile);
                 holder.mBinding.textProviderName.setTextColor(ContextCompat.getColor(context, R.color.splash_gradient_end));
                 holder.mBinding.textProviderName.setText(model.sp_user_name);

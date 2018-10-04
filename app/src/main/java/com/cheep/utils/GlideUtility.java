@@ -8,8 +8,10 @@ import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
-
+import com.bumptech.glide.request.RequestOptions;
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 /**
  * Created by kruti on 6/3/18.
  */
@@ -24,9 +26,9 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -37,7 +39,7 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .crossFade()
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -49,9 +51,9 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -63,10 +65,10 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
+                .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
                 .listener(requestListener)
-                .crossFade()
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -87,10 +89,8 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(url)
-                .transform(new CircleTransform(context, url, tag))
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().circleCrop().placeholder(placeholderRes).error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -101,10 +101,10 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .transform(new CircleTransform(context, isRounded, Color.WHITE, (int) Utility.convertDpToPixel(strockwidthIndp, context), imageToLoad, tag))
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().circleCrop())
+                .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -116,10 +116,10 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .transform(new CircleTransform(context, isRounded, Color.WHITE, 5, imageToLoad, tag))
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().circleCrop())
+                .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -132,10 +132,10 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
-                .placeholder(placeholderRes)
-                .error(placeholderRes)
-                .crossFade()
+                .apply(new RequestOptions().circleCrop())
+                        .apply(new RequestOptions().placeholder(placeholderRes))
+                .apply(new RequestOptions().error(placeholderRes))
+                .transition(withCrossFade())
                 .into(img);
     }
 
@@ -147,8 +147,8 @@ public class GlideUtility {
         Glide
                 .with(context)
                 .load(imageToLoad)
-                .transform(new CircleTransform(context, isRounded, ContextCompat.getColor(context, color), 5, imageToLoad, tag))
-                .crossFade()
+                .apply(new RequestOptions().circleCrop())
+                        .transition(withCrossFade())
                 .into(img);
     }
 }

@@ -91,7 +91,7 @@
                         android:layout_width="@dimen/scale_20dp"
                         android:layout_height="@dimen/scale_20dp"
                         android:layout_alignEnd="@+id/img_profile"
-                        android:src="@drawable/icon_favourite_not_selected"
+                        android:background="@drawable/icon_fav_selector"
                         android:layout_marginTop="@dimen/scale_32dp"
                         android:visibility="gone"
                         android:layout_alignRight="@+id/img_profile" />

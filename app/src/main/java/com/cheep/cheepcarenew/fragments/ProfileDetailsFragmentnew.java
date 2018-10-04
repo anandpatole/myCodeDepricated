@@ -224,7 +224,7 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
             }
             mBinding.textPhoneNo.setText(userDetails.phoneNumber);
             mBinding.textEmail.setText(userDetails.email);
-
+            callGetProfileWS();
         } else {
             // Static details for Guest Users
             //  mBinding.userName.setText(Utility.GUEST_STATIC_INFO.USERNAME);
@@ -872,10 +872,19 @@ public class ProfileDetailsFragmentnew extends BaseFragment implements
                 mBinding.tvAddressCategory.setText(addressList.get(0).category);
                 mBinding.tvFullAddress.setText(addressList.get(0).getAddressWithInitials());
                 hideAndShowView(addressList.get(0).is_subscribe);
-                break;
+                if(addressList.get(i).is_subscribe.equalsIgnoreCase(Utility.ADDRESS_SUBSCRIPTION_TYPE.PREMIUM )||addressList.get(i).is_subscribe.equalsIgnoreCase( Utility.ADDRESS_SUBSCRIPTION_TYPE.NORMAL)) {
+
+                    mBinding.linearManageCheepCareSubscription.setVisibility(View.VISIBLE);
+                    break;
+                }
+
+
+
+
             }
             mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
-            mBinding.linearManageCheepCareSubscription.setVisibility(View.VISIBLE);
+            // mBinding.linearAddressLayout.setVisibility(View.VISIBLE);
+            // mBinding.linearManageCheepCareSubscription.setVisibility(View.VISIBLE);
         } else {
             mBinding.linearManageCheepCareSubscription.setVisibility(View.GONE);
             mBinding.linearAddressLayout.setVisibility(View.GONE);
